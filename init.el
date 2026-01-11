@@ -238,7 +238,7 @@
   ;; Configure font settings based on the operating system.
   ;; Ok, this kickstart is meant to be used on the terminal, not on GUI.
   ;; But without this, I fear you could start Graphical Emacs and be sad :(
-  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono"  :height 100)
+  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono"  :height 130)
   (when (eq system-type 'darwin)       ;; Check if the system is macOS.
     (setq mac-command-modifier 'meta)  ;; Set the Command key to act as the Meta key.
     (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 130))
