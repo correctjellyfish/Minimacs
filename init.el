@@ -82,12 +82,12 @@
 (use-package general
   :config
   ;; (general-evil-setup) ;; <- evil
-  ;; Set up 'C-SPC' as the leader key
+  ;; Set up 'C-z' as the leader key
   (general-create-definer start/leader-keys
     ;; :states '(normal insert visual motion emacs) ;; <- evil
     :keymaps 'override
-    :prefix "C-SPC"
-    :global-prefix "C-SPC") ;; Set global leader key so we can access our keybindings from any state
+    :prefix "C-z"
+    :global-prefix "C-z") ;; Set global leader key so we can access our keybindings from any state
 
   (start/leader-keys
     "." '(find-file :wk "Find file")
@@ -131,7 +131,8 @@
 
   (start/leader-keys
     "g" '(:ignore t :wk "Git")
-    "g s" '(magit-status :wk "Magit status"))
+    "g s" '(magit-status :wk "Magit status")
+    "g m" '(magit :wk "Magit"))
 
   (start/leader-keys
     "h" '(:ignore t :wk "Help") ;; To get more help use C-h commands (describe variable, function, etc.)
@@ -156,17 +157,13 @@
 ;;           nil nil t)
 ;;   )
 
-; (use-package gruvbox-theme
-;   :config
-;   (setq gruvbox-bold-constructs t)
-;   (load-theme 'gruvbox-dark-medium t)) ;; We need to add t to trust this package
 (use-package catppuccin-theme)
 (load-theme 'catppuccin :no-confirm)
 
 (add-to-list 'default-frame-alist '(alpha-background . 90)) ;; For all new frames henceforth
 
 (set-face-attribute 'default nil
-                    ;; :font "JetBrains Mono" ;; Set your favorite type of font or download JetBrains Mono
+                    ;; :font "FiraCode Nerd Font Mono" ;; Set your favorite type of font or download JetBrains Mono
                     :height 120
                     :weight 'medium)
 ;; This sets the default font on all graphical frames created after restarting Emacs.

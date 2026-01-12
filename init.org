@@ -334,7 +334,7 @@ If you plan to use a different package manager, remember to remove this section 
       (menu-bar-mode nil)         ;; Disable the menu bar
       (scroll-bar-mode nil)       ;; Disable the scroll bar
       (tool-bar-mode nil)         ;; Disable the tool bar
-      ;;(inhibit-startup-screen t)  ;; Disable welcome screen
+      (inhibit-startup-screen t)  ;; Disable welcome screen
 
       (delete-selection-mode t)   ;; Select text and delete it by typing.
       (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
@@ -343,16 +343,16 @@ If you plan to use a different package manager, remember to remove this section 
       (blink-cursor-mode nil)     ;; Don't blink cursor
       (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
 
-      ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
-      ;;(recentf-mode t) ;; Enable recent file mode
+      (dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
+      (recentf-mode t) ;; Enable recent file mode
 
-      ;;(global-visual-line-mode t)           ;; Enable truncated lines
-      ;;(display-line-numbers-type 'relative) ;; Relative line numbers
+      (global-visual-line-mode t)           ;; Enable truncated lines
+      (display-line-numbers-type 'relative) ;; Relative line numbers
       (global-display-line-numbers-mode t)  ;; Display line numbers
 
       (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
       (scroll-conservatively 10) ;; Smooth scrolling
-      ;;(scroll-margin 8)
+      (scroll-margin 8)
 
       (tab-width 4)
 
@@ -426,17 +426,17 @@ We use general because it gives:
 - a consistent and unified interface for managing keybinds.
 And it is also really customizable.
 
-Note: The Leader key is what you will press when you want to access your keybindings: C-SPC + .  Find file
+Note: The Leader key is what you will press when you want to access your keybindings: C-z  Find file
 #+begin_src emacs-lisp
     (use-package general
       :config
       ;; (general-evil-setup) ;; <- evil
-      ;; Set up 'C-SPC' as the leader key
+      ;; Set up 'C-z' as the leader key
       (general-create-definer start/leader-keys
         ;; :states '(normal insert visual motion emacs) ;; <- evil
         :keymaps 'override
-        :prefix "C-SPC"
-        :global-prefix "C-SPC") ;; Set global leader key so we can access our keybindings from any state
+        :prefix "C-z"
+        :global-prefix "C-z") ;; Set global leader key so we can access our keybindings from any state
 
       (start/leader-keys
         "." '(find-file :wk "Find file")
@@ -480,7 +480,8 @@ Note: The Leader key is what you will press when you want to access your keybind
 
       (start/leader-keys
         "g" '(:ignore t :wk "Git")
-        "g s" '(magit-status :wk "Magit status"))
+        "g s" '(magit-status :wk "Magit status")
+        "g m" '(magit :wk "Magit"))
 
       (start/leader-keys
         "h" '(:ignore t :wk "Help") ;; To get more help use C-h commands (describe variable, function, etc.)
@@ -519,13 +520,11 @@ To read more about using the built in methods, check out this awesome article fr
 
 * Appearance
 ** Set Theme
-Set gruvbox theme, if you want some themes try out doom-themes.
+Set catppuccin theme, if you want some themes try out doom-themes.
 Use consult-theme to easily try out themes (*Epilepsy* Warning).
 #+begin_src emacs-lisp
-    (use-package gruvbox-theme
-      :config
-      (setq gruvbox-bold-constructs t)
-      (load-theme 'gruvbox-dark-medium t)) ;; We need to add t to trust this package
+    (use-package catppuccin-theme)
+    (load-theme 'catppuccin :no-confirm)
 #+end_src
 
 ** Transparency
