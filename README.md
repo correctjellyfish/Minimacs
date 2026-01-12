@@ -1,280 +1,202 @@
-<div align="center">
-  <img src="doc/emacs-kick-logo.png" alt="Project Logo" width="300"/>
-  <br/>
-  <img src="https://img.shields.io/badge/Emacs-30%2B-green.svg" alt="Emacs 30+"/>
-  <img src="https://img.shields.io/badge/License-GPLv2-green" alt="GPLv2 License"/>
-</div>
+https://github.com/MiniApollo/kickstart.emacs/assets/72389030/5c66130d-66b9-459b-a26d-210f3f937459
 
-<div align="center">
-  A feature rich Emacs (kickstarter) config for (neo)vi(m)mers
-</div>
+# Table of Contents
 
-<div align="center">
-  <a href="#minimum-requirements"><strong>Requirements</strong></a> ·
-  <a href="#installation-instructions"><strong>Installation</strong></a> ·
-  <a href="#available-commands"><strong>Available Commands</strong></a> ·
-  <a href="#contributing"><strong>Contributing</strong></a>
-</div>
+1.  [Introduction](#orgb229cbd)
+    -  [Packages](#orgb05d649)
+    -  [Helpful resources](#orgfaf0570)
+2.  [Installation](#orgb633c86)
+    -  [1. Requirements](#orgb7bc22f)
+    -  [2. Backup your previous configuration](#org6189661)
+    -  [3. Clone the repository to the configuration location](#org820a205)
+    -  [4. Start Emacs](#orgd77a070)
+3.  [Post Installation](#org60302a9)
+    -  [1. Install fonts](#org87d8fc9)
+    -  [2. Open the configuration file](#org94fe140)
+    -  [3. Fork the repository](#org23b14b0)
+4.  [Uninstallation](#org14852f4)
+5.  [Gallery](#orgc18728a)
 
----
+<a id="orgb229cbd"></a>
 
-# Emacs-Kick(starter) for Vim/Neovim Users
+# Introduction
+This repository gives you a starting point for Gnu Emacs with good defaults, optional vim keybindings and packages that most people may want to use.
 
-Welcome to `Emacs-Kick`, a feature-rich Emacs configuration designed
-for users familiar with `Vim`, `Neovim`, and `Vi`. With this
-setup, you don't need to leave behind your favorite terminal or tools
-like `yazi`, `starship`, `lazygit`, and `lazydocker` just to
-give Emacs a try.
+Kickstart.emacs is **not** a distribution. <br>
+It's a template for your own configuration.
 
-Use Emacs the same way you'd use `Neovim`, seamlessly integrating it
-into your workflow inside terminal multiplexers like `tmux` or
-`Zellij`, while also enjoying modern features such as `treesitter`
-and `LSP`, no hassle.
+This config is:
+-   A single file **org document** (with examples of moving to multi-file)
+-   Modular and easily configurable
+-   Documented describing its purpuse
 
-![Demo](doc/demo01.png)
+Inspired by [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
 
-**Emacs-Kick** isn’t a full-fledged distribution but rather a
-**starting point** for building your own Emacs configuration. It’s
-designed to be especially accessible for Vim/Neovim users, letting you
-explore the power of Emacs without committing to its entire ecosystem.
+Special thanks to:
+-   [DistroTube](https://www.youtube.com/watch?v=d1fgypEiQkE&list=PL5--8gKSku15e8lXf7aLICFmAHQVo0KXX)
+-   [System Crafters](https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ)
 
-You can take advantage of Emacs’ features without needing to master
-every Emacs-specific workflow right away. And if you find yourself
-enjoying it, you can:
+Their content helped me to create this configuration.
 
-- Run it in a GUI for a richer experience
-- Customize and expand your configuration as much as you want
-- Experiment with frameworks like Doom Emacs or Spacemacs
-- Tinker with vanilla Emacs to build a setup entirely your own
-  OR...
-- Just keep using it on TUI, it is all up to you!
+<a id="orgb05d649"></a>
 
-With `Emacs-Kick`, the goal is to empower you to explore Emacs at your
-own pace. The sky's the limit! 🌟
+## Packages
 
-## Minimum Requirements
+### Included Package list
 
-- Emacs version **>=30.1**
-- You can verify your installed Emacs version by running:
+-   Package Manager: Package.el with Use-package (built in)
+-   Optin [Evil mode](https://github.com/emacs-evil/evil): An extensible vi/vim layer
+-   [General](https://github.com/noctuid/general.el): Keybindings
+-   [Gruvbox-theme](https://github.com/greduan/emacs-theme-gruvbox): Color scheme
+-   [Doom-modeline](https://github.com/seagle0128/doom-modeline): Prettier, more useful modeline
+-   [Nerd Icons](https://github.com/rainstormstudio/nerd-icons.el): For icons and more helpful ui (Supports both GUI and TUI)
+-   [Projectile](https://github.com/bbatsov/projectile): Project interaction library
+-   [Eglot](https://www.gnu.org/software/emacs/manual/html_mono/eglot.html): Language Server Protocol Support
+-   [Sideline-Flymake](https://github.com/emacs-sideline/sideline-flymake): Show flymake errors with sideline 
+-   [Yasnippet](https://github.com/joaotavora/yasnippet): Template system and snippet collection package
+-   Optin [Tree-Sitter](https://tree-sitter.github.io/tree-sitter): A parser generator tool and an incremental parsing library.
+-   Some [Org mode](https://orgmode.org/) packages (toc-org, org-superstar)
+-   [Eat](https://codeberg.org/akib/emacs-eat): Fast terminal emulator within Emacs
+-   [Magit](https://github.com/magit/magit): Complete text-based user interface to Git
+-   [Diff-hl](https://github.com/dgutov/diff-hl): Highlights uncommitted changes
+-   [Corfu](https://github.com/minad/corfu): Enhances in-buffer completion
+-   [Cape](https://github.com/minad/cape): Provides Completion At Point Extensions
+-   [Orderless](https://github.com/oantolin/orderless): Completion style that matches candidates in any order
+-   [Vertico](https://github.com/minad/vertico): Provides a performant and minimalistic vertical completion UI.
+-   [Marginalia](https://github.com/minad/marginalia): Adds extra metadata for completions in the margins (like descriptions).
+-   [Consult](https://github.com/minad/consult): Provides search and navigation commands.
+-   [Helpful](https://github.com/Wilfred/helpful): A better Emacs *help* buffer 
+-   [Diminish](https://github.com/myrjola/diminish.el): Hiding or abbreviation of the modeline displays
+-   [Rainbow Delimiters](https://github.com/Fanael/rainbow-delimiters): Adds colors to brackets.
+-   [Which key](https://github.com/justbur/emacs-which-key): Helper utility for keychords
+-   [Ws-butler](https://github.com/lewang/ws-butler): Removes whitespace from the ends of lines.
 
-```bash
-emacs --version
+### Recommended Packages
+
+If you want to see how to configure these, look up their git repositories or check out my [config](https://github.com/MiniApollo/config/blob/main/emacs/config.org).
+
+-   **[DashBoard](https://github.com/emacs-dashboard/emacs-dashboard):** Extensible startup screen.
+-   **[Drag Stuff](https://github.com/rejeep/drag-stuff.el):** Makes it possible to move selected text, regions and lines.
+-   **[Rainbow Mode](https://github.com/emacsmirror/rainbow-mode):** Displays the actual color as a background for any hex color value (ex. #ffffff).
+-   **[UndoTree](https://www.emacswiki.org/emacs/UndoTree):** Visualizes the undo history (alternative: [Vundo](https://github.com/casouri/vundo) with [undo-fu-session](https://github.com/emacsmirror/undo-fu-session)).
+-   **[Vterm](https://github.com/akermu/emacs-libvterm):** Fast, Fully-fledged terminal emulator inside GNU Emacs.
+-   **[Multi-vterm](https://github.com/suonlight/multi-vterm):** Managing multiple vterm buffers in Emacs 
+-   **[Sudo-edit](https://github.com/nflath/sudo-edit):** Utilities for opening files with root privileges (also works with doas).
+
+<a id="orgfaf0570"></a>
+
+## Helpful resources
+
+Videos and configurations to get started.
+
+-   **[Emacs From Scratch by System Crafters](https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ):** Very detailed video series about building Gnu Emacs from the ground up.
+-   **[Configuring Emacs by DistroTube](https://www.youtube.com/watch?v=d1fgypEiQkE&list=PL5--8gKSku15e8lXf7aLICFmAHQVo0KXX):** Shorter but also very detailed video series about configuring Emacs from scratch.
+-   **[Mastering Emacs](https://www.masteringemacs.org/):** An awesome blog covering interesting topics and practical tips about Emacs.
+-   **[Purcell's emacs configuration](https://github.com/purcell/emacs.d):** Emacs configuration bundle with batteries included.
+-   **[Spacemacs](https://www.spacemacs.org/) and [Doom Emacs](https://github.com/doomemacs/doomemacs):** For an out of box experience and their wiki pages are really helpful.
+-   **[More starter kits](https://www.emacswiki.org/emacs/StarterKits ):** List of starter kits for Emacs.
+-   **[Emacs manual](https://www.gnu.org/software/emacs/manual/html_node/emacs/index.html):** For learning the fundamentals of Emacs.
+
+
+<a id="orgb633c86"></a>
+
+# Installation
+
+
+<a id="orgb7bc22f"></a>
+
+## 1. Requirements
+
+-   Gnu Emacs 30.1 or later (Latest stable release)
+-   Git (To clone/download this repository)
+
+
+### Optional:
+
+-   ripgrep
+-   fd (improves file indexing performance for some commands)
+-   Gnu Emacs with [native-compilation](https://www.emacswiki.org/emacs/GccEmacs) (provides noticeable performance improvements)
+
+
+<a id="org6189661"></a>
+
+## 2. Backup your previous configuration
+
+If any exists.
+
+<a id="org820a205"></a>
+
+## 3. Clone the repository to the configuration location
+
+### Linux and Mac
+```sh
+git clone https://github.com/MiniApollo/kickstart.emacs.git "${XDG_CONFIG_HOME:-$HOME/.config}"/emacs
 ```
 
-**Note**: floating windows on TUI are only supported from Emacs >=31 (current
-development version on Emacs master branch).
+### Windows
 
-
-### macOS Warning
-
-On macOS, `Emacs-Kick` may fail to function correctly due to missing or
-incompatible system utilities. To avoid common issues, make sure the
-following tools are installed via Homebrew:
-
-```bash
-brew install coreutils git
+-   **CMD:**
+```sh
+git clone https://github.com/MiniApollo/kickstart.emacs.git %userprofile%\AppData\Local\emacs\
+```
+-   **Powershell:**
+```sh
+git clone https://github.com/MiniApollo/kickstart.emacs.git $env:USERPROFILE\AppData\Local\emacs\
 ```
 
-This provides:
+<a id="orgd77a070"></a>
 
-- `gls`: The GNU version of `ls`, required by Dired to avoid errors
-  like:
+## 4. Start Emacs
 
-  ```
-  Listing directory failed but 'access-file' worked.
-  ```
+Emacs will install all the requested packages (it can take a minute).
 
-- `git`: macOS system usually has an older version of Git, this
-  typically refers to the version installed through Apple's Command
-  Line Tools (part of Xcode). Installing from Homebrew ensures a
-  modern version of git is installed and will avoid problems with
-  `magit`.
+> **Note:**
+> If you see errors, warnings when package installation is finished just restart Emacs.
 
+<a id="org60302a9"></a>
 
-## Installation Instructions
+# Post Installation
 
-1. **Clone the repository**:
+<a id="org87d8fc9"></a>
 
-**Note**: If you already have an existing Emacs configuration in
-`~/.emacs.d`, please back it up before proceeding. You can do this
-by renaming the directory:
+## 1. Install fonts
 
-```bash
-mv ~/.emacs.d ~/.emacs.d.backup
+Run the following command with M-x (alt-x) C-y to paste
+
+```sh
+nerd-icons-install-fonts
 ```
 
-If you have any additional configurations from other Emacs
-installations, please clean them up. This includes directories and
-files such as `~/.emacs.d`, `~/.emacs`, `~/.emacs~`,
-`~/.config/emacs`, `~/.config/doom`, `~/.config/cache/emacs` and
-any other related files.
+Change or install JetBrains Mono font
 
-After deleting/backing up, clone the repository:
+<a id="org94fe140"></a>
 
-```bash
-git clone https://github.com/LionyxML/emacs-kick.git ~/.emacs.d
-```
+## 2. Open the configuration file
 
-2. **Run the setup**:
+1.  Hit Ctrl-Space-s-c to open the config file at $HOME/.config/emacs
 
-After cloning, install the configuration by running:
+> **Note**
+> If you use Windows you need to change the path (hit C-x C-f, find the config file and in general region replace the path)
 
-```bash
-emacs -nw --eval="(ek/first-install)"
-```
+2.  Now you can Edit and add more configuration.
 
-Alternatively, you can run the provided script `ek-reinstall.sh`
-from inside `~/.emacs.d/`, which will achieve the same result:
+<a id="org23b14b0"></a>
 
-```bash
-cd ~/.emacs.d/ && ./ek-reinstall.sh
-```
+## 3. Fork the repository
 
-Both methods will install all necessary packages and apply the
-configuration.
+Recommended so that you have your own copy to modify.
 
-**NOTE**: During the initial setup, you'll be prompted to install Tree-sitter
-grammars and download some fonts. This configuration uses **Nerd Fonts** by
-default, so installing them now is highly recommended for the best experience.
+<a id="org14852f4"></a>
 
-**VERY IMPORTANT**: On first launch, Emacs will also **native compile some
-external packages**, which may take a little time. Additionally, the first time
-you perform certain actions, like opening the tree explorer, Emacs may compile
-related components in the background. This is completely normal and only
-happens once per feature. You might notice a brief moment of sluggish
-performance during this initial compilation.
+# Uninstallation
 
-3. **Set terminal mode by default**:
+To uninstall kickstart.emacs, you need to remove the following directory:
 
-**Note on Emacs TUI/GUI**: Emacs automatically adapts to either
-graphical or terminal mode depending on the environment. But if
-you're in a graphical session and prefer terminal mode, just use:
+-   Delete the emacs folder/directory for your OS (E.g. $HOME/.config/emacs/).
 
-```bash
-emacs -nw
-```
+<a id="orgc18728a"></a>
 
-To ensure Emacs always opens in terminal mode, add the following to
-your `.bashrc` or `.zshrc`:
+# Gallery
 
-```bash
-alias emacs='emacs -nw'
-```
-
-Then, reload your shell configuration with:
-
-```bash
-source ~/.bashrc  # for bash
-source ~/.zshrc   # for zsh
-```
-
-4. **Start Emacs**:
-
-Once set up, start Emacs with:
-
-```bash
-emacs
-```
-
-**Usage Tips**:
-
-- **Leader Key**: The leader key is set to `SPC` (spacebar),
-  `which-key` is there to help you discover keybindings.
-- **Help Commands**:
-- `SPC h i` opens the Emacs info documentation (`M-x info`).
-- `SPC h v` allows you to explore available variables.
-- `SPC h f` lets you explore functions.
-- `SPC h k` displays keybindings.
-
-**Troubleshooting**:
-
-- If you encounter any issues during installation, check the
-  `*Messages*` buffer for more information. You can switch between
-  buffers with `SPC SPC`, and navigate options using `C-p` and `C-n`.
-
-## Available Commands
-
-| Keybinding     | Action                                    |
-| -------------- | ----------------------------------------- |
-| `SPC`          | Leader key                                |
-| `TAB`          | Call completion                           |
-| `C-d`          | Scroll down                               |
-| `C-u`          | Scroll up                                 |
-| `<leader> s f` | Find file                                 |
-| `<leader> s g` | Grep                                      |
-| `<leader> s G` | Git grep                                  |
-| `<leader> s r` | Ripgrep                                   |
-| `<leader> s h` | Consult info                              |
-| `<leader> /`   | Consult line                              |
-| `<leader> x x` | Consult Flymake                           |
-| `] d`          | Next Flymake error                        |
-| `[ d`          | Previous Flymake error                    |
-| `<leader> x d` | Dired                                     |
-| `<leader> x j` | Dired jump                                |
-| `<leader> x f` | Find file                                 |
-| `] c`          | Next diff hunk                            |
-| `[ c`          | Previous diff hunk                        |
-| `<leader> e e` | Toggle NeoTree                            |
-| `<leader> g g` | Open Magit status                         |
-| `<leader> g l` | Show current log                          |
-| `<leader> g d` | Show diff for current file                |
-| `<leader> g D` | Show diff for hunk                        |
-| `<leader> g b` | Annotate buffer with version control info |
-| `] b`          | Switch to next buffer                     |
-| `[ b`          | Switch to previous buffer                 |
-| `<leader> b i` | Consult buffer list                       |
-| `<leader> b b` | Open Ibuffer                              |
-| `<leader> b d` | Kill current buffer                       |
-| `<leader> b k` | Kill current buffer                       |
-| `<leader> b x` | Kill current buffer                       |
-| `<leader> b s` | Save buffer                               |
-| `<leader> b l` | Consult buffer                            |
-| `<leader>SPC`  | Consult buffer                            |
-| `<leader> p b` | Consult project buffer                    |
-| `<leader> p p` | Switch project                            |
-| `<leader> p f` | Find file in project                      |
-| `<leader> p g` | Find regexp in project                    |
-| `<leader> p k` | Kill project buffers                      |
-| `<leader> p D` | Dired for project                         |
-| `P`            | Yank from kill ring                       |
-| `<leader> P`   | Yank from kill ring                       |
-| `<leader> .`   | Embark act                                |
-| `<leader> u`   | Undo tree visualize                       |
-| `<leader> h m` | Describe current mode                     |
-| `<leader> h f` | Describe function                         |
-| `<leader> h v` | Describe variable                         |
-| `<leader> h k` | Describe key                              |
-| `] t`          | Go to next tab                            |
-| `[ t`          | Go to previous tab                        |
-| `<leader> m p` | Format with Prettier                      |
-| `<leader> c a` | Execute code action                       |
-| `<leader> r n` | Rename symbol                             |
-| `gI`           | Find implementation                       |
-| `<leader> l f` | Format buffer via LSP                     |
-| `K`            | Show hover documentation                  |
-| `gcc`          | Comment/uncomment current line            |
-| `gc`           | Comment/uncomment selected region         |
-| `gd`           | Goto definitions                          |
-| `gr`           | Goto references                           |
-
-...and a lot more, discoverable with which-key :)
-
-## Contributing
-
-This package is intentionally designed with a specific vision in mind,
-reflecting my own opinions and preferences. While contributions are
-welcome, please understand that this configuration is quite
-opinionated.
-
-If you have suggestions or requests, they will be considered
-carefully, but I cannot make any promises regarding implementation or
-acceptance. Your input is valuable, and I appreciate any help or
-feedback to improve the project.
-
-To contribute, feel free to open an issue or submit a pull
-request. Let's make this configuration even better together!
-
-## About PRs
-
-Always welcome, not a promise to accept though (see above). Please
-direct your PRs to the `development` branch of this repository.
+![Emacs_KickStarter](https://github.com/MiniApollo/kickstart.emacs/assets/72389030/b82bb86b-ce49-4b0a-8fe7-2ca8b8c422fb)
+![Kickstart_coding](https://github.com/MiniApollo/kickstart.emacs/assets/72389030/8e560d2b-78f5-4306-8f6a-c70ad189f181)
