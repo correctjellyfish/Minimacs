@@ -39,7 +39,7 @@
   (menu-bar-mode nil)         ;; Disable the menu bar
   (scroll-bar-mode nil)       ;; Disable the scroll bar
   (tool-bar-mode nil)         ;; Disable the tool bar
-  ;;(inhibit-startup-screen t)  ;; Disable welcome screen
+  (inhibit-startup-screen t)  ;; Disable welcome screen
 
   (delete-selection-mode t)   ;; Select text and delete it by typing.
   (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
@@ -48,16 +48,16 @@
   (blink-cursor-mode nil)     ;; Don't blink cursor
   (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
 
-  ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
-  ;;(recentf-mode t) ;; Enable recent file mode
+  (dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
+  (recentf-mode t) ;; Enable recent file mode
 
-  ;;(global-visual-line-mode t)           ;; Enable truncated lines
-  ;;(display-line-numbers-type 'relative) ;; Relative line numbers
+  (global-visual-line-mode t)           ;; Enable truncated lines
+  (display-line-numbers-type 'relative) ;; Relative line numbers
   (global-display-line-numbers-mode t)  ;; Display line numbers
 
   (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
   (scroll-conservatively 10) ;; Smooth scrolling
-  ;;(scroll-margin 8)
+  (scroll-margin 8)
 
   (tab-width 4)
 
@@ -156,10 +156,12 @@
 ;;           nil nil t)
 ;;   )
 
-(use-package gruvbox-theme
-  :config
-  (setq gruvbox-bold-constructs t)
-  (load-theme 'gruvbox-dark-medium t)) ;; We need to add t to trust this package
+; (use-package gruvbox-theme
+;   :config
+;   (setq gruvbox-bold-constructs t)
+;   (load-theme 'gruvbox-dark-medium t)) ;; We need to add t to trust this package
+(use-package catppuccin-theme)
+(load-theme 'catppuccin :no-confirm)
 
 (add-to-list 'default-frame-alist '(alpha-background . 90)) ;; For all new frames henceforth
 
