@@ -26,6 +26,7 @@
 (when (< emacs-major-version 29)
   (error "Emacs Bedrock only works with Emacs 29 and newer; you have version %s" emacs-major-version))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Basic settings
@@ -66,6 +67,10 @@
 
 ;; Move through windows with Ctrl-<arrow keys>
 (windmove-default-keybindings 'control) ; You can use other modifiers here
+(global-set-key (kbd "C-c h") 'windmove-left)
+(global-set-key (kbd "C-c j") 'windmove-down)
+(global-set-key (kbd "C-c k") 'windmove-up)
+(global-set-key (kbd "C-c l") 'windmove-right)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -171,7 +176,7 @@ If the new path's directories does not exist, create them."
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 
 ;; Use common keystrokes by default
-(cua-mode)
+;; (cua-mode)
 
 ;; For terminal users, make the mouse more useful
 
@@ -225,7 +230,8 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(corfu consult avy cape corfu-terminal eat eglot embark-consult json-mode kind-icon magit marginalia markdown-mode multiple-cursors orderless tempel vertico wgrep yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -239,12 +245,25 @@ If the new path's directories does not exist, create them."
 ;;;   Motion aids
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-unset-key (kbd "C-z"))
 
 (use-package avy
   :ensure t
   :demand t
-  :bind (("C-c j" . avy-goto-line)
-         ("s-j"   . avy-goto-char-timer)))
+  :bind (("C-c C-l" . avy-goto-line)))
+(global-set-key (kbd "C-c C-c") 'avy-goto-char)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Multiple Cursors
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package multiple-cursors
+             :ensure t)
+(require 'multiple-cursors)
+(global-set-key (kbd "C-c C-j") 'mc/mark-next-word-like-this)
+(global-set-key (kbd "C-c C-k") 'mc/mark-previous-word-like-this)
+(global-set-key (kbd "C-c C-x") 'mc/mark-all-in-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -447,6 +466,8 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+(global-set-key (kbd "C-c C-g") 'magit)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Common file types
@@ -481,8 +502,8 @@ If the new path's directories does not exist, create them."
   ;; no :ensure t here because it's built-in
 
   ;; Configure hooks to automatically turn-on eglot for selected modes
-  ; :hook
-  ; (((python-mode ruby-mode elixir-mode) . eglot-ensure))
+  :hook
+  (((python-mode ruby-mode elixir-mode) . eglot-ensure))
 
   :custom
   (eglot-send-changes-idle-time 0.1)
