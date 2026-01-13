@@ -65,12 +65,6 @@
 ;; Save history of minibuffer
 (savehist-mode)
 
-;; Move through windows with Ctrl-<arrow keys>
-(windmove-default-keybindings 'control) ; You can use other modifiers here
-(global-set-key (kbd "C-c h") 'windmove-left)
-(global-set-key (kbd "C-c j") 'windmove-down)
-(global-set-key (kbd "C-c k") 'windmove-up)
-(global-set-key (kbd "C-c l") 'windmove-right)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -248,9 +242,7 @@ If the new path's directories does not exist, create them."
 
 (use-package avy
   :ensure t
-  :demand t
-  :bind (("C-c C-l" . avy-goto-line)))
-(global-set-key (kbd "C-c C-c") 'avy-goto-char)
+  :demand t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -260,9 +252,6 @@ If the new path's directories does not exist, create them."
 (use-package multiple-cursors
              :ensure t)
 (require 'multiple-cursors)
-(global-set-key (kbd "C-c C-j") 'mc/mark-next-word-like-this)
-(global-set-key (kbd "C-c C-k") 'mc/mark-previous-word-like-this)
-(global-set-key (kbd "C-c C-x") 'mc/mark-all-in-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -427,13 +416,11 @@ If the new path's directories does not exist, create them."
 ;; Expand selected region
 (use-package expand-region
   :ensure t
-  :bind ("C-c =" . er/expand-region))
+)
 
 ;; Change inside/outside current region
 (use-package change-inner
   :ensure t)
-(global-set-key (kbd "M-i") 'change-inner)
-(global-set-key (kbd "M-o") 'change-outer)
 
 
 
@@ -477,9 +464,8 @@ If the new path's directories does not exist, create them."
 ;; Magit: best Git client to ever exist
 (use-package magit
   :ensure t
-  :bind (("C-x g" . magit-status)))
+)
 
-(global-set-key (kbd "C-c C-g") 'magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -531,14 +517,6 @@ If the new path's directories does not exist, create them."
   ; (add-to-list 'eglot-server-programs
   ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   )
-(global-set-key (kbd "C-c e e") 'eglot)
-(global-set-key (kbd "C-c e a") 'eglot-code-actions)
-(global-set-key (kbd "C-c e r") 'eglot-rename)
-(global-set-key (kbd "C-c e h") 'eldoc)
-(global-set-key (kbd "C-c e f") 'eglot-format)
-(global-set-key (kbd "C-c e F") 'eglot-format-buffer)
-(global-set-key (kbd "C-c e d") 'xref-find-definitions-at-mouse)
-(global-set-key (kbd "C-c e R") 'eglot-reconnect)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Templating
@@ -569,3 +547,123 @@ If the new path's directories does not exist, create them."
   ;; writing prose.
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   General Keybinds
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Move through windows with Ctrl-<arrow keys>
+(windmove-default-keybindings 'control) 
+
+;; Avy default bindings
+(avy-setup-default)
+
+(use-package general
+             :config
+             (general-create-definer start/leader-keys
+                                     :keymaps 'override
+                                     :prefix "C-c"
+                                     :global-prefix "C-c")
+             ;; Directly accesible keys, all prefixed with CTRL
+              (start/leader-keys
+                "C-c" '(avy-goto-word-1 :wk "Goto word")
+                "C-j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
+                "C-k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
+                "C-\\" '(eat :wk "Terminal")
+                "C-=" '(er/expand-region :wk "Expand Region")
+                "C-i" '(change-inner :wk "Change Inner")
+                "C-o" '(change-outer :wk "Change Outer")
+                "C-b" '(consult-buffer :wk "Switch Buffer")
+                )
+
+              ;; Buffer keymaps
+              (start/leader-keys
+                "b" '(:ignore t :wk "+buffer")
+                "b s" '(consult-buffer :wk "Switch buffer")
+                "b k" '(kill-current-buffer :wk "Kill current buffer")
+                "b i" '(ibuffer :wk "Ibuffer")
+                "b n" '(next-buffer :wk "Next buffer")
+                "b p" '(previous-buffer :wk "Previous buffer")
+                "b r" '(revert-buffer :wk "Reload buffer")
+                )
+
+              ;; File Keymaps
+              (start/leader-keys
+                "f" '(:ignore t :wk "+file")
+                "f v" '(dired :wk "Open dired")
+                "f j" '(dired-jump :wk "Dired jump to current")
+                "f w" '(write-file :wk "Write File (with name)")
+                "f s" '(save-buffer :wk "Save Buffer")
+                "f S" '(save-some-buffer :wk "Save Buffer")
+                )
+
+              ;; Git
+              (start/leader-keys
+                "g" '(:ignore t :wk "+git")
+                "g g" '(magit :wk "Open Magit")
+                "g s" '(magit-status :wk "Open Magit")
+                )
+
+              ;; Jump
+              (start/leader-keys
+                "j" '(:ignore t :wk "+jump")
+                "j l" '(avy-goto-line :wk "Jump to line")
+                "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
+                "j w" '(avy-goto-word-0 :wk "Jump word")
+                "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
+                )
+
+              ;; Language keymaps (eglot, etc.)
+              (start/leader-keys
+                "l" '(:ignore t :wk "+language")
+                "l e" '(eglot-reconnect :wk "Eglot Reconnect")
+                "l d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
+                "l f" '(eglot-format :wk "Eglot Format")
+                "l l" '(consult-flymake :wk "Consult Flymake")
+                "l r" '(eglot-rename :wk "Eglot Rename")
+                "l R" '(xref-find-references :wk "Find references")
+                "l i" '(xref-find-definitions :wk "Find definition")
+                "l v" '(:ignore t :wk "Elisp")
+                "l v b" '(eval-buffer :wk "Evaluate elisp in buffer")
+                "l v r" '(eval-region :wk "Evaluate elisp in region")
+                )
+
+              ;; Multicursor
+              (start/leader-keys
+                "m" '(:ignore t :wk "+multicursor")
+                "m r" '(:ignore t :wk "+match in region")
+                )
+
+              ;; Search functionality
+              (start/leader-keys
+                "s" '(:ignore t :wk "+search")
+                "s r" '(consult-recent-file :wk "Search recent files")
+                "s f" '(consult-fd :wk "Search files with fd")
+                "s g" '(consult-ripgrep :wk "Search with ripgrep")
+                "s l" '(consult-line :wk "Search line")
+                "s i" '(consult-imenu :wk "Search Imenu buffer locations")
+                )
+
+              ;; Toggle/Terminal
+              (start/leader-keys
+                "t" '(:ignore t :wk "+terminal/toggle")
+                "t t" '(eat :wk "Terminal")
+                "t w" '(visual-line-mode :wk "Toggle line wrap")
+                "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+                )
+              ;; Window keymaps
+              (start/leader-keys
+                "w" '(:ignore t :wk "+window")
+                "w h" '(windmove-left :wk "Left Window")
+                "w j" '(windmove-down :wk "Down Window")
+                "w k" '(windmove-up :wk "Up Window")
+                "w l" '(windmove-right :wk "Right Window")
+                "w q" '(delete-window :wk "Close Window")
+                "w v" '(split-window-right :wk "Split Vertical")
+                "w h" '(split-window-below :wk "Split Horizontal")
+                )
+
+             )
+
