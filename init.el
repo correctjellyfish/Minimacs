@@ -516,7 +516,9 @@ If the new path's directories does not exist, create them."
   :ensure t
   :init (setq lsp-keymap-prefix "C-c l")
   :hook (;; Start LSP when in a "programming" file
-         (prog-mode . lsp)
+         (python-ts-mode . lsp)
+         (python-mode . lsp)
+         (cc-mode . lsp)
          ;; which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
