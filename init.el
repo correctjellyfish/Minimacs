@@ -518,10 +518,10 @@ If the new path's directories does not exist, create them."
 
 (use-package lsp-mode
   :ensure t
-  :init
-  (setq lsp-keymap-prefix "C-c l")
+  :config
+         (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (python-mode . lsp)
+         (prog-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
@@ -763,6 +763,7 @@ If the new path's directories does not exist, create them."
               ;; Language keymaps (eglot, etc.)
               (start/leader-keys
                 "l" '(:ignore t :wk "language")
+                "l l" '(lsp :wk "start lsp")
                 )
               ;; Moving to lsp-mode keymaps
               ; (start/leader-keys
