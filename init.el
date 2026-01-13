@@ -493,6 +493,45 @@ If the new path's directories does not exist, create them."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;;   Flycheck
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Completion
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package company
+             :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   LSP Mode
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package lsp-ui
+             :ensure t)
+
+
+(use-package lsp-mode
+  :ensure t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;;   Eglot, the built-in LSP client for Emacs
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -501,24 +540,60 @@ If the new path's directories does not exist, create them."
 ;;
 ;;  - https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
 
-(use-package eglot
-  ;; no :ensure t here because it's built-in
+; (use-package eglot
+;   ;; no :ensure t here because it's built-in
+;
+;   ;; Configure hooks to automatically turn-on eglot for selected modes
+;   :hook
+;   (((python-mode ruby-mode elixir-mode) . eglot-ensure))
+;
+;
+;   :custom
+;   (eglot-send-changes-idle-time 0.1)
+;   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+;
+;   :config
+;   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+;   ;; Sometimes you need to tell Eglot where to find the language server
+;   ; (add-to-list 'eglot-server-programs
+;   ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+;   )
 
-  ;; Configure hooks to automatically turn-on eglot for selected modes
-  :hook
-  (((python-mode ruby-mode elixir-mode) . eglot-ensure))
-
-
-  :custom
-  (eglot-send-changes-idle-time 0.1)
-  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
-
-  :config
-  (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
-  ;; Sometimes you need to tell Eglot where to find the language server
-  ; (add-to-list 'eglot-server-programs
-  ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Language Modes
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package rust-mode
+             :ensure t)
+(add-hook 'rust-mode-hook #'lsp)
+;; Stop rust-mode clobbering my keymap
+(eval-after-load "rust-mode"
+  '(progn
+     (define-key rust-mode-map (kbd "C-c C-c C-u") nil) ;; Default Compile
+     (define-key rust-mode-map (kbd "C-c C-c C-k") nil) ;; Default Check
+     (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
+     (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
+     (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
+     (define-key rust-mode-map (kbd "C-c L c") rust-compile) ;; New compile
+     (define-key rust-mode-map (kbd "C-c L k") rust-check) ;; New check
+     (define-key rust-mode-map (kbd "C-c L t") rust-test) ;; New test
+     (define-key rust-mode-map (kbd "C-c L r") rust-test) ;; New run
+   )
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Treemacs
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package treemacs
+             :ensure t)
+
+(use-package lsp-treemacs
+             :ensure t)
+(lsp-treemacs-sync-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Templating
@@ -599,6 +674,7 @@ If the new path's directories does not exist, create them."
                 "f w" '(write-file :wk "Write File (with name)")
                 "f s" '(save-buffer :wk "Save Buffer")
                 "f S" '(save-some-buffer :wk "Save Buffer")
+                "f t" '(treemacs :wk "File Tree")
                 )
 
               ;; Git
@@ -620,16 +696,25 @@ If the new path's directories does not exist, create them."
               ;; Language keymaps (eglot, etc.)
               (start/leader-keys
                 "l" '(:ignore t :wk "language")
-                "l e" '(eglot-reconnect :wk "Eglot Reconnect")
-                "l d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
-                "l f" '(eglot-format :wk "Eglot Format")
-                "l l" '(consult-flymake :wk "Consult Flymake")
-                "l r" '(eglot-rename :wk "Eglot Rename")
-                "l R" '(xref-find-references :wk "Find references")
-                "l i" '(xref-find-definitions :wk "Find definition")
-                "l v" '(:ignore t :wk "Elisp")
-                "l v b" '(eval-buffer :wk "Evaluate elisp in buffer")
-                "l v r" '(eval-region :wk "Evaluate elisp in region")
+                )
+              ;; Moving to lsp-mode keymaps
+              ; (start/leader-keys
+              ;   "l" '(:ignore t :wk "language")
+              ;   "l e" '(eglot-reconnect :wk "Eglot Reconnect")
+              ;   "l d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
+              ;   "l f" '(eglot-format :wk "Eglot Format")
+              ;   "l l" '(consult-flymake :wk "Consult Flymake")
+              ;   "l r" '(eglot-rename :wk "Eglot Rename")
+              ;   "l R" '(xref-find-references :wk "Find references")
+              ;   "l i" '(xref-find-definitions :wk "Find definition")
+              ;   "l v" '(:ignore t :wk "Elisp")
+              ;   "l v b" '(eval-buffer :wk "Evaluate elisp in buffer")
+              ;   "l v r" '(eval-region :wk "Evaluate elisp in region")
+              ;   )
+
+              ;; Language specific maps (added by e.g. rust-mode)
+              (start/leader-keys
+                "L" '(:ignore t :wk "language mode")
                 )
 
               ;; Multicursor
