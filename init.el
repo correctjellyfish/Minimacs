@@ -519,7 +519,7 @@ If the new path's directories does not exist, create them."
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
   (((python-mode ruby-mode elixir-mode) . eglot-ensure))
-  
+
 
   :custom
   (eglot-send-changes-idle-time 0.1)
@@ -538,7 +538,7 @@ If the new path's directories does not exist, create them."
 (global-set-key (kbd "C-c e f") 'eglot-format)
 (global-set-key (kbd "C-c e F") 'eglot-format-buffer)
 (global-set-key (kbd "C-c e d") 'xref-find-definitions-at-mouse)
-(global-set-key (kbd "C-c e R") 'eglot-reconnect))
+(global-set-key (kbd "C-c e R") 'eglot-reconnect)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Templating
