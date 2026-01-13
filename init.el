@@ -227,7 +227,15 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(cape change-inner company corfu-terminal dap-mode dashboard eat
+	  eglot elsa embark-consult flycheck format-all general
+	  json-mode kind-icon lsp-ui magit marginalia multiple-cursors
+	  orderless rust-mode tempel typst-ts-mode vertico wgrep
+	  yaml-mode))
+ '(package-vc-selected-packages
+   '((typst-ts-mode :url
+		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -495,9 +503,27 @@ If the new path's directories does not exist, create them."
 ;;;   Flycheck
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package flycheck-pos-tip
+             :ensure t)
+
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Flyspell
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Enable flyspell prog mode when activating prog-mode
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+;; Enable flyspell mode for text mode
+(add-hook 'text-mode-hook #'flyspell-mode)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -617,6 +643,11 @@ If the new path's directories does not exist, create them."
      ; (define-key rust-mode-map (kbd "C-c L r") rust-test) ;; New run
    )
   )
+
+(use-package typst-ts-mode
+  :ensure t
+  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -823,6 +854,11 @@ If the new path's directories does not exist, create them."
                 "w q" '(delete-window :wk "Close Window")
                 "w |" '(split-window-right :wk "Split Vertical")
                 "w -" '(split-window-below :wk "Split Horizontal")
+                )
+
+              ;; Flycheck
+              (start/leader-keys
+                "!" '(:ignore t :wk "flycheck")
                 )
 
              )
