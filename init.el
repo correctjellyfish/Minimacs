@@ -230,8 +230,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(corfu consult avy cape corfu-terminal eat eglot embark-consult json-mode kind-icon magit marginalia markdown-mode multiple-cursors orderless tempel vertico wgrep yaml-mode)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -425,6 +424,20 @@ If the new path's directories does not exist, create them."
   :config
   (setq wgrep-auto-save-buffer t))
 
+;; Expand selected region
+(use-package expand-region
+  :ensure t
+  :bind ("C-c =" . er/expand-region))
+
+;; Change inside/outside current region
+(use-package change-inner
+  :ensure t)
+(global-set-key (kbd "M-i") 'change-inner)
+(global-set-key (kbd "M-o") 'change-outer)
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -484,6 +497,8 @@ If the new path's directories does not exist, create them."
 (use-package json-mode
   :ensure t)
 
+
+
 ;; Emacs ships with a lot of popular programming language modes. If it's not
 ;; built in, you're almost certain to find a mode for the language you're
 ;; looking for with a quick Internet search.
@@ -504,6 +519,7 @@ If the new path's directories does not exist, create them."
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
   (((python-mode ruby-mode elixir-mode) . eglot-ensure))
+  
 
   :custom
   (eglot-send-changes-idle-time 0.1)
@@ -515,7 +531,14 @@ If the new path's directories does not exist, create them."
   ; (add-to-list 'eglot-server-programs
   ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   )
-
+(global-set-key (kbd "C-c e e") 'eglot)
+(global-set-key (kbd "C-c e a") 'eglot-code-actions)
+(global-set-key (kbd "C-c e r") 'eglot-rename)
+(global-set-key (kbd "C-c e h") 'eldoc)
+(global-set-key (kbd "C-c e f") 'eglot-format)
+(global-set-key (kbd "C-c e F") 'eglot-format-buffer)
+(global-set-key (kbd "C-c e d") 'xref-find-definitions-at-mouse)
+(global-set-key (kbd "C-c e R") 'eglot-reconnect))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Templating
