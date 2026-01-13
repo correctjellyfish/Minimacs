@@ -94,6 +94,7 @@ If the new path's directories does not exist, create them."
 ;; (let ((backup-dir (expand-file-name "emacs-backup/" user-emacs-directory)))
 ;;   (setopt backup-directory-alist `(("." . ,backup-dir))))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Discovery aids
@@ -224,7 +225,10 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(avy cape change-inner corfu-terminal eat embark-consult general
+	 json-mode kind-icon magit marginalia markdown-mode
+	 multiple-cursors orderless tempel vertico wgrep yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -238,8 +242,6 @@ If the new path's directories does not exist, create them."
 ;;;   Motion aids
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-unset-key (kbd "C-z"))
-
 (use-package avy
   :ensure t
   :demand t)
@@ -251,7 +253,7 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package multiple-cursors
              :ensure t)
-(require 'multiple-cursors)
+(define-key mc/keymap (kbd "<return>") nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -555,7 +557,7 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Move through windows with Ctrl-<arrow keys>
-(windmove-default-keybindings 'control) 
+(windmove-default-keybindings 'control)
 
 ;; Avy default bindings
 (avy-setup-default)
@@ -580,7 +582,7 @@ If the new path's directories does not exist, create them."
 
               ;; Buffer keymaps
               (start/leader-keys
-                "b" '(:ignore t :wk "+buffer")
+                "b" '(:ignore t :wk "buffer")
                 "b s" '(consult-buffer :wk "Switch buffer")
                 "b k" '(kill-current-buffer :wk "Kill current buffer")
                 "b i" '(ibuffer :wk "Ibuffer")
@@ -591,8 +593,8 @@ If the new path's directories does not exist, create them."
 
               ;; File Keymaps
               (start/leader-keys
-                "f" '(:ignore t :wk "+file")
-                "f v" '(dired :wk "Open dired")
+                "f" '(:ignore t :wk "file")
+                "f d" '(dired :wk "Open dired")
                 "f j" '(dired-jump :wk "Dired jump to current")
                 "f w" '(write-file :wk "Write File (with name)")
                 "f s" '(save-buffer :wk "Save Buffer")
@@ -601,14 +603,14 @@ If the new path's directories does not exist, create them."
 
               ;; Git
               (start/leader-keys
-                "g" '(:ignore t :wk "+git")
+                "g" '(:ignore t :wk "git")
                 "g g" '(magit :wk "Open Magit")
-                "g s" '(magit-status :wk "Open Magit")
+                "g s" '(magit-status :wk "Magit Status")
                 )
 
               ;; Jump
               (start/leader-keys
-                "j" '(:ignore t :wk "+jump")
+                "j" '(:ignore t :wk "jump")
                 "j l" '(avy-goto-line :wk "Jump to line")
                 "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
                 "j w" '(avy-goto-word-0 :wk "Jump word")
@@ -617,7 +619,7 @@ If the new path's directories does not exist, create them."
 
               ;; Language keymaps (eglot, etc.)
               (start/leader-keys
-                "l" '(:ignore t :wk "+language")
+                "l" '(:ignore t :wk "language")
                 "l e" '(eglot-reconnect :wk "Eglot Reconnect")
                 "l d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
                 "l f" '(eglot-format :wk "Eglot Format")
@@ -632,13 +634,17 @@ If the new path's directories does not exist, create them."
 
               ;; Multicursor
               (start/leader-keys
-                "m" '(:ignore t :wk "+multicursor")
-                "m r" '(:ignore t :wk "+match in region")
+                "m" '(:ignore t :wk "multicursor")
+                "m r" '(mc/mark-all-in-region :wk "At matches in region")
+                "m ^" '(mc/edit-beginnings-of-lines :wk "At line start")
+                "m $" '(mc/edit-ends-of-lines :wk "At line end")
+                "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
+                "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
                 )
 
               ;; Search functionality
               (start/leader-keys
-                "s" '(:ignore t :wk "+search")
+                "s" '(:ignore t :wk "search")
                 "s r" '(consult-recent-file :wk "Search recent files")
                 "s f" '(consult-fd :wk "Search files with fd")
                 "s g" '(consult-ripgrep :wk "Search with ripgrep")
@@ -648,14 +654,14 @@ If the new path's directories does not exist, create them."
 
               ;; Toggle/Terminal
               (start/leader-keys
-                "t" '(:ignore t :wk "+terminal/toggle")
+                "t" '(:ignore t :wk "terminal/toggle")
                 "t t" '(eat :wk "Terminal")
                 "t w" '(visual-line-mode :wk "Toggle line wrap")
                 "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
                 )
               ;; Window keymaps
               (start/leader-keys
-                "w" '(:ignore t :wk "+window")
+                "w" '(:ignore t :wk "window")
                 "w h" '(windmove-left :wk "Left Window")
                 "w j" '(windmove-down :wk "Down Window")
                 "w k" '(windmove-up :wk "Up Window")
@@ -666,4 +672,3 @@ If the new path's directories does not exist, create them."
                 )
 
              )
-
