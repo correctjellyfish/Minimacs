@@ -512,19 +512,17 @@ If the new path's directories does not exist, create them."
 ;;;   LSP Mode
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package lsp-ui
-             :ensure t)
-
-
 (use-package lsp-mode
   :ensure t
-  :config
-         (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  :init (setq lsp-keymap-prefix "C-c l")
+  :hook (;; Start LSP when in a "programming" file
          (prog-mode . lsp)
-         ;; if you want which-key integration
+         ;; which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
+
+(use-package lsp-ui
+             :ensure t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -545,6 +543,7 @@ If the new path's directories does not exist, create them."
 (use-package dap-gdb)
 
 ;; Python Debugging
+(setq dap-python-debugger 'debugpy)
 (use-package dap-python)
 
 
