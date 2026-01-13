@@ -229,10 +229,9 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(cape change-inner company corfu-terminal dap-mode dashboard eat
-	  eglot elsa embark-consult flycheck format-all general
-	  json-mode kind-icon lsp-ui magit marginalia multiple-cursors
-	  orderless rust-mode tempel typst-ts-mode vertico wgrep
-	  yaml-mode))
+	  embark-consult flycheck-pos-tip format-all general json-mode
+	  kind-icon lsp-ui magit marginalia multiple-cursors orderless
+	  rust-mode tempel typst-ts-mode vertico wgrep yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
