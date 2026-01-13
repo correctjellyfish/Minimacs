@@ -525,7 +525,25 @@ If the new path's directories does not exist, create them."
   :commands lsp)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   DAP Mode
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package hydra)
 
+
+(use-package dap-mode
+             :ensure t)
+
+(add-hook 'dap-stopped-hook
+          (lambda (arg) (call-interactively #'dap-hydra)))
+
+;; Native Debugging
+(use-package dap-gdb)
+
+;; Python Debugging
+(use-package dap-python)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -661,6 +679,21 @@ If the new path's directories does not exist, create them."
                 "b n" '(next-buffer :wk "Next buffer")
                 "b p" '(previous-buffer :wk "Previous buffer")
                 "b r" '(revert-buffer :wk "Reload buffer")
+                )
+
+              ;; Debugging
+              (start/leader-keys
+                "d" '(:ignore t :wk "debug")
+                "d b" '(dap-breakpoint-toggle :wk "toggle breakpoint")
+                "d s" '(dap-debug :wk "start debug")
+                "d o" '(dap-go-to-output-buffer :wk "goto output buffer")
+                "d c" '(dap-continue :wk "continue")
+                "d n" '(dap-next :wk "next")
+                "d i" '(dap-step-in :wk "step in")
+                "d u" '(dap-step-out :wk "step out")
+                "d e" '(dap-eval-thing-at-point :wk "eval at point")
+                "d g" '(dap-eval-region :wk "eval region")
+                "d r" '(dap-restart-frame :wk "restart frame")
                 )
 
               ;; File Keymaps
