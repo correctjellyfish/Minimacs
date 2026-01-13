@@ -49,7 +49,7 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
 ;; If you want to turn off the welcome screen, uncomment this
-;(setopt inhibit-splash-screen t)
+(setopt inhibit-splash-screen t)
 
 (setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
@@ -94,6 +94,9 @@ If the new path's directories does not exist, create them."
 ;; (let ((backup-dir (expand-file-name "emacs-backup/" user-emacs-directory)))
 ;;   (setopt backup-directory-alist `(("." . ,backup-dir))))
 
+;; Set scroll margin
+(setq scroll-margin 2)
+(setq scroll-conservatively 101)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -174,7 +177,6 @@ If the new path's directories does not exist, create them."
 ;; (cua-mode)
 
 ;; For terminal users, make the mouse more useful
-
 (xterm-mouse-mode 1)
 
 ;; Display line numbers in programming mode
@@ -545,6 +547,24 @@ If the new path's directories does not exist, create them."
 ;; Python Debugging
 (use-package dap-python)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Formatting
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package format-all
+  :ensure t
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode)
+  :config
+  ; (setq-default format-all-formatters
+  ;               '(("C"     (astyle "--mode=c"))
+  ;                 ("Shell" (shfmt "-i" "4" "-ci")))
+  ;               )
+  )
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Eglot, the built-in LSP client for Emacs
@@ -639,6 +659,16 @@ If the new path's directories does not exist, create them."
   ;; writing prose.
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Dashboard
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package dashboard
+             :ensure t
+             :config(dashboard-setup-startup-hook)
+             )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
