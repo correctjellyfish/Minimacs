@@ -225,10 +225,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(avy cape change-inner corfu-terminal eat embark-consult general
-	 json-mode kind-icon magit marginalia markdown-mode
-	 multiple-cursors orderless tempel vertico wgrep yaml-mode)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -575,10 +572,10 @@ If the new path's directories does not exist, create them."
      (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
      (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
      (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
-     (define-key rust-mode-map (kbd "C-c L c") rust-compile) ;; New compile
-     (define-key rust-mode-map (kbd "C-c L k") rust-check) ;; New check
-     (define-key rust-mode-map (kbd "C-c L t") rust-test) ;; New test
-     (define-key rust-mode-map (kbd "C-c L r") rust-test) ;; New run
+     ; (define-key rust-mode-map (kbd "C-c L c") rust-compile) ;; New compile
+     ; (define-key rust-mode-map (kbd "C-c L k") rust-check) ;; New check
+     ; (define-key rust-mode-map (kbd "C-c L t") rust-test) ;; New test
+     ; (define-key rust-mode-map (kbd "C-c L r") rust-test) ;; New run
    )
   )
 
@@ -752,8 +749,8 @@ If the new path's directories does not exist, create them."
                 "w k" '(windmove-up :wk "Up Window")
                 "w l" '(windmove-right :wk "Right Window")
                 "w q" '(delete-window :wk "Close Window")
-                "w v" '(split-window-right :wk "Split Vertical")
-                "w h" '(split-window-below :wk "Split Horizontal")
+                "w |" '(split-window-right :wk "Split Vertical")
+                "w -" '(split-window-below :wk "Split Horizontal")
                 )
 
              )

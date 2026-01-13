@@ -7,3 +7,5 @@
 /projects
 /transient/
 /tree-sitter/
+emacs-backup/
+.lsp-session-v1
