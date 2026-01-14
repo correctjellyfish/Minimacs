@@ -675,8 +675,25 @@ If the new path's directories does not exist, create them."
 
 
 (with-eval-after-load "ess-mode"
-    (bind-key "C-c l p p" #'my/insert-R-pipe ess-mode-map)
-    (bind-key "C-c l p a" #'my/insert-R-assignment ess-mode-map)
+    (bind-key "C-c >" #'my/insert-R-pipe ess-mode-map)
+    (bind-key "C-c -" #'my/insert-R-assignment ess-mode-map)
+)
+
+(setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
+
+;; use Air to format the content of the file
+(defun run-air-on-r-save ()
+  "Run Air after saving .R files and refresh buffer."
+  (when (and (stringp buffer-file-name)
+             (string-match "\\.R$" buffer-file-name))
+    (let ((current-buffer (current-buffer)))
+      (shell-command (concat "air format " buffer-file-name))
+      ;; Refresh buffer from disk
+      (with-current-buffer current-buffer
+        (revert-buffer nil t t)))))
+
+(with-eval-after-load "ess-mode"
+  (add-hook 'after-save-hook 'run-air-on-r-save)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -770,11 +787,11 @@ If the new path's directories does not exist, create them."
                                      :global-prefix "C-c")
              ;; Directly accesible keys, all prefixed with CTRL
               (start/leader-keys
-                "C-c" '(avy-goto-word-1 :wk "Goto word")
+                "C-c" '(avy-goto-word-0 :wk "Goto word")
                 "C-j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
                 "C-k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
                 "C-\\" '(eat :wk "Terminal")
-                "C-=" '(er/expand-region :wk "Expand Region")
+                "=" '(er/expand-region :wk "Expand Region")
                 "C-i" '(change-inner :wk "Change Inner")
                 "C-o" '(change-outer :wk "Change Outer")
                 "C-b" '(consult-buffer :wk "Switch Buffer")
@@ -837,7 +854,7 @@ If the new path's directories does not exist, create them."
                 "j" '(:ignore t :wk "jump")
                 "j l" '(avy-goto-line :wk "Jump to line")
                 "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
-                "j w" '(avy-goto-word-0 :wk "Jump word")
+                "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
                 "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
                 )
 
