@@ -662,9 +662,9 @@ If the new path's directories does not exist, create them."
              :ensure t
              )
 (defun my/insert-R-pipe ()
-  "Insert '%>%' at point, moving point forward."
+  "Insert '|>' at point, moving point forward."
   (interactive)
-  (insert "%>%"))
+  (insert "|>"))
 
 (defun my/insert-R-assignment ()
   "Insert '<-' at point, moving point forward."
@@ -675,8 +675,8 @@ If the new path's directories does not exist, create them."
 
 
 (with-eval-after-load "ess-mode"
-    (bind-key "C-S-m" #'my/insert-R-pipe ess-mode-map)
-    (bind-key "M-i" #'my/insert-R-assignment ess-mode-map)
+    (bind-key "C-c l p p" #'my/insert-R-pipe ess-mode-map)
+    (bind-key "C-c l p a" #'my/insert-R-assignment ess-mode-map)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
