@@ -234,9 +234,7 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((typst-ts-mode :url
-		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -647,16 +645,32 @@ If the new path's directories does not exist, create them."
      (define-key rust-mode-map (kbd "C-c p t") 'rust-test) ;; New test
      (define-key rust-mode-map (kbd "C-c p r") 'rust-run) ;; New run
   )
-;; (eval-after-load "rust-mode"
-;;   '(progn
-     
-;;    )
-;;   )
 
 (use-package typst-ts-mode
   :ensure t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
+;; R
+(use-package ess
+             :ensure t
+             )
+(defun my/insert-R-pipe ()
+  "Insert '%>%' at point, moving point forward."
+  (interactive)
+  (insert "%>%"))
+
+(defun my/insert-R-assignment ()
+  "Insert '<-' at point, moving point forward."
+  (interactive)
+  (insert "<-"))
+
+(load "ess-autoloads")
+
+
+(with-eval-after-load "ess-mode"
+    (bind-key "C-S-m" #'my/insert-R-pipe ess-mode-map)
+    (bind-key "M-i" #'my/insert-R-assignment ess-mode-map)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -669,6 +683,17 @@ If the new path's directories does not exist, create them."
 (use-package lsp-treemacs
              :ensure t)
 (lsp-treemacs-sync-mode 1)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Tabs
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package centaur-tabs
+             :ensure t
+             :config (centaur-tabs-mode t)
+             :bind
+              ("C-<prior>" . centaur-tabs-backward)
+              ("C-<next>" . centaur-tabs-forward))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
