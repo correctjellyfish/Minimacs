@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;  ________                                                _______                 __                            __
 ;;; /        |                                              /       \               /  |                          /  |
 ;;; $$$$$$$$/ _____  ____   ______   _______  _______       $$$$$$$  | ______   ____$$ | ______   ______   _______$$ |   __
@@ -212,9 +213,14 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package emacs
-  :config
-  (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+; (use-package emacs
+;   :config
+;   (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+
+(use-package catppuccin-theme
+  :ensure t)
+(load-theme 'catppuccin :no-confirm)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -227,11 +233,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(cape change-inner company corfu-terminal dap-mode dashboard eat
-	  embark-consult flycheck-pos-tip format-all general json-mode
-	  kind-icon lsp-ui magit marginalia multiple-cursors orderless
-	  rust-mode tempel typst-ts-mode vertico wgrep yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
@@ -251,6 +253,10 @@ If the new path's directories does not exist, create them."
 (use-package avy
   :ensure t
   :demand t)
+
+(use-package ace-window
+   :ensure t)
+(global-set-key (kbd "M-o") 'ace-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -362,6 +368,7 @@ If the new path's directories does not exist, create them."
   (corfu-popupinfo-hide nil)
   :config
   (corfu-popupinfo-mode))
+(setq corfu-auto t corfu-auto-delay 0.1 corfu-quit-no-match 'separator)
 
 ;; Make corfu popup come up in terminal overlay
 (use-package corfu-terminal
@@ -529,8 +536,8 @@ If the new path's directories does not exist, create them."
 ;;;   Completion
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package company
-             :ensure t)
+;; (use-package company
+             ;; :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -629,19 +636,22 @@ If the new path's directories does not exist, create them."
              :ensure t)
 (add-hook 'rust-mode-hook #'lsp)
 ;; Stop rust-mode clobbering my keymap
-(eval-after-load "rust-mode"
-  '(progn
-     (define-key rust-mode-map (kbd "C-c C-c C-u") nil) ;; Default Compile
+(with-eval-after-load 'rust-mode
+  (define-key rust-mode-map (kbd "C-c C-c C-u") nil) ;; Default Compile
      (define-key rust-mode-map (kbd "C-c C-c C-k") nil) ;; Default Check
      (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
      (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
      (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
-     ; (define-key rust-mode-map (kbd "C-c L c") rust-compile) ;; New compile
-     ; (define-key rust-mode-map (kbd "C-c L k") rust-check) ;; New check
-     ; (define-key rust-mode-map (kbd "C-c L t") rust-test) ;; New test
-     ; (define-key rust-mode-map (kbd "C-c L r") rust-test) ;; New run
-   )
+     (define-key rust-mode-map (kbd "C-c p c") 'rust-compile) ;; New compile
+     (define-key rust-mode-map (kbd "C-c p k") 'rust-check) ;; New check
+     (define-key rust-mode-map (kbd "C-c p t") 'rust-test) ;; New test
+     (define-key rust-mode-map (kbd "C-c p r") 'rust-run) ;; New run
   )
+;; (eval-after-load "rust-mode"
+;;   '(progn
+     
+;;    )
+;;   )
 
 (use-package typst-ts-mode
   :ensure t
@@ -749,6 +759,14 @@ If the new path's directories does not exist, create them."
                 "b r" '(revert-buffer :wk "Reload buffer")
                 )
 
+	      ;; Comment keymaps
+	      (start/leader-keys
+		"c" '(:ignore t :wk "comment")
+		"c l" '(comment-line :wk "line")
+		"c r" '(comment-region :wk "region")
+		"c d" '(comment-dwim :wk "dwim")
+		)
+
               ;; Debugging
               (start/leader-keys
                 "d" '(:ignore t :wk "debug")
@@ -796,25 +814,6 @@ If the new path's directories does not exist, create them."
                 "l" '(:ignore t :wk "language")
                 "l l" '(lsp :wk "start lsp")
                 )
-              ;; Moving to lsp-mode keymaps
-              ; (start/leader-keys
-              ;   "l" '(:ignore t :wk "language")
-              ;   "l e" '(eglot-reconnect :wk "Eglot Reconnect")
-              ;   "l d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
-              ;   "l f" '(eglot-format :wk "Eglot Format")
-              ;   "l l" '(consult-flymake :wk "Consult Flymake")
-              ;   "l r" '(eglot-rename :wk "Eglot Rename")
-              ;   "l R" '(xref-find-references :wk "Find references")
-              ;   "l i" '(xref-find-definitions :wk "Find definition")
-              ;   "l v" '(:ignore t :wk "Elisp")
-              ;   "l v b" '(eval-buffer :wk "Evaluate elisp in buffer")
-              ;   "l v r" '(eval-region :wk "Evaluate elisp in region")
-              ;   )
-
-              ;; Language specific maps (added by e.g. rust-mode)
-              (start/leader-keys
-                "L" '(:ignore t :wk "language mode")
-                )
 
               ;; Multicursor
               (start/leader-keys
@@ -824,6 +823,11 @@ If the new path's directories does not exist, create them."
                 "m $" '(mc/edit-ends-of-lines :wk "At line end")
                 "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
                 "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
+                )
+
+              ;; Language Specific Bindings
+              (start/leader-keys
+                "p" '(:ignore t :wk "language specific")
                 )
 
               ;; Search functionality
@@ -857,7 +861,17 @@ If the new path's directories does not exist, create them."
 
               ;; Flycheck
               (start/leader-keys
-                "!" '(:ignore t :wk "flycheck")
+                "!" '(:ignore t :wk "flycheck (default)")
+                )
+              (start/leader-keys
+                "x" '(:ignore t :wk "flycheck")
                 )
 
              )
+(define-key flycheck-mode-map (kbd "C-c x l") #'flycheck-list-errors)
+(define-key flycheck-mode-map (kbd "C-c x s") #'flycheck-select-checker)
+(define-key flycheck-mode-map (kbd "C-c x n") #'flycheck-next-error)
+(define-key flycheck-mode-map (kbd "C-c x p") #'flycheck-previous-error)
+(define-key flycheck-mode-map (kbd "C-c x e") #'flycheck-explain-error-at-point)
+(define-key flycheck-mode-map (kbd "C-c x x") #'flycheck-buffer)
+(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup)
