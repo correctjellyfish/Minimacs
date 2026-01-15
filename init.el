@@ -99,6 +99,9 @@ If the new path's directories does not exist, create them."
 (setq scroll-margin 2)
 (setq scroll-conservatively 101)
 
+;; Replace selection when typing (or pasting)
+(delete-selection-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Discovery aids
@@ -106,7 +109,7 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Show the help buffer after startup
-; (add-hook 'after-init-hook 'help-quick)
+					; (add-hook 'after-init-hook 'help-quick)
 
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
@@ -134,16 +137,16 @@ If the new path's directories does not exist, create them."
 (setopt completions-format 'one-column)
 (setopt completions-group t)
 (setopt completion-auto-select 'second-tab)            ; Much more eager
-;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
+					;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
 ;; For a fancier built-in completion option, try ido-mode,
 ;; icomplete-vertical, or fido-mode. See also the file extras/base.el
 
-;(icomplete-vertical-mode)
-;(fido-vertical-mode)
-;(setopt icomplete-delay-completions-threshold 4000)
+					;(icomplete-vertical-mode)
+					;(fido-vertical-mode)
+					;(setopt icomplete-delay-completions-threshold 4000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -191,6 +194,7 @@ If the new path's directories does not exist, create them."
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 
+(setq display-line-numbers 'relative)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Tab-bar configuration
@@ -213,9 +217,9 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; (use-package emacs
-;   :config
-;   (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+					; (use-package emacs
+					;   :config
+					;   (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
 
 (use-package catppuccin-theme
   :ensure t)
@@ -233,12 +237,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(cape catppuccin-theme centaur-tabs change-inner corfu-terminal
-	  dap-mode dashboard eat embark-consult ess esup
-	  flycheck-pos-tip format-all general json-mode kind-icon
-	  lsp-ui magit marginalia multiple-cursors orderless rust-mode
-	  tempel typst-ts-mode vertico wgrep yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
@@ -260,7 +259,7 @@ If the new path's directories does not exist, create them."
   :demand t)
 
 (use-package ace-window
-   :ensure t)
+  :ensure t)
 (global-set-key (kbd "M-o") 'ace-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -269,7 +268,7 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package multiple-cursors
-             :ensure t)
+  :ensure t)
 (define-key mc/keymap (kbd "<return>") nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -415,7 +414,31 @@ If the new path's directories does not exist, create them."
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
-;; Orderless: powerful completion style
+;; Termint
+(use-package termint
+  :ensure t
+  :after python
+  :bind (:map python-ts-mode-map ("C-c r s" . termint-ipython-start))
+  :config
+  (termint-define "ipython" "ipython" :bracketed-paste-p t
+                  :source-syntax termint-ipython-source-syntax-template)
+
+  ;; C-c r s: `termint-ipython-start'
+  ;; C-c r e: `termint-ipython-send-string'
+  ;; C-c r r: `termint-ipython-send-region' (or `termint-ipython-send-region-operator' if evil is installed.)
+  ;; C-c r p: `termint-ipython-send-paragraph'
+  ;; C-c r b: `termint-ipython-send-buffer'
+  ;; C-c r f: `termint-ipython-send-defun'
+  ;; C-c r R: `termint-ipython-source-region' (or `termint-ipython-source-region-operator' if evil is installed.)
+  ;; C-c r P: `termint-ipython-source-paragraph'
+  ;; C-c r B: `termint-ipython-source-buffer'
+  ;; C-c r F: `termint-ipython-source-defun'
+  ;; C-c r h: `termint-ipython-hide-window'
+  (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
+  )
+
+
+;; orderless: powerful completion style
 (use-package orderless
   :ensure t
   :config
@@ -436,15 +459,11 @@ If the new path's directories does not exist, create them."
 ;; Expand selected region
 (use-package expand-region
   :ensure t
-)
+  )
 
 ;; Change inside/outside current region
 (use-package change-inner
   :ensure t)
-
-
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -475,24 +494,26 @@ If the new path's directories does not exist, create them."
   (when (>= emacs-major-version 30)
     (project-mode-line t)))         ; show project name in modeline
 
+;; Direnv integration
+(use-package envrc
+  :ensure t
+  :hook (after-init . envrc-global-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Version Control
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Magit: best Git client to ever exist
 (use-package magit
   :ensure t
-)
-
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Common file types
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package markdown-mode
   :ensure t
   :hook ((markdown-mode . visual-line-mode)))
@@ -514,12 +535,12 @@ If the new path's directories does not exist, create them."
 ;;;   Flycheck
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package flycheck-pos-tip
-             :ensure t)
-
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+
+(use-package flycheck-pos-tip
+  :ensure t)
 
 (with-eval-after-load 'flycheck
   (flycheck-pos-tip-mode))
@@ -534,15 +555,6 @@ If the new path's directories does not exist, create them."
 
 ;; Enable flyspell mode for text mode
 (add-hook 'text-mode-hook #'flyspell-mode)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Completion
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (use-package company
-             ;; :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -561,8 +573,7 @@ If the new path's directories does not exist, create them."
   :commands lsp)
 
 (use-package lsp-ui
-             :ensure t)
-
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -573,7 +584,7 @@ If the new path's directories does not exist, create them."
 
 
 (use-package dap-mode
-             :ensure t)
+  :ensure t)
 
 (add-hook 'dap-stopped-hook
           (lambda (arg) (call-interactively #'dap-hydra)))
@@ -596,41 +607,13 @@ If the new path's directories does not exist, create them."
   :commands format-all-mode
   :hook (prog-mode . format-all-mode)
   :config
-  ; (setq-default format-all-formatters
-  ;               '(("C"     (astyle "--mode=c"))
-  ;                 ("Shell" (shfmt "-i" "4" "-ci")))
-  ;               )
+  (setq-default format-all-formatters
+                '(
+                  ("Shell" (shfmt "-i" "4" "-ci"))
+		  )
+                )
   )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Eglot, the built-in LSP client for Emacs
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Helpful resources:
-;;
-;;  - https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
-
-; (use-package eglot
-;   ;; no :ensure t here because it's built-in
-;
-;   ;; Configure hooks to automatically turn-on eglot for selected modes
-;   :hook
-;   (((python-mode ruby-mode elixir-mode) . eglot-ensure))
-;
-;
-;   :custom
-;   (eglot-send-changes-idle-time 0.1)
-;   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
-;
-;   :config
-;   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
-;   ;; Sometimes you need to tell Eglot where to find the language server
-;   ; (add-to-list 'eglot-server-programs
-;   ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
-;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -638,29 +621,30 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package rust-mode
-             :ensure t)
+  :ensure t)
 (add-hook 'rust-mode-hook #'lsp)
 ;; Stop rust-mode clobbering my keymap
 (with-eval-after-load 'rust-mode
   (define-key rust-mode-map (kbd "C-c C-c C-u") nil) ;; Default Compile
-     (define-key rust-mode-map (kbd "C-c C-c C-k") nil) ;; Default Check
-     (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
-     (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
-     (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
-     (define-key rust-mode-map (kbd "C-c p c") 'rust-compile) ;; New compile
-     (define-key rust-mode-map (kbd "C-c p k") 'rust-check) ;; New check
-     (define-key rust-mode-map (kbd "C-c p t") 'rust-test) ;; New test
-     (define-key rust-mode-map (kbd "C-c p r") 'rust-run) ;; New run
+  (define-key rust-mode-map (kbd "C-c C-c C-k") nil) ;; Default Check
+  (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
+  (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
+  (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
+  (define-key rust-mode-map (kbd "C-c p c") 'rust-compile) ;; New compile
+  (define-key rust-mode-map (kbd "C-c p k") 'rust-check) ;; New check
+  (define-key rust-mode-map (kbd "C-c p t") 'rust-test) ;; New test
+  (define-key rust-mode-map (kbd "C-c p r") 'rust-run) ;; New run
   )
 
+;; Typst
 (use-package typst-ts-mode
   :ensure t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
 ;; R
 (use-package ess
-             :ensure t
-             )
+  :ensure t
+  )
 (defun my/insert-R-pipe ()
   "Insert '|>' at point, moving point forward."
   (interactive)
@@ -675,9 +659,9 @@ If the new path's directories does not exist, create them."
 
 
 (with-eval-after-load "ess-mode"
-    (bind-key "C-c >" #'my/insert-R-pipe ess-mode-map)
-    (bind-key "C-c -" #'my/insert-R-assignment ess-mode-map)
-)
+  (bind-key "C-c >" #'my/insert-R-pipe ess-mode-map)
+  (bind-key "C-c -" #'my/insert-R-assignment ess-mode-map)
+  )
 
 (setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
 
@@ -694,7 +678,7 @@ If the new path's directories does not exist, create them."
 
 (with-eval-after-load "ess-mode"
   (add-hook 'after-save-hook 'run-air-on-r-save)
-)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -702,29 +686,29 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package treemacs
-             :ensure t)
+  :ensure t)
 
 (use-package lsp-treemacs
-             :ensure t)
+  :ensure t)
 (lsp-treemacs-sync-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Tabs
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package centaur-tabs
-             :ensure t
-             :config (centaur-tabs-mode t)
-             :bind
-              ("C-<prior>" . centaur-tabs-backward)
-              ("C-<next>" . centaur-tabs-forward))
+  :ensure t
+  :config (centaur-tabs-mode t)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Templating
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package tempel
   :ensure t
   ;; By default, tempel looks at the file "templates" in
@@ -756,9 +740,9 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package dashboard
-             :ensure t
-             :config(dashboard-setup-startup-hook)
-             )
+  :ensure t
+  :config(dashboard-setup-startup-hook)
+  )
 (setq dashboard-banner-logo-title "Welcome to Emacs!")
 (setq dashboard-startup-banner 'logo)
 (setq dashboard-center-content t)
@@ -780,143 +764,148 @@ If the new path's directories does not exist, create them."
 (avy-setup-default)
 
 (use-package general
-             :config
-             (general-create-definer start/leader-keys
-                                     :keymaps 'override
-                                     :prefix "C-c"
-                                     :global-prefix "C-c")
-             ;; Directly accesible keys, all prefixed with CTRL
-              (start/leader-keys
-                "C-c" '(avy-goto-word-0 :wk "Goto word")
-                "C-j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
-                "C-k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
-                "C-\\" '(eat :wk "Terminal")
-                "=" '(er/expand-region :wk "Expand Region")
-                "C-i" '(change-inner :wk "Change Inner")
-                "C-o" '(change-outer :wk "Change Outer")
-                "C-b" '(consult-buffer :wk "Switch Buffer")
-                )
+  :config
+  (general-create-definer start/leader-keys
+    :keymaps 'override
+    :prefix "C-c"
+    :global-prefix "C-c")
+  ;; Directly accesible keys, all prefixed with CTRL
+  (start/leader-keys
+    "C-c" '(avy-goto-word-0 :wk "Goto word")
+    "C-j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
+    "C-k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
+    "C-\\" '(eat :wk "Terminal")
+    "=" '(er/expand-region :wk "Expand Region")
+    "C-i" '(change-inner :wk "Change Inner")
+    "C-o" '(change-outer :wk "Change Outer")
+    "C-b" '(consult-buffer :wk "Switch Buffer")
+    )
 
-              ;; Buffer keymaps
-              (start/leader-keys
-                "b" '(:ignore t :wk "buffer")
-                "b s" '(consult-buffer :wk "Switch buffer")
-                "b k" '(kill-current-buffer :wk "Kill current buffer")
-                "b i" '(ibuffer :wk "Ibuffer")
-                "b n" '(next-buffer :wk "Next buffer")
-                "b p" '(previous-buffer :wk "Previous buffer")
-                "b r" '(revert-buffer :wk "Reload buffer")
-                )
+  ;; Buffer keymaps
+  (start/leader-keys
+    "b" '(:ignore t :wk "buffer")
+    "b s" '(consult-buffer :wk "Switch buffer")
+    "b k" '(kill-current-buffer :wk "Kill current buffer")
+    "b i" '(ibuffer :wk "Ibuffer")
+    "b n" '(next-buffer :wk "Next buffer")
+    "b p" '(previous-buffer :wk "Previous buffer")
+    "b r" '(revert-buffer :wk "Reload buffer")
+    )
 
-	      ;; Comment keymaps
-	      (start/leader-keys
-		"c" '(:ignore t :wk "comment")
-		"c l" '(comment-line :wk "line")
-		"c r" '(comment-region :wk "region")
-		"c d" '(comment-dwim :wk "dwim")
-		)
+  ;; Comment keymaps
+  (start/leader-keys
+    "c" '(:ignore t :wk "comment")
+    "c l" '(comment-line :wk "line")
+    "c r" '(comment-region :wk "region")
+    "c d" '(comment-dwim :wk "dwim")
+    )
 
-              ;; Debugging
-              (start/leader-keys
-                "d" '(:ignore t :wk "debug")
-                "d b" '(dap-breakpoint-toggle :wk "toggle breakpoint")
-                "d s" '(dap-debug :wk "start debug")
-                "d o" '(dap-go-to-output-buffer :wk "goto output buffer")
-                "d c" '(dap-continue :wk "continue")
-                "d n" '(dap-next :wk "next")
-                "d i" '(dap-step-in :wk "step in")
-                "d u" '(dap-step-out :wk "step out")
-                "d e" '(dap-eval-thing-at-point :wk "eval at point")
-                "d g" '(dap-eval-region :wk "eval region")
-                "d r" '(dap-restart-frame :wk "restart frame")
-                )
+  ;; Debugging
+  (start/leader-keys
+    "d" '(:ignore t :wk "debug")
+    "d b" '(dap-breakpoint-toggle :wk "toggle breakpoint")
+    "d s" '(dap-debug :wk "start debug")
+    "d o" '(dap-go-to-output-buffer :wk "goto output buffer")
+    "d c" '(dap-continue :wk "continue")
+    "d n" '(dap-next :wk "next")
+    "d i" '(dap-step-in :wk "step in")
+    "d u" '(dap-step-out :wk "step out")
+    "d e" '(dap-eval-thing-at-point :wk "eval at point")
+    "d g" '(dap-eval-region :wk "eval region")
+    "d r" '(dap-restart-frame :wk "restart frame")
+    )
 
-              ;; File Keymaps
-              (start/leader-keys
-                "f" '(:ignore t :wk "file")
-                "f d" '(dired :wk "Open dired")
-                "f j" '(dired-jump :wk "Dired jump to current")
-                "f w" '(write-file :wk "Write File (with name)")
-                "f s" '(save-buffer :wk "Save Buffer")
-                "f S" '(save-some-buffer :wk "Save Buffer")
-                "f t" '(treemacs :wk "File Tree")
-                )
+  ;; File Keymaps
+  (start/leader-keys
+    "f" '(:ignore t :wk "file")
+    "f d" '(dired :wk "Open dired")
+    "f j" '(dired-jump :wk "Dired jump to current")
+    "f w" '(write-file :wk "Write File (with name)")
+    "f s" '(save-buffer :wk "Save Buffer")
+    "f S" '(save-some-buffer :wk "Save Buffer")
+    "f t" '(treemacs :wk "File Tree")
+    )
 
-              ;; Git
-              (start/leader-keys
-                "g" '(:ignore t :wk "git")
-                "g g" '(magit :wk "Open Magit")
-                "g s" '(magit-status :wk "Magit Status")
-                )
+  ;; Git
+  (start/leader-keys
+    "g" '(:ignore t :wk "git")
+    "g g" '(magit :wk "Open Magit")
+    "g s" '(magit-status :wk "Magit Status")
+    )
 
-              ;; Jump
-              (start/leader-keys
-                "j" '(:ignore t :wk "jump")
-                "j l" '(avy-goto-line :wk "Jump to line")
-                "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
-                "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
-                "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
-                )
+  ;; Jump
+  (start/leader-keys
+    "j" '(:ignore t :wk "jump")
+    "j l" '(avy-goto-line :wk "Jump to line")
+    "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
+    "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
+    "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
+    )
 
-              ;; Language keymaps (eglot, etc.)
-              (start/leader-keys
-                "l" '(:ignore t :wk "language")
-                "l l" '(lsp :wk "start lsp")
-                )
+  ;; Language keymaps (eglot, etc.)
+  (start/leader-keys
+    "l" '(:ignore t :wk "language")
+    "l l" '(lsp :wk "start lsp")
+    )
 
-              ;; Multicursor
-              (start/leader-keys
-                "m" '(:ignore t :wk "multicursor")
-                "m r" '(mc/mark-all-in-region :wk "At matches in region")
-                "m ^" '(mc/edit-beginnings-of-lines :wk "At line start")
-                "m $" '(mc/edit-ends-of-lines :wk "At line end")
-                "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
-                "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
-                )
+  ;; Multicursor
+  (start/leader-keys
+    "m" '(:ignore t :wk "multicursor")
+    "m r" '(mc/mark-all-in-region :wk "At matches in region")
+    "m ^" '(mc/edit-beginnings-of-lines :wk "At line start")
+    "m $" '(mc/edit-ends-of-lines :wk "At line end")
+    "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
+    "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
+    )
 
-              ;; Language Specific Bindings
-              (start/leader-keys
-                "p" '(:ignore t :wk "language specific")
-                )
+  ;; Language Specific Bindings
+  (start/leader-keys
+    "p" '(:ignore t :wk "language specific")
+    )
 
-              ;; Search functionality
-              (start/leader-keys
-                "s" '(:ignore t :wk "search")
-                "s r" '(consult-recent-file :wk "Search recent files")
-                "s f" '(consult-fd :wk "Search files with fd")
-                "s g" '(consult-ripgrep :wk "Search with ripgrep")
-                "s l" '(consult-line :wk "Search line")
-                "s i" '(consult-imenu :wk "Search Imenu buffer locations")
-                )
+  ;; REPL (Termint)
+  (start/leader-keys
+    "r" '(:ignore t :wk "REPL")
+    )
 
-              ;; Toggle/Terminal
-              (start/leader-keys
-                "t" '(:ignore t :wk "terminal/toggle")
-                "t t" '(eat :wk "Terminal")
-                "t w" '(visual-line-mode :wk "Toggle line wrap")
-                "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-                )
-              ;; Window keymaps
-              (start/leader-keys
-                "w" '(:ignore t :wk "window")
-                "w h" '(windmove-left :wk "Left Window")
-                "w j" '(windmove-down :wk "Down Window")
-                "w k" '(windmove-up :wk "Up Window")
-                "w l" '(windmove-right :wk "Right Window")
-                "w q" '(delete-window :wk "Close Window")
-                "w |" '(split-window-right :wk "Split Vertical")
-                "w -" '(split-window-below :wk "Split Horizontal")
-                )
+  ;; Search functionality
+  (start/leader-keys
+    "s" '(:ignore t :wk "search")
+    "s r" '(consult-recent-file :wk "Search recent files")
+    "s f" '(consult-fd :wk "Search files with fd")
+    "s g" '(consult-ripgrep :wk "Search with ripgrep")
+    "s l" '(consult-line :wk "Search line")
+    "s i" '(consult-imenu :wk "Search Imenu buffer locations")
+    )
 
-              ;; Flycheck
-              (start/leader-keys
-                "!" '(:ignore t :wk "flycheck (default)")
-                )
-              (start/leader-keys
-                "x" '(:ignore t :wk "flycheck")
-                )
+  ;; Toggle/Terminal
+  (start/leader-keys
+    "t" '(:ignore t :wk "terminal/toggle")
+    "t t" '(eat :wk "Terminal")
+    "t w" '(visual-line-mode :wk "Toggle line wrap")
+    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+    )
+  ;; Window keymaps
+  (start/leader-keys
+    "w" '(:ignore t :wk "window")
+    "w h" '(windmove-left :wk "Left Window")
+    "w j" '(windmove-down :wk "Down Window")
+    "w k" '(windmove-up :wk "Up Window")
+    "w l" '(windmove-right :wk "Right Window")
+    "w q" '(delete-window :wk "Close Window")
+    "w |" '(split-window-right :wk "Split Vertical")
+    "w -" '(split-window-below :wk "Split Horizontal")
+    )
 
-             )
+  ;; Flycheck
+  (start/leader-keys
+    "!" '(:ignore t :wk "flycheck (default)")
+    )
+  (start/leader-keys
+    "x" '(:ignore t :wk "flycheck")
+    )
+
+  )
 (define-key flycheck-mode-map (kbd "C-c x l") #'flycheck-list-errors)
 (define-key flycheck-mode-map (kbd "C-c x s") #'flycheck-select-checker)
 (define-key flycheck-mode-map (kbd "C-c x n") #'flycheck-next-error)
