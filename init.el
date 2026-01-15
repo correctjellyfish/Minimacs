@@ -857,6 +857,8 @@ If the new path's directories does not exist, create them."
     "m $" '(mc/edit-ends-of-lines :wk "At line end")
     "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
     "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
+    "m j" '(mc/mmlte--down :wk "Next line")
+    "m k" '(mc/mmlte--up :wk "Previous line")
     )
 
   ;; Language Specific Bindings
