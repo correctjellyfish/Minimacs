@@ -415,6 +415,7 @@ If the new path's directories does not exist, create them."
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
 ;; Termint
+(setq termint-backend 'eat)
 (use-package termint
   :ensure t
   :after python
