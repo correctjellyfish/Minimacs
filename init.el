@@ -27,7 +27,6 @@
 (when (< emacs-major-version 29)
   (error "Emacs Bedrock only works with Emacs 29 and newer; you have version %s" emacs-major-version))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Basic settings
@@ -796,6 +795,13 @@ If the new path's directories does not exist, create them."
   ("S" sp-backward-sexp "sexp backward")
   )
 
+(defun hydra-region ()
+  "Set mark and launch movement hydra"
+  (interactive)
+  (set-mark-command nil)
+  (hydra-movement/body)
+  )
+
 (defhydra hydra-flycheck (global-map "C-c h x")
   "Flycheck"
   ("n" flycheck-next-error "Next Error")
@@ -855,6 +861,10 @@ If the new path's directories does not exist, create them."
     "C-o" '(change-outer :wk "Change Outer")
     "C-b" '(consult-buffer :wk "Switch Buffer")
     )
+
+  ;; Region keymap
+  (start/leader-keys
+    "SPC" '(hydra-region :wk "Region select") )
 
   ;; Buffer keymaps
   (start/leader-keys
@@ -926,7 +936,7 @@ If the new path's directories does not exist, create them."
     "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
     )
 
-  ;; Language keymaps (eglot, etc.)
+  ;; Language keymaps (lsp-mode, etc.)
   (start/leader-keys
     "l" '(:ignore t :wk "language")
     "l l" '(lsp :wk "start lsp")
@@ -973,6 +983,19 @@ If the new path's directories does not exist, create them."
     "t w" '(visual-line-mode :wk "Toggle line wrap")
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
     )
+
+  ;; Utility functions (mostly crux)
+  (start/leader-keys
+    "u" '(:ignore t :wk "utils")
+    "u o" '(crux-smart-open-line "Line below")
+    "u O" '(crux-smart-open-line-above "Line above")
+    "u d" '(crux-duplicate-current-line-or-region "Duplicate line/region")
+    "u k" '(crux-kill-other-buffers "Kill other buffers")
+    "u r" '(crux-rename-file-and-buffer "Rename file/buffer")
+    "u t" '(crux-transpose-windows "Transpose Windows")
+    "u j" '(join-line "Join line")
+    )
+  
   ;; Window keymaps
   (start/leader-keys
     "w" '(:ignore t :wk "window")
