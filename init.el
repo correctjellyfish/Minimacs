@@ -476,6 +476,14 @@ If the new path's directories does not exist, create them."
 	 )
   )
 
+;; Various useful functions
+(use-package crux
+  :ensure t
+  :bind (
+	 ("C-k" . crux-smart-kill-line)
+  )
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   built-in config for developers
@@ -772,8 +780,8 @@ If the new path's directories does not exist, create them."
   ("W" left-word "word back")
   ("w" right-word "word forward")
   ("g" avy-goto-word-0 "jump")
-  ("d" scroll-up-command "down page")
-  ("u" scroll-down-command "up page")
+  ("v" scroll-up-command "down page")
+  ("V" scroll-down-command "up page")
   ("]" forward-sentence "sentence forward")
   ("[" backward-sentence "sentence backward")
   ("}" forward-paragraph "paragraph forward")
@@ -797,11 +805,10 @@ If the new path's directories does not exist, create them."
 
 (defhydra hydra-sexp (global-map "C-c h s")
   "Sexp"
-  ("s" sp-forward-slurp-sexp "slurp")
-  ("S" sp-backward-slurp-sexp "slurp")
-  ("b" sp-forward-barf-sexp "barf")
-  ("B" sp-backward-barf-sexp "barf")
-  ("a" sp-s)
+  ("s" sp-forward-slurp-sexp "slurp forward")
+  ("S" sp-backward-slurp-sexp "slurp back")
+  ("b" sp-forward-barf-sexp "barf forward")
+  ("B" sp-backward-barf-sexp "barf back")
   ("n" sp-next-sexp "next")
   ("p" sp-previous-sexp "previous")
   ("r" sp-rewrap-sexp "replace")
@@ -814,15 +821,14 @@ If the new path's directories does not exist, create them."
   )
 
 (defhydra hydra-multicursor (global-map "C-c h c")
-          "Multicursor"
-          ("n" mc/mark-next-word-like-this "Next Word")
-          ("p" mc/mark-previous-word-like-this "Previous Word")
-          ("N" mc/mark-next-symbol-like-this "Next Word")
-          ("P" mc/mark-previous-word-like-this "Previous Word")
-          ("j" mc/mmlte--down "Next Line")
-          ("k" mc/mmlte--up "Previous Line")
-          ("e" mc/mark-more-like-this-extended "Extended")
-          )
+  "Multicursor"
+  ("n" mc/mark-next-like-this-word "Next Word")
+  ("p" mc/mark-previous-like-this-word "Previous Word")
+  ("N" mc/mark-next-like-this-symbol "Next Word")
+  ("P" mc/mark-previous-like-this-symbol "Previous Word")
+  ("j" mc/mmlte--down "Next Line")
+  ("k" mc/mmlte--up "Previous Line")
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -986,7 +992,6 @@ If the new path's directories does not exist, create them."
   (start/leader-keys
     "x" '(:ignore t :wk "flycheck")
     )
-
   )
 (define-key flycheck-mode-map (kbd "C-c x l") #'flycheck-list-errors)
 (define-key flycheck-mode-map (kbd "C-c x s") #'flycheck-select-checker)
