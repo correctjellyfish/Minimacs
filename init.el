@@ -229,13 +229,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(beacon cape catppuccin-theme centaur-tabs change-inner
-	    corfu-terminal dap-mode dashboard eat embark-consult envrc
-	    ess esup flycheck-pos-tip format-all general json-mode
-	    kind-icon lsp-ui magit marginalia move-text
-	    multiple-cursors orderless rust-mode smartparens tempel
-	    termint typst-ts-mode vertico wgrep yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
@@ -819,6 +813,17 @@ If the new path's directories does not exist, create them."
   ("[" sp-wrap-square "wrap []")
   )
 
+(defhydra hydra-multicursor (global-map "C-c h c")
+          "Multicursor"
+          ("n" mc/mark-next-word-like-this "Next Word")
+          ("p" mc/mark-previous-word-like-this "Previous Word")
+          ("N" mc/mark-next-symbol-like-this "Next Word")
+          ("P" mc/mark-previous-word-like-this "Previous Word")
+          ("j" mc/mmlte--down "Next Line")
+          ("k" mc/mmlte--up "Previous Line")
+          ("e" mc/mark-more-like-this-extended "Extended")
+          )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -839,10 +844,6 @@ If the new path's directories does not exist, create them."
     :global-prefix "C-c")
   ;; Directly accesible keys, all prefixed with CTRL
   (start/leader-keys
-    "C-c" '(avy-goto-word-0 :wk "Goto word")
-    "C-j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
-    "C-k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
-    "C-\\" '(eat :wk "Terminal")
     "=" '(er/expand-region :wk "Expand Region")
     "C-i" '(change-inner :wk "Change Inner")
     "C-o" '(change-outer :wk "Change Outer")
@@ -906,11 +907,13 @@ If the new path's directories does not exist, create them."
     "h" '(:ignore t :wk "hydras")
     "h x" '(:ignore t :wk "flycheck")
     "h s" '(:ignore t :wk "sexp/parens")
+    "h c" '(:ignore t :wk "multicursor")
     )
 
   ;; Jump
   (start/leader-keys
     "j" '(:ignore t :wk "jump")
+    "j j" '(acy-goto-word-0 :wk "Jump to word")
     "j l" '(avy-goto-line :wk "Jump to line")
     "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
     "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
@@ -931,8 +934,10 @@ If the new path's directories does not exist, create them."
     "m $" '(mc/edit-ends-of-lines :wk "At line end")
     "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
     "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
-    "m j" '(mc/mmlte--down :wk "Next line")
-    "m k" '(mc/mmlte--up :wk "Previous line")
+    "m n" '(mc/mmlte--down :wk "Next line")
+    "m p" '(mc/mmlte--up :wk "Previous line")
+    "m j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
+    "m k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
     )
 
   ;; Language Specific Bindings
