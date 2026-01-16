@@ -172,11 +172,15 @@ If the new path's directories does not exist, create them."
 (xterm-mouse-mode 1)
 
 ;; Display line numbers in programming mode
-(setopt display-line-numbers-type 'relative)
+(setq display-line-numbers-type 'relative)
 (setopt display-line-numbers-width 2)           ; Set a minimum width
 (global-display-line-numbers-mode)
-;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(global-display-line-numbers-mode)
 
+;; Help tracking cursor
+(use-package beacon
+  :ensure t
+  :init (beacon-mode 1))
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -209,10 +213,6 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-					; (use-package emacs
-					;   :config
-					;   (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
-
 (use-package catppuccin-theme
   :ensure t)
 (load-theme 'catppuccin :no-confirm)
@@ -229,7 +229,13 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(beacon cape catppuccin-theme centaur-tabs change-inner
+	    corfu-terminal dap-mode dashboard eat embark-consult envrc
+	    ess esup flycheck-pos-tip format-all general json-mode
+	    kind-icon lsp-ui magit marginalia move-text
+	    multiple-cursors orderless rust-mode smartparens tempel
+	    termint typst-ts-mode vertico wgrep yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
@@ -241,6 +247,7 @@ If the new path's directories does not exist, create them."
  )
 
 (setq gc-cons-threshold 100000000)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Motion aids
@@ -428,7 +435,7 @@ If the new path's directories does not exist, create them."
   ;; C-c r F: `termint-ipython-source-defun'
   ;; C-c r h: `termint-ipython-hide-window'
   (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
-  )
+)
 
 
 ;; orderless: powerful completion style
@@ -468,11 +475,16 @@ If the new path's directories does not exist, create them."
 
 ;; Move lines or region
 (use-package move-text
-             :ensure t)
+  :ensure t
+  :bind (
+	 ("M-<down>" . move-text-down)
+	 ("M-<up>" .  move-text-up)
+	 )
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Built-in config for developers
+;;;   built-in config for developers
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -585,9 +597,6 @@ If the new path's directories does not exist, create them."
 ;;;   DAP Mode
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package hydra)
-
-
 (use-package dap-mode
   :ensure t)
 
@@ -647,9 +656,6 @@ If the new path's directories does not exist, create them."
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
 ;; R
-(use-package ess
-  :ensure t
-  )
 (defun my/insert-R-pipe ()
   "Insert '|>' at point, moving point forward."
   (interactive)
@@ -659,14 +665,15 @@ If the new path's directories does not exist, create them."
   "Insert '<-' at point, moving point forward."
   (interactive)
   (insert "<-"))
-
+(use-package ess
+  :ensure t
+  :bind (
+	 ("C-c >" . #'my/insert-R-pipe)
+	 ("C-c >" . #'my/insert-R-pipe)
+    )
+  )
 (load "ess-autoloads")
 
-
-(with-eval-after-load "ess-mode"
-  (bind-key "C-c >" #'my/insert-R-pipe ess-mode-map)
-  (bind-key "C-c -" #'my/insert-R-assignment ess-mode-map)
-  )
 
 (setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
 
@@ -759,6 +766,62 @@ If the new path's directories does not exist, create them."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;;   Hydras
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defhydra hydra-movement (global-map "C-c v")
+  "Movement"
+  ("f" forward-char "forward")
+  ("b" backward-char "backward")
+  ("n" forward-line "line down")
+  ("p" previous-line "line up")
+  ("W" left-word "word back")
+  ("w" right-word "word forward")
+  ("g" avy-goto-word-0 "jump")
+  ("d" scroll-up-command "down page")
+  ("u" scroll-down-command "up page")
+  ("]" forward-sentence "sentence forward")
+  ("[" backward-sentence "sentence backward")
+  ("}" forward-paragraph "paragraph forward")
+  ("{" backward-paragraph "paragraph backward")
+  ("a" move-beginning-of-line "line start")
+  ("e" move-end-of-line "line end")
+  ("h" windmove-left "window left")
+  ("j" windmove-down "window down")
+  ("k" windmove-up "window up")
+  ("l" windmove-right "window right")
+  ("s" sp-forward-sexp "sexp forward")
+  ("S" sp-backward-sexp "sexp backward")
+  )
+
+(defhydra hydra-flycheck (global-map "C-c h x")
+  "Flycheck"
+  ("n" flycheck-next-error "Next Error")
+  ("p" flycheck-previous-error "Previous Error")
+  ("e" flycheck-explain-error-at-point "Explain")
+  )
+
+(defhydra hydra-sexp (global-map "C-c h s")
+  "Sexp"
+  ("s" sp-forward-slurp-sexp "slurp")
+  ("S" sp-backward-slurp-sexp "slurp")
+  ("b" sp-forward-barf-sexp "barf")
+  ("B" sp-backward-barf-sexp "barf")
+  ("a" sp-s)
+  ("n" sp-next-sexp "next")
+  ("p" sp-previous-sexp "previous")
+  ("r" sp-rewrap-sexp "replace")
+  ("d" sp-unwrap-sexp "delete")
+  ("D" sp-backward-unwrap-sexp "delete backwards")
+  ("c" sp-change-enclosing "change inside")
+  ("(" sp-wrap-round "wrap ()")
+  ("{" sp-wrap-curly "wrap {}")
+  ("[" sp-wrap-square "wrap []")
+  )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;;   General Keybinds
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -836,6 +899,13 @@ If the new path's directories does not exist, create them."
     "g" '(:ignore t :wk "git")
     "g g" '(magit :wk "Open Magit")
     "g s" '(magit-status :wk "Magit Status")
+    )
+
+  ;; Hydras
+  (start/leader-keys
+    "h" '(:ignore t :wk "hydras")
+    "h x" '(:ignore t :wk "flycheck")
+    "h s" '(:ignore t :wk "sexp/parens")
     )
 
   ;; Jump
@@ -919,4 +989,4 @@ If the new path's directories does not exist, create them."
 (define-key flycheck-mode-map (kbd "C-c x p") #'flycheck-previous-error)
 (define-key flycheck-mode-map (kbd "C-c x e") #'flycheck-explain-error-at-point)
 (define-key flycheck-mode-map (kbd "C-c x x") #'flycheck-buffer)
-(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup) 
+(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup)
