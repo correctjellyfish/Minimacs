@@ -108,9 +108,6 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Show the help buffer after startup
-					; (add-hook 'after-init-hook 'help-quick)
-
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
@@ -137,16 +134,10 @@ If the new path's directories does not exist, create them."
 (setopt completions-format 'one-column)
 (setopt completions-group t)
 (setopt completion-auto-select 'second-tab)            ; Much more eager
-					;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
+
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
-;; For a fancier built-in completion option, try ido-mode,
-;; icomplete-vertical, or fido-mode. See also the file extras/base.el
-
-					;(icomplete-vertical-mode)
-					;(fido-vertical-mode)
-					;(setopt icomplete-delay-completions-threshold 4000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -177,15 +168,15 @@ If the new path's directories does not exist, create them."
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 
-;; Use common keystrokes by default
-;; (cua-mode)
-
 ;; For terminal users, make the mouse more useful
 (xterm-mouse-mode 1)
 
 ;; Display line numbers in programming mode
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(setopt display-line-numbers-width 3)           ; Set a minimum width
+(setopt display-line-numbers-type 'relative)
+(setopt display-line-numbers-width 2)           ; Set a minimum width
+(global-display-line-numbers-mode)
+;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -194,7 +185,8 @@ If the new path's directories does not exist, create them."
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 
-(setq display-line-numbers 'relative)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Tab-bar configuration
@@ -466,6 +458,18 @@ If the new path's directories does not exist, create them."
 (use-package change-inner
   :ensure t)
 
+;; Smart Parens
+(use-package smartparens
+  :ensure smartparens  ;; install the package
+  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  ;; load default config
+  (require 'smartparens-config))
+
+;; Move lines or region
+(use-package move-text
+             :ensure t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in config for developers
@@ -611,7 +615,7 @@ If the new path's directories does not exist, create them."
   (setq-default format-all-formatters
                 '(
                   ("Shell" (shfmt "-i" "4" "-ci"))
-		  )
+                  )
                 )
   )
 
@@ -915,4 +919,4 @@ If the new path's directories does not exist, create them."
 (define-key flycheck-mode-map (kbd "C-c x p") #'flycheck-previous-error)
 (define-key flycheck-mode-map (kbd "C-c x e") #'flycheck-explain-error-at-point)
 (define-key flycheck-mode-map (kbd "C-c x x") #'flycheck-buffer)
-(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup)
+(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup) 
