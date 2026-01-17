@@ -140,7 +140,16 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(almost-mono-themes beacon cape catppuccin-theme centaur-tabs
+			change-inner corfu-terminal crux dap-mode
+			dashboard eat embark-consult envrc ess esup
+			flycheck-pos-tip format-all general god-mode
+			json-mode kind-icon lsp-ui magit marginalia
+			move-text multiple-cursors orderless
+			paper-theme rust-mode smartparens
+			tempel-collection termint typst-ts-mode
+			vertico wgrep writeroom-mode yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -869,11 +878,11 @@ If the new path's directories does not exist, create them."
 
   ;; Multicursor
   (start/leader-keys
-    "m" '(hydra-multicursor/body t :wk "multicursor")
     "n" '(mc/mark-next-like-this-word :wk "MC Mark Next")
     "N" '(mc/skip-to-next-like-this :wk "MC Skip Next")
     "p" '(mc/mark-previous-like-this-word :wk "MC Mark Previous")
     "P" '(mc/skip-to-previous-like-this :wk "MC Skip Previous")
+    "m" '(:ignore: wk "multicursor")
     "m j" '(mc/mark-next-like-this :wk "Mark Next line/region")
     "m k" '(mc/mark-next-like-this :wk "Mark Previous line/region")
     "m ^" '(mc/edit-beginnings-of-lines :wk "Mark line starts")
