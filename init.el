@@ -25,7 +25,7 @@
 ;;; Guardrail
 
 (when (< emacs-major-version 29)
-  (error "Emacs Bedrock only works with Emacs 29 and newer; you have version %s" emacs-major-version))
+  ("Emacs Bedrock only works with Emacs 29 and newer; you have version %s" emacs-major-version))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -174,12 +174,14 @@ If the new path's directories does not exist, create them."
 (setq display-line-numbers-type 'relative)
 (setopt display-line-numbers-width 2)           ; Set a minimum width
 (global-display-line-numbers-mode)
-(global-display-line-numbers-mode)
 
 ;; Help tracking cursor
 (use-package beacon
   :ensure t
   :init (beacon-mode 1))
+
+;; Set line truncation to be the default
+(custom-set-variables '(truncate-lines t))
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -212,9 +214,14 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package almost-mono-themes
+  :ensure t)
+(load-theme 'almost-mono-white t)
+
 (use-package catppuccin-theme
   :ensure t)
 (load-theme 'catppuccin :no-confirm)
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -228,10 +235,26 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(almost-mono-themes beacon cape catppuccin-theme centaur-tabs
+			change-inner corfu-terminal crux dap-mode
+			dashboard eat embark-consult envrc ess esup
+			flycheck-pos-tip format-all general json-mode
+			kind-icon lsp-ui magit marginalia move-text
+			multiple-cursors orderless paper-theme
+			rust-mode smartparens tempel termint
+			typst-ts-mode vertico wgrep writeroom-mode
+			yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
-		    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
+		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
+ '(writeroom-global-effects
+   '(writeroom-set-fullscreen writeroom-set-alpha
+			      writeroom-set-menu-bar-lines
+			      writeroom-set-tool-bar-lines
+			      writeroom-set-vertical-scroll-bars
+			      writeroom-set-bottom-divider-width
+			      my/writeroom)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -344,6 +367,7 @@ If the new path's directories does not exist, create them."
   (marginalia-mode))
 
 ;; Corfu: Popup completion-at-point
+(setq corfu-auto t corfu-auto-delay 0.1 corfu-quit-no-match 'separator)
 (use-package corfu
   :ensure t
   :init
@@ -364,7 +388,7 @@ If the new path's directories does not exist, create them."
   (corfu-popupinfo-hide nil)
   :config
   (corfu-popupinfo-mode))
-(setq corfu-auto t corfu-auto-delay 0.1 corfu-quit-no-match 'separator)
+
 
 ;; Make corfu popup come up in terminal overlay
 (use-package corfu-terminal
@@ -764,6 +788,42 @@ If the new path's directories does not exist, create them."
                         (projects  . 5)
                         (registers . 5)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Writing
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun my/writeroom (arg)
+  "Hook used for writeroom-mode"
+  (cond
+   ((= arg 1)
+    (progn
+      (enable-theme 'almost-mono-white)
+      (setq display-line-numbers nil)
+      (visual-line-mode)
+      )
+    )
+   ((= arg -1)
+    (progn
+      (disable-theme 'almost-mono-white)
+      (setq display-line-numbers t)
+      (visual-line-mode)
+      )
+    )
+   )
+  )
+
+(use-package visual-fill-column
+  :ensure t)
+
+(use-package writeroom-mode
+  :ensure t
+  )
+
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -995,7 +1055,7 @@ If the new path's directories does not exist, create them."
     "u t" '(crux-transpose-windows "Transpose Windows")
     "u j" '(join-line "Join line")
     )
-  
+
   ;; Window keymaps
   (start/leader-keys
     "w" '(:ignore t :wk "window")
@@ -1016,6 +1076,13 @@ If the new path's directories does not exist, create them."
     "x" '(:ignore t :wk "flycheck")
     )
   )
+
+  ;; Zen/Writing
+  (start/leader-keys
+    "z" '(writeroom-mode :wk "Zen/Writing")
+    )
+
+
 (define-key flycheck-mode-map (kbd "C-c x l") #'flycheck-list-errors)
 (define-key flycheck-mode-map (kbd "C-c x s") #'flycheck-select-checker)
 (define-key flycheck-mode-map (kbd "C-c x n") #'flycheck-next-error)
