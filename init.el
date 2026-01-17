@@ -1,50 +1,51 @@
 ;; -*- lexical-binding: t; -*-
-;;;  ________                                                _______                 __                            __
-;;; /        |                                              /       \               /  |                          /  |
-;;; $$$$$$$$/ _____  ____   ______   _______  _______       $$$$$$$  | ______   ____$$ | ______   ______   _______$$ |   __
-;;; $$ |__   /     \/    \ /      \ /       |/       |      $$ |__$$ |/      \ /    $$ |/      \ /      \ /       $$ |  /  |
-;;; $$    |  $$$$$$ $$$$  |$$$$$$  /$$$$$$$//$$$$$$$/       $$    $$</$$$$$$  /$$$$$$$ /$$$$$$  /$$$$$$  /$$$$$$$/$$ |_/$$/
-;;; $$$$$/   $$ | $$ | $$ |/    $$ $$ |     $$      \       $$$$$$$  $$    $$ $$ |  $$ $$ |  $$/$$ |  $$ $$ |     $$   $$<
-;;; $$ |_____$$ | $$ | $$ /$$$$$$$ $$ \_____ $$$$$$  |      $$ |__$$ $$$$$$$$/$$ \__$$ $$ |     $$ \__$$ $$ \_____$$$$$$  \
-;;; $$       $$ | $$ | $$ $$    $$ $$       /     $$/       $$    $$/$$       $$    $$ $$ |     $$    $$/$$       $$ | $$  |
-;;; $$$$$$$$/$$/  $$/  $$/ $$$$$$$/ $$$$$$$/$$$$$$$/        $$$$$$$/  $$$$$$$/ $$$$$$$/$$/       $$$$$$/  $$$$$$$/$$/   $$/
+;;__/\\\\____________/\\\\_________________________________________________________________________________________
+;; _\/\\\\\\________/\\\\\\_________________________________________________________________________________________
+;;  _\/\\\//\\\____/\\\//\\\__/\\\________________/\\\_______________________________________________________________
+;;   _\/\\\\///\\\/\\\/_\/\\\_\///___/\\/\\\\\\___\///_____/\\\\\__/\\\\\____/\\\\\\\\\________/\\\\\\\\__/\\\\\\\\\\_
+;;    _\/\\\__\///\\\/___\/\\\__/\\\_\/\\\////\\\___/\\\__/\\\///\\\\\///\\\_\////////\\\_____/\\\//////__\/\\\//////__
+;;     _\/\\\____\///_____\/\\\_\/\\\_\/\\\__\//\\\_\/\\\_\/\\\_\//\\\__\/\\\___/\\\\\\\\\\___/\\\_________\/\\\\\\\\\\_
+;;      _\/\\\_____________\/\\\_\/\\\_\/\\\___\/\\\_\/\\\_\/\\\__\/\\\__\/\\\__/\\\/////\\\__\//\\\________\////////\\\_
+;;       _\/\\\_____________\/\\\_\/\\\_\/\\\___\/\\\_\/\\\_\/\\\__\/\\\__\/\\\_\//\\\\\\\\/\\__\///\\\\\\\\__/\\\\\\\\\\_
+;;        _\///______________\///__\///__\///____\///__\///__\///___\///___\///___\////////\//_____\////////__\//////////__
 
 ;;; Minimal init.el
 
 ;;; Contents:
 ;;;
-;;;  - Basic settings
-;;;  - Discovery aids
-;;;  - Minibuffer/completion settings
-;;;  - Interface enhancements/defaults
-;;;  - Tab-bar configuration
+;;;  - Basic Setup
+;;;  - Completions
+;;;  - Customization
+;;;  - Editing Enhancements
+;;;  - UI
 ;;;  - Theme
-;;;  - Optional extras
-;;;  - Built-in customization framework
+;;;  - Developement
+;;;    - Linting
+;;;    - LSP
+;;;    - Debugging
+;;;    - Formatting
+;;;    - Language Modes
+;;;    - Templating
+;;;    - Version Control
+;;;  - REPL/Terminal
+;;;  - Writing
+;;;  - Keymaps
 
 ;;; Guardrail
 
 (when (< emacs-major-version 29)
-  ("Emacs Bedrock only works with Emacs 29 and newer; you have version %s" emacs-major-version))
+  ("Config only works with Emacs 29 and newer; you have version %s" emacs-major-version))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Basic settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Change GC Threshold to improve loading times/For LSP
+(setq gc-cons-threshold 100000000)
 
-;; Package initialization
-;;
-;; We'll stick to the built-in GNU and non-GNU ELPAs (Emacs Lisp Package
-;; Archive) for the base install, but there are some other ELPAs you could look
-;; at if you want more packages. MELPA in particular is very popular. See
-;; instructions at:
-;;
-;;    https://melpa.org/#/getting-started
-;;
-;; You can simply uncomment the following if you'd like to get started with
-;; MELPA packages quickly:
-;;
+;; Package Initialization (including MELPA)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
@@ -101,12 +102,6 @@ If the new path's directories does not exist, create them."
 ;; Replace selection when typing (or pasting)
 (delete-selection-mode 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Discovery aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
@@ -114,14 +109,8 @@ If the new path's directories does not exist, create them."
   :config
   (which-key-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Minibuffer/completion settings
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
-
+;; Minibuffers and Completions
 (setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
 (setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
 (setopt completions-detailed t)                        ; Show annotations
@@ -137,96 +126,12 @@ If the new path's directories does not exist, create them."
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Interface enhancements/defaults
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Mode line information
-(setopt line-number-mode t)                        ; Show current line in modeline
-(setopt column-number-mode t)                      ; Show column as well
-
-(setopt x-underline-at-descent-line nil)           ; Prettier underlines
-(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
-
-(setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
-(setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
-
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
-
-;; We won't set these, but they're good to know about
-;;
-;; (setopt indent-tabs-mode nil)
-;; (setopt tab-width 4)
-
-;; Misc. UI tweaks
-(blink-cursor-mode -1)                                ; Steady cursor
-(pixel-scroll-precision-mode)                         ; Smooth scrolling
-
-;; For terminal users, make the mouse more useful
-(xterm-mouse-mode 1)
-
-;; Display line numbers in programming mode
-(setq display-line-numbers-type 'relative)
-(setopt display-line-numbers-width 2)           ; Set a minimum width
-(global-display-line-numbers-mode)
-
-;; Help tracking cursor
-(use-package beacon
-  :ensure t
-  :init (beacon-mode 1))
-
-;; Set line truncation to be the default
-(custom-set-variables '(truncate-lines t))
-
-;; Nice line wrapping when working with text
-(add-hook 'text-mode-hook 'visual-line-mode)
-
-;; Modes to highlight the current line with
-(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
-  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Tab-bar configuration
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Show the tab-bar as soon as tab-bar functions are invoked
-(setopt tab-bar-show 1)
-
-;; Add the time to the tab-bar, if visible
-(add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
-(add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
-(setopt display-time-format "%a %F %T")
-(setopt display-time-interval 1)
-(display-time-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Theme
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package almost-mono-themes
-  :ensure t)
-(load-theme 'almost-mono-white t)
-
-(use-package catppuccin-theme
-  :ensure t)
-(load-theme 'catppuccin :no-confirm)
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Built-in customization framework
+;;;   Customization
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -262,88 +167,9 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  )
 
-(setq gc-cons-threshold 100000000)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Motion aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package avy
-  :ensure t
-  :demand t)
-
-(use-package ace-window
-  :ensure t)
-(global-set-key (kbd "M-o") 'ace-window)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Multiple Cursors
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package multiple-cursors
-  :ensure t)
-(define-key mc/keymap (kbd "<return>") nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Power-ups: Embark and Consult
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Consult: Misc. enhanced commands
-(use-package consult
-  :ensure t
-  :bind (
-         ;; Drop-in replacements
-         ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
-         ("M-y"   . consult-yank-pop)   ; orig. yank-pop
-         ;; Searching
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
-         ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
-         ("M-s L" . consult-line-multi) ; isearch to M-s s
-         ("M-s o" . consult-outline)
-         ;; Isearch integration
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)   ; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history) ; orig. isearch-edit-string
-         ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)      ; needed by consult-line to detect isearch
-         )
-  :config
-  ;; Narrowing lets you restrict results to certain groups of candidates
-  (setq consult-narrow-key "<"))
-
-(use-package embark-consult
-  :ensure t)
-
-;; Embark: supercharged context-dependent menu; kinda like a
-;; super-charged right-click.
-(use-package embark
-  :ensure t
-  :demand t
-  :after (avy embark-consult)
-  :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
-  :init
-  ;; Add the option to run embark when using avy
-  (defun bedrock/avy-action-embark (pt)
-    (unwind-protect
-        (save-excursion
-          (goto-char pt)
-          (embark-act))
-      (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
-
-  ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
-  ;; candidate you select
-  (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Minibuffer and completion
+;;;   Completions
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -421,40 +247,6 @@ If the new path's directories does not exist, create them."
     (keymap-set eshell-mode-map "C-r" 'consult-history))
   :hook ((eshell-mode . bedrock/setup-eshell)))
 
-;; Eat: Emulate A Terminal
-(use-package eat
-  :ensure t
-  :custom
-  (eat-term-name "xterm")
-  :config
-  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
-
-;; Termint
-(setq termint-backend 'eat)
-(use-package termint
-  :ensure t
-  :after python
-  :bind (:map python-ts-mode-map ("C-c r s" . termint-ipython-start))
-  :config
-  (termint-define "ipython" "ipython" :bracketed-paste-p t
-                  :source-syntax termint-ipython-source-syntax-template)
-
-  ;; C-c r s: `termint-ipython-start'
-  ;; C-c r e: `termint-ipython-send-string'
-  ;; C-c r r: `termint-ipython-send-region' (or `termint-ipython-send-region-operator' if evil is installed.)
-  ;; C-c r p: `termint-ipython-send-paragraph'
-  ;; C-c r b: `termint-ipython-send-buffer'
-  ;; C-c r f: `termint-ipython-send-defun'
-  ;; C-c r R: `termint-ipython-source-region' (or `termint-ipython-source-region-operator' if evil is installed.)
-  ;; C-c r P: `termint-ipython-source-paragraph'
-  ;; C-c r B: `termint-ipython-source-buffer'
-  ;; C-c r F: `termint-ipython-source-defun'
-  ;; C-c r h: `termint-ipython-hide-window'
-  (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
-)
-
-
 ;; orderless: powerful completion style
 (use-package orderless
   :ensure t
@@ -463,9 +255,74 @@ If the new path's directories does not exist, create them."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Misc. editing enhancements
+;;;   Editing Enhancements
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Allows for jumping around visual field
+(use-package avy
+  :ensure t
+  :demand t)
+
+;; Easy jumping between windows
+(use-package ace-window
+  :ensure t)
+(global-set-key (kbd "M-o") 'ace-window)
+
+;; Multiple cursors
+(use-package multiple-cursors
+  :ensure t)
+(define-key mc/keymap (kbd "<return>") nil)
+
+;; Consult: Misc. enhanced commands
+(use-package consult
+  :ensure t
+  :bind (
+         ;; Drop-in replacements
+         ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
+         ("M-y"   . consult-yank-pop)   ; orig. yank-pop
+         ;; Searching
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
+         ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
+         ("M-s L" . consult-line-multi) ; isearch to M-s s
+         ("M-s o" . consult-outline)
+         ;; Isearch integration
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)   ; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history) ; orig. isearch-edit-string
+         ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)      ; needed by consult-line to detect isearch
+         )
+  :config
+  ;; Narrowing lets you restrict results to certain groups of candidates
+  (setq consult-narrow-key "<"))
+
+(use-package embark-consult
+  :ensure t)
+
+;; Embark: supercharged context-dependent menu; kinda like a
+;; super-charged right-click.
+(use-package embark
+  :ensure t
+  :demand t
+  :after (avy embark-consult)
+  :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
+  :init
+  ;; Add the option to run embark when using avy
+  (defun bedrock/avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
+  ;; candidate you select
+  (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark))
+
 
 ;; Modify search results en masse
 (use-package wgrep
@@ -476,6 +333,9 @@ If the new path's directories does not exist, create them."
 ;; Expand selected region
 (use-package expand-region
   :ensure t
+  :bind (
+   ("C-=" . er/expand-region)
+   )
   )
 
 ;; Change inside/outside current region
@@ -509,7 +369,93 @@ If the new path's directories does not exist, create them."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   built-in config for developers
+;;;   UI
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Mode line information
+(setopt line-number-mode t)                        ; Show current line in modeline
+(setopt column-number-mode t)                      ; Show column as well
+
+(setopt x-underline-at-descent-line nil)           ; Prettier underlines
+(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
+
+(setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
+(setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
+
+(blink-cursor-mode -1)                                ; Steady cursor
+(pixel-scroll-precision-mode)                         ; Smooth scrolling
+
+;; For terminal users, make the mouse more useful
+(xterm-mouse-mode 1)
+
+(setq display-line-numbers-type 'relative)      ; Use relative line numbers
+(setopt display-line-numbers-width 2)           ; Set a minimum width
+(global-display-line-numbers-mode)              ; Show line numbers
+
+;; Line Truncation/Continuation
+(custom-set-variables '(truncate-lines t))
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; Help tracking cursor
+(use-package beacon
+  :ensure t
+  :init (beacon-mode 1))
+
+;; Set modes to highlight current line in
+(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
+  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
+;; Show the tab-bar as soon as tab-bar functions are invoked
+(setopt tab-bar-show 1)
+
+;; Add the time to the tab-bar, if visible
+(add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
+(add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
+(setopt display-time-format "%a %F %T")
+(setopt display-time-interval 1)
+(display-time-mode)
+
+;; File tree
+(use-package treemacs
+  :ensure t)
+
+(use-package centaur-tabs
+  :ensure t
+  :config (centaur-tabs-mode t)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
+
+(use-package dashboard
+  :ensure t
+  :config(dashboard-setup-startup-hook)
+  )
+(setq dashboard-banner-logo-title "Welcome to Emacs!")
+(setq dashboard-startup-banner 'logo)
+(setq dashboard-center-content t)
+(setq dashboard-items '((recents   . 5)
+                        (bookmarks . 5)
+                        (projects  . 5)
+                        (registers . 5)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Theme
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package almost-mono-themes
+  :ensure t)
+(load-theme 'almost-mono-white t)
+
+(use-package catppuccin-theme
+  :ensure t)
+(load-theme 'catppuccin :no-confirm)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Developement
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -531,6 +477,7 @@ If the new path's directories does not exist, create them."
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
 
+
 (use-package project
   :custom
   (when (>= emacs-major-version 30)
@@ -541,42 +488,10 @@ If the new path's directories does not exist, create them."
   :ensure t
   :hook (after-init . envrc-global-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Version Control
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Magit: best Git client to ever exist
-(use-package magit
-  :ensure t
-  )
+;;;;;;;;;;;;;;;;;
+;;;  Linting   ;;
+;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Common file types
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package markdown-mode
-  :ensure t
-  :hook ((markdown-mode . visual-line-mode)))
-
-(use-package yaml-mode
-  :ensure t)
-
-(use-package json-mode
-  :ensure t)
-
-
-
-;; Emacs ships with a lot of popular programming language modes. If it's not
-;; built in, you're almost certain to find a mode for the language you're
-;; looking for with a quick Internet search.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Flycheck
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
@@ -587,22 +502,9 @@ If the new path's directories does not exist, create them."
 (with-eval-after-load 'flycheck
   (flycheck-pos-tip-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Flyspell
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Enable flyspell prog mode when activating prog-mode
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-
-;; Enable flyspell mode for text mode
-(add-hook 'text-mode-hook #'flyspell-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   LSP Mode
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;  LSP   ;;
+;;;;;;;;;;;;;
 (use-package lsp-mode
   :ensure t
   :init (setq lsp-keymap-prefix "C-c l")
@@ -617,11 +519,15 @@ If the new path's directories does not exist, create them."
 (use-package lsp-ui
   :ensure t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   DAP Mode
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Integrate LSP with Treemacs
+(use-package lsp-treemacs
+  :ensure t)
+(lsp-treemacs-sync-mode 1)
+
+;;;;;;;;;;;;;;;;;;
+;;;  Debugging  ;;
+;;;;;;;;;;;;;;;;;;
+
 (use-package dap-mode
   :ensure t)
 
@@ -635,30 +541,36 @@ If the new path's directories does not exist, create them."
 (setq dap-python-debugger 'debugpy)
 (use-package dap-python)
 
+;;;;;;;;;;;;;;;;;;;;
+;;;   Formatting  ;;
+;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Formatting
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package format-all
   :ensure t
   :commands format-all-mode
   :hook (prog-mode . format-all-mode)
   :config
   (setq-default format-all-formatters
-                '(
-                  ("Shell" (shfmt "-i" "4" "-ci"))
-                  )
-                )
+    '(
+      ("Shell" (shfmt "-i" "4" "-ci"))
+      )
+    )
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Language Modes  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Language Modes
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package markdown-mode
+  :ensure t
+  :hook ((markdown-mode . visual-line-mode)))
+
+(use-package yaml-mode
+  :ensure t)
+
+(use-package json-mode
+  :ensure t)
+
 (use-package rust-mode
   :ensure t)
 (add-hook 'rust-mode-hook #'lsp)
@@ -716,36 +628,10 @@ If the new path's directories does not exist, create them."
 (with-eval-after-load "ess-mode"
   (add-hook 'after-save-hook 'run-air-on-r-save)
   )
+;;;;;;;;;;;;;;;;;;;
+;;;  Templating  ;;
+;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Treemacs
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package treemacs
-  :ensure t)
-
-(use-package lsp-treemacs
-  :ensure t)
-(lsp-treemacs-sync-mode 1)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Tabs
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package centaur-tabs
-  :ensure t
-  :config (centaur-tabs-mode t)
-  :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Templating
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package tempel
   :ensure t
   ;; By default, tempel looks at the file "templates" in
@@ -771,28 +657,72 @@ If the new path's directories does not exist, create them."
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Dashboard
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package dashboard
+(use-package tempel-collection
   :ensure t
-  :config(dashboard-setup-startup-hook)
+  :after tempel
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Version Control  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Magit: best Git client to ever exist
+(use-package magit
+  :ensure t
   )
-(setq dashboard-banner-logo-title "Welcome to Emacs!")
-(setq dashboard-startup-banner 'logo)
-(setq dashboard-center-content t)
-(setq dashboard-items '((recents   . 5)
-                        (bookmarks . 5)
-                        (projects  . 5)
-                        (registers . 5)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Terminal/REPL
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Eat: Emulate A Terminal
+(use-package eat
+  :ensure t
+  :custom
+  (eat-term-name "xterm")
+  :config
+  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
+  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
+
+;; Termint
+(setq termint-backend 'eat)
+(use-package termint
+  :ensure t
+  :after python
+  :bind (:map python-ts-mode-map ("C-c r s" . termint-ipython-start))
+  :config
+  (termint-define "ipython" "ipython" :bracketed-paste-p t
+                  :source-syntax termint-ipython-source-syntax-template)
+
+  ;; C-c r s: `termint-ipython-start'
+  ;; C-c r e: `termint-ipython-send-string'
+  ;; C-c r r: `termint-ipython-send-region' (or `termint-ipython-send-region-operator' if evil is installed.)
+  ;; C-c r p: `termint-ipython-send-paragraph'
+  ;; C-c r b: `termint-ipython-send-buffer'
+  ;; C-c r f: `termint-ipython-send-defun'
+  ;; C-c r R: `termint-ipython-source-region' (or `termint-ipython-source-region-operator' if evil is installed.)
+  ;; C-c r P: `termint-ipython-source-paragraph'
+  ;; C-c r B: `termint-ipython-source-buffer'
+  ;; C-c r F: `termint-ipython-source-defun'
+  ;; C-c r h: `termint-ipython-hide-window'
+  (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Writing
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Enable flyspell prog mode when activating prog-mode
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+;; Enable flyspell mode for text mode
+(add-hook 'text-mode-hook #'flyspell-mode)
+
 (defun my/writeroom (arg)
   "Hook used for writeroom-mode"
   (cond
@@ -820,88 +750,46 @@ If the new path's directories does not exist, create them."
   :ensure t
   )
 
-
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Hydras
+;;;   Keymaps
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defhydra hydra-movement (global-map "C-c v")
-  "Movement"
-  ("f" forward-char "forward")
-  ("b" backward-char "backward")
-  ("n" forward-line "line down")
-  ("p" previous-line "line up")
-  ("W" left-word "word back")
-  ("w" right-word "word forward")
-  ("g" avy-goto-word-0 "jump")
-  ("v" scroll-up-command "down page")
-  ("V" scroll-down-command "up page")
-  ("]" forward-sentence "sentence forward")
-  ("[" backward-sentence "sentence backward")
-  ("}" forward-paragraph "paragraph forward")
-  ("{" backward-paragraph "paragraph backward")
-  ("a" move-beginning-of-line "line start")
-  ("e" move-end-of-line "line end")
-  ("h" windmove-left "window left")
-  ("j" windmove-down "window down")
-  ("k" windmove-up "window up")
-  ("l" windmove-right "window right")
-  ("s" sp-forward-sexp "sexp forward")
-  ("S" sp-backward-sexp "sexp backward")
-  )
 
-(defun hydra-region ()
-  "Set mark and launch movement hydra"
-  (interactive)
-  (set-mark-command nil)
-  (hydra-movement/body)
-  )
+;;;;;;;;;;;;;;;;
+;;;  Hydras   ;;
+;;;;;;;;;;;;;;;;
 
-(defhydra hydra-flycheck (global-map "C-c h x")
+(defhydra hydra-flycheck (global-map nil)
   "Flycheck"
   ("n" flycheck-next-error "Next Error")
   ("p" flycheck-previous-error "Previous Error")
   ("e" flycheck-explain-error-at-point "Explain")
-  )
-
-(defhydra hydra-sexp (global-map "C-c h s")
-  "Sexp"
-  ("s" sp-forward-slurp-sexp "slurp forward")
-  ("S" sp-backward-slurp-sexp "slurp back")
-  ("b" sp-forward-barf-sexp "barf forward")
-  ("B" sp-backward-barf-sexp "barf back")
-  ("n" sp-next-sexp "next")
-  ("p" sp-previous-sexp "previous")
-  ("r" sp-rewrap-sexp "replace")
-  ("d" sp-unwrap-sexp "delete")
-  ("D" sp-backward-unwrap-sexp "delete backwards")
-  ("c" sp-change-enclosing "change inside")
-  ("(" sp-wrap-round "wrap ()")
-  ("{" sp-wrap-curly "wrap {}")
-  ("[" sp-wrap-square "wrap []")
+  ("l" flycheck-list-errors "List errors")
+  ("s" flycheck-select-checker "Select checker")
+  ("x" flycheck-buffer "Flycheck buffer")
+  ("v" flycheck-verify-setup "Verify setup")
   )
 
 (defhydra hydra-multicursor (global-map "C-c h c")
   "Multicursor"
   ("n" mc/mark-next-like-this-word "Next Word")
   ("p" mc/mark-previous-like-this-word "Previous Word")
-  ("N" mc/mark-next-like-this-symbol "Next Word")
-  ("P" mc/mark-previous-like-this-symbol "Previous Word")
+  ("N" mc/mark-next-like-this-symbol "Next Symbole")
+  ("P" mc/mark-previous-like-this-symbol "Previous Symbol")
   ("j" mc/mmlte--down "Next Line")
   ("k" mc/mmlte--up "Previous Line")
+  ("r" mc/mark-all-in-region "At matches in region")
+  ("^" mc/edit-beginnings-of-lines "At line start")
+  ("$" mc/edit-ends-of-lines "At line end")
+  ("%" mc/mark-all-like-this "At all matches in buffer")
+  ("w" mc/mark-all-words-like-this "At all words like current")
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  General Keybinds   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   General Keybinds
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Move through windows with Ctrl-<arrow keys>
 (windmove-default-keybindings 'control)
 
@@ -935,6 +823,8 @@ If the new path's directories does not exist, create them."
     "b n" '(next-buffer :wk "Next buffer")
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
+    "b R" '(crux-rename-file-and-buffer :wk "Rename")
+    "b o" '(crux-kill-other-buffers :wk "Kill other buffers")
     )
 
   ;; Comment keymaps
@@ -960,15 +850,20 @@ If the new path's directories does not exist, create them."
     "d r" '(dap-restart-frame :wk "restart frame")
     )
 
-  ;; File Keymaps
+  ;; File/Find Keymaps
   (start/leader-keys
-    "f" '(:ignore t :wk "file")
+    "f" '(:ignore t :wk "file/find")
     "f d" '(dired :wk "Open dired")
     "f j" '(dired-jump :wk "Dired jump to current")
     "f w" '(write-file :wk "Write File (with name)")
     "f s" '(save-buffer :wk "Save Buffer")
-    "f S" '(save-some-buffer :wk "Save Buffer")
+    "f S" '(save-some-buffer :wk "Save Some Buffer")
     "f t" '(treemacs :wk "File Tree")
+    "f r" '(consult-recent-file :wk "Recent Files")
+    "f f" '(consult-fd :wk "Files with fd")
+    "f g" '(consult-ripgrep :wk "Grep")
+    "f l" '(consult-line :wk "Search line")
+    "f i" '(consult-imenu :wk "Search Imenu buffer locations")
     )
 
   ;; Git
@@ -1004,16 +899,13 @@ If the new path's directories does not exist, create them."
 
   ;; Multicursor
   (start/leader-keys
-    "m" '(:ignore t :wk "multicursor")
-    "m r" '(mc/mark-all-in-region :wk "At matches in region")
-    "m ^" '(mc/edit-beginnings-of-lines :wk "At line start")
-    "m $" '(mc/edit-ends-of-lines :wk "At line end")
-    "m %" '(mc/mark-all-like-this :wk "At all matches in buffer")
-    "m w" '(mc/mark-all-words-like-this :wk "At all words like current")
-    "m n" '(mc/mmlte--down :wk "Next line")
-    "m p" '(mc/mmlte--up :wk "Previous line")
-    "m j" '(mc/mark-next-word-like-this :wk "Multicursor Next Word")
-    "m k" '(mc/mark-previous-word-like-this :wk "Multicursor Prev Word")
+    "m" '(hydra-multicursor/body t :wk "multicursor")
+    )
+
+  ;; Open line (Above or below)
+  (start/leader-keys
+    "o" '(crux-smart-open-line :wk "Line below")
+    "O" '(crux-smart-open-line :wk "Line above")
     )
 
   ;; Language Specific Bindings
@@ -1026,14 +918,22 @@ If the new path's directories does not exist, create them."
     "r" '(:ignore t :wk "REPL")
     )
 
-  ;; Search functionality
+  ;; SEXP
   (start/leader-keys
-    "s" '(:ignore t :wk "search")
-    "s r" '(consult-recent-file :wk "Search recent files")
-    "s f" '(consult-fd :wk "Search files with fd")
-    "s g" '(consult-ripgrep :wk "Search with ripgrep")
-    "s l" '(consult-line :wk "Search line")
-    "s i" '(consult-imenu :wk "Search Imenu buffer locations")
+    "s" '(:ignore t :wk "Sexp/Parens")
+    "s" '(sp-forward-slurp-sexp :wk "slurp forward")
+    "S" '(sp-backward-slurp-sexp :wk "slurp back")
+    "b" '(sp-forward-barf-sexp :wk "barf forward")
+    "B" '(sp-backward-barf-sexp :wk "barf back")
+    "n" '(sp-next-sexp :wk "next")
+    "p" '(sp-previous-sexp :wk "previous")
+    "r" '(sp-rewrap-sexp :wk "replace")
+    "d" '(sp-unwrap-sexp :wk "delete")
+    "D" '(sp-backward-unwrap-sexp :wk "delete backwards")
+    "c" '(sp-change-enclosing :wk "change inside")
+    "(" '(sp-wrap-round :wk "wrap ()")
+    "{" '(sp-wrap-curly :wk "wrap {}")
+    "[" '(sp-wrap-square :wk "wrap []")
     )
 
   ;; Toggle/Terminal
@@ -1047,13 +947,8 @@ If the new path's directories does not exist, create them."
   ;; Utility functions (mostly crux)
   (start/leader-keys
     "u" '(:ignore t :wk "utils")
-    "u o" '(crux-smart-open-line "Line below")
-    "u O" '(crux-smart-open-line-above "Line above")
-    "u d" '(crux-duplicate-current-line-or-region "Duplicate line/region")
-    "u k" '(crux-kill-other-buffers "Kill other buffers")
-    "u r" '(crux-rename-file-and-buffer "Rename file/buffer")
-    "u t" '(crux-transpose-windows "Transpose Windows")
-    "u j" '(join-line "Join line")
+    "u d" '(crux-duplicate-current-line-or-region  :wk "Duplicate line/region")
+    "u j" '(join-line :wk "Join line")
     )
 
   ;; Window keymaps
@@ -1066,6 +961,7 @@ If the new path's directories does not exist, create them."
     "w q" '(delete-window :wk "Close Window")
     "w |" '(split-window-right :wk "Split Vertical")
     "w -" '(split-window-below :wk "Split Horizontal")
+    "w t" '(crux-transpose-windows :wk "Transpose windows")
     )
 
   ;; Flycheck
@@ -1073,20 +969,11 @@ If the new path's directories does not exist, create them."
     "!" '(:ignore t :wk "flycheck (default)")
     )
   (start/leader-keys
-    "x" '(:ignore t :wk "flycheck")
-    )
+    "x" '(hydra-flycheck/body :wk "flycheck")
   )
 
   ;; Zen/Writing
   (start/leader-keys
     "z" '(writeroom-mode :wk "Zen/Writing")
     )
-
-
-(define-key flycheck-mode-map (kbd "C-c x l") #'flycheck-list-errors)
-(define-key flycheck-mode-map (kbd "C-c x s") #'flycheck-select-checker)
-(define-key flycheck-mode-map (kbd "C-c x n") #'flycheck-next-error)
-(define-key flycheck-mode-map (kbd "C-c x p") #'flycheck-previous-error)
-(define-key flycheck-mode-map (kbd "C-c x e") #'flycheck-explain-error-at-point)
-(define-key flycheck-mode-map (kbd "C-c x x") #'flycheck-buffer)
-(define-key flycheck-mode-map (kbd "C-c x v") #'flycheck-verify-setup)
+)
