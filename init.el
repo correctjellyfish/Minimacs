@@ -43,7 +43,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Change GC Threshold to improve loading times/For LSP
-(setq gc-cons-threshold 100000000)
+
 
 ;; Package Initialization (including MELPA)
 (with-eval-after-load 'package
@@ -140,19 +140,11 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(almost-mono-themes beacon cape catppuccin-theme centaur-tabs
-			change-inner corfu-terminal crux dap-mode
-			dashboard eat embark-consult envrc ess esup
-			flycheck-pos-tip format-all general json-mode
-			kind-icon lsp-ui magit marginalia move-text
-			multiple-cursors orderless paper-theme
-			rust-mode smartparens tempel termint
-			typst-ts-mode vertico wgrep writeroom-mode
-			yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
+ '(truncate-lines t)
  '(writeroom-global-effects
    '(writeroom-set-fullscreen writeroom-set-alpha
 			      writeroom-set-menu-bar-lines
@@ -394,7 +386,7 @@ If the new path's directories does not exist, create them."
 (global-display-line-numbers-mode)              ; Show line numbers
 
 ;; Line Truncation/Continuation
-(custom-set-variables '(truncate-lines t))
+
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 ;; Help tracking cursor
@@ -657,6 +649,7 @@ If the new path's directories does not exist, create them."
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
+;; Collection of useful templates
 (use-package tempel-collection
   :ensure t
   :after tempel
@@ -760,7 +753,7 @@ If the new path's directories does not exist, create them."
 ;;;  Hydras   ;;
 ;;;;;;;;;;;;;;;;
 
-(defhydra hydra-flycheck (global-map nil)
+(defhydra hydra-flycheck ()
   "Flycheck"
   ("n" flycheck-next-error "Next Error")
   ("p" flycheck-previous-error "Previous Error")
@@ -769,21 +762,6 @@ If the new path's directories does not exist, create them."
   ("s" flycheck-select-checker "Select checker")
   ("x" flycheck-buffer "Flycheck buffer")
   ("v" flycheck-verify-setup "Verify setup")
-  )
-
-(defhydra hydra-multicursor (global-map "C-c h c")
-  "Multicursor"
-  ("n" mc/mark-next-like-this-word "Next Word")
-  ("p" mc/mark-previous-like-this-word "Previous Word")
-  ("N" mc/mark-next-like-this-symbol "Next Symbole")
-  ("P" mc/mark-previous-like-this-symbol "Previous Symbol")
-  ("j" mc/mmlte--down "Next Line")
-  ("k" mc/mmlte--up "Previous Line")
-  ("r" mc/mark-all-in-region "At matches in region")
-  ("^" mc/edit-beginnings-of-lines "At line start")
-  ("$" mc/edit-ends-of-lines "At line end")
-  ("%" mc/mark-all-like-this "At all matches in buffer")
-  ("w" mc/mark-all-words-like-this "At all words like current")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -873,18 +851,10 @@ If the new path's directories does not exist, create them."
     "g s" '(magit-status :wk "Magit Status")
     )
 
-  ;; Hydras
-  (start/leader-keys
-    "h" '(:ignore t :wk "hydras")
-    "h x" '(:ignore t :wk "flycheck")
-    "h s" '(:ignore t :wk "sexp/parens")
-    "h c" '(:ignore t :wk "multicursor")
-    )
-
   ;; Jump
   (start/leader-keys
     "j" '(:ignore t :wk "jump")
-    "j j" '(acy-goto-word-0 :wk "Jump to word")
+    "j j" '(avy-goto-word-0 :wk "Jump to word (0 in)")
     "j l" '(avy-goto-line :wk "Jump to line")
     "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
     "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
@@ -900,6 +870,20 @@ If the new path's directories does not exist, create them."
   ;; Multicursor
   (start/leader-keys
     "m" '(hydra-multicursor/body t :wk "multicursor")
+    "n" '(mc/mark-next-like-this-word :wk "MC Mark Next")
+    "N" '(mc/skip-to-next-like-this :wk "MC Skip Next")
+    "p" '(mc/mark-previous-like-this-word :wk "MC Mark Previous")
+    "P" '(mc/skip-to-previous-like-this :wk "MC Skip Previous")
+    "m j" '(mc/mark-next-like-this :wk "Mark Next line/region")
+    "m k" '(mc/mark-next-like-this :wk "Mark Previous line/region")
+    "m ^" '(mc/edit-beginnings-of-lines :wk "Mark line starts")
+    "m $" '(mc/edit-ends-of-lines :wk "Mark line ends")
+    "m s" '(mc/mark-all-in-region :wk "Mark all in region")
+    "m v" '(mc/vertical-align :wk "Vertical align")
+    "m f" '(mc/mark-all-like-this-in-defun :wk "All in function")
+    "m i" '(:ignore t :wk "Insert")
+    "m i a" '(mc/insert-letters :wk "Add incrementing letters")
+    "m i n" '(mc/insert-letters :wk "Add incrementing letters")
     )
 
   ;; Open line (Above or below)
@@ -921,19 +905,19 @@ If the new path's directories does not exist, create them."
   ;; SEXP
   (start/leader-keys
     "s" '(:ignore t :wk "Sexp/Parens")
-    "s" '(sp-forward-slurp-sexp :wk "slurp forward")
-    "S" '(sp-backward-slurp-sexp :wk "slurp back")
-    "b" '(sp-forward-barf-sexp :wk "barf forward")
-    "B" '(sp-backward-barf-sexp :wk "barf back")
-    "n" '(sp-next-sexp :wk "next")
-    "p" '(sp-previous-sexp :wk "previous")
-    "r" '(sp-rewrap-sexp :wk "replace")
-    "d" '(sp-unwrap-sexp :wk "delete")
-    "D" '(sp-backward-unwrap-sexp :wk "delete backwards")
-    "c" '(sp-change-enclosing :wk "change inside")
-    "(" '(sp-wrap-round :wk "wrap ()")
-    "{" '(sp-wrap-curly :wk "wrap {}")
-    "[" '(sp-wrap-square :wk "wrap []")
+    "s s" '(sp-forward-slurp-sexp :wk "slurp forward")
+    "s S" '(sp-backward-slurp-sexp :wk "slurp back")
+    "s b" '(sp-forward-barf-sexp :wk "barf forward")
+    "s B" '(sp-backward-barf-sexp :wk "barf back")
+    "s n" '(sp-next-sexp :wk "next")
+    "s p" '(sp-previous-sexp :wk "previous")
+    "s r" '(sp-rewrap-sexp :wk "replace")
+    "s d" '(sp-unwrap-sexp :wk "delete")
+    "s D" '(sp-backward-unwrap-sexp :wk "delete backwards")
+    "s c" '(sp-change-enclosing :wk "change inside")
+    "s (" '(sp-wrap-round :wk "wrap ()")
+    "s {" '(sp-wrap-curly :wk "wrap {}")
+    "s [" '(sp-wrap-square :wk "wrap []")
     )
 
   ;; Toggle/Terminal
