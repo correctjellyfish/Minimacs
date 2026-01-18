@@ -489,7 +489,6 @@ If the new path's directories does not exist, create them."
 (use-package emacs
   :config
   ;; Treesitter config
-
   ;; Tell Emacs to prefer the treesitter mode
   ;; You'll want to run the command `M-x treesit-install-language-grammar' before editing.
   (setq major-mode-remap-alist
@@ -542,7 +541,8 @@ If the new path's directories does not exist, create them."
          (cc-mode . lsp)
          ;; which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+  :commands lsp
+  )
 
 (use-package lsp-ui
   :ensure t)
