@@ -104,10 +104,10 @@ If the new path's directories does not exist, create them."
 
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
+;; Eagerly Loaded
 (use-package which-key
   :ensure t
-  :config
-  (which-key-mode))
+  :config (which-key-mode))
 
 
 ;; Minibuffers and Completions
@@ -175,6 +175,7 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Vertico: better vertical completion for minibuffer commands
+;; Eager
 (use-package vertico
   :ensure t
   :init
@@ -182,7 +183,7 @@ If the new path's directories does not exist, create them."
   (vertico-mode))
 
 (use-package vertico-directory
-  :ensure nil
+  :ensure nil ;; Included in vertico
   :after vertico
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
@@ -194,10 +195,10 @@ If the new path's directories does not exist, create them."
   (marginalia-mode))
 
 ;; Corfu: Popup completion-at-point
-(setq corfu-auto t corfu-auto-delay 0.1 corfu-quit-no-match 'separator)
 (use-package corfu
   :ensure t
   :init
+  (setq corfu-auto t corfu-auto-delay 0.1 corfu-quit-no-match 'separator)
   (global-corfu-mode)
   :bind
   (:map corfu-map
@@ -263,17 +264,40 @@ If the new path's directories does not exist, create them."
 ;; Allows for jumping around visual field
 (use-package avy
   :ensure t
-  :demand t)
+  :bind (
+         ("C-c j j" . avy-goto-word-0)
+         ("C-c j l" . avy-goto-line)
+         ("C-c j c" . avy-goto-char-timer)
+         ("C-c j w" . avy-goto-word-1)
+         )
+  )
 
 ;; Easy jumping between windows
 (use-package ace-window
-  :ensure t)
-(global-set-key (kbd "M-o") 'ace-window)
+  :ensure t
+  :bind ("M-o" . ace-window))
 
 ;; Multiple cursors
 (use-package multiple-cursors
-  :ensure t)
-(define-key mc/keymap (kbd "<return>") nil)
+  :ensure t
+  :config
+    (define-key mc/keymap (kbd "<return>") nil)
+  :bind(
+        ("C-c n" . mc/mark-next-like-this-word)
+        ("C-c N" . mc/skip-to-next-like-this)
+        ("C-c p" . mc/mark-previous-like-this-word)
+        ("C-c P" . mc/skip-to-previous-like-this)
+        ("C-c m j" . mc/mark-next-like-this )
+        ("C-c m k" . mc/mark-next-like-this )
+        ("C-c m ^" . mc/edit-beginnings-of-lines )
+        ("C-c m $" . mc/edit-ends-of-lines )
+        ("C-c m s" . mc/mark-all-in-region )
+        ("C-c m v" . mc/vertical-align )
+        ("C-c m f" . mc/mark-all-like-this-in-defun )
+        ("C-c m i a" . mc/insert-letters )
+        ("C-c m i n" . mc/insert-letters )
+        )
+  )
 
 ;; Consult: Misc. enhanced commands
 (use-package consult
@@ -365,6 +389,10 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind (
 	 ("C-k" . crux-smart-kill-line)
+   ("C-c C-o" . crux-smart-open-line)
+   ("C-c C-O" . crux-smart-open-line-above)
+   ("C-c u d" . crux-duplicate-current-line-or-region)
+   ("C-c w t" . crux-transpose-windows)
   )
   )
 
@@ -448,11 +476,9 @@ If the new path's directories does not exist, create them."
 
 (use-package almost-mono-themes
   :ensure t)
-(load-theme 'almost-mono-white t)
+(load-theme 'almost-mono-white t) ;; Loaded so it will work with writeroom-mode
 
-(use-package catppuccin-theme
-  :ensure t)
-(load-theme 'catppuccin :no-confirm)
+(load-theme 'deeper-blue)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -495,13 +521,14 @@ If the new path's directories does not exist, create them."
 
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init
+  (global-flycheck-mode)
+  (flycheck-pos-tip-mode)
+  )
 
 (use-package flycheck-pos-tip
-  :ensure t)
-
-(with-eval-after-load 'flycheck
-  (flycheck-pos-tip-mode))
+  :ensure t
+  :after flycheck)
 
 ;;;;;;;;;;;;;
 ;;;  LSP   ;;
@@ -687,10 +714,14 @@ If the new path's directories does not exist, create them."
   (eat-term-name "xterm")
   :config
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
+  (eat-eshell-visual-command-mode)     ; commands like less will be handled by Eat
+  :bind (
+         ("C-c t t" . eat)
+         )
+  :commands eat
+  )
 
 ;; Termint
-(setq termint-backend 'eat)
 (use-package termint
   :ensure t
   :after python
@@ -698,6 +729,7 @@ If the new path's directories does not exist, create them."
   :config
   (termint-define "ipython" "ipython" :bracketed-paste-p t
                   :source-syntax termint-ipython-source-syntax-template)
+  (setq termint-backend 'eat)
 
   ;; C-c r s: `termint-ipython-start'
   ;; C-c r e: `termint-ipython-send-string'
@@ -746,10 +778,14 @@ If the new path's directories does not exist, create them."
   )
 
 (use-package visual-fill-column
+  :defer t
   :ensure t)
 
 (use-package writeroom-mode
   :ensure t
+  :bind (
+         ("C-c z" . writeroom-mode)
+         )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -863,11 +899,6 @@ If the new path's directories does not exist, create them."
   ;; Jump
   (start/leader-keys
     "j" '(:ignore t :wk "jump")
-    "j j" '(avy-goto-word-0 :wk "Jump to word (0 in)")
-    "j l" '(avy-goto-line :wk "Jump to line")
-    "j c" '(avy-goto-char-timer :wk "Jump char (timer)")
-    "j w" '(avy-goto-word-1 :wk "Jump word (1 in)")
-    "j h" '(avy-goto-char-2 :wk "Jump char (2 in)")
     )
 
   ;; Language keymaps (lsp-mode, etc.)
@@ -878,27 +909,14 @@ If the new path's directories does not exist, create them."
 
   ;; Multicursor
   (start/leader-keys
-    "n" '(mc/mark-next-like-this-word :wk "MC Mark Next")
-    "N" '(mc/skip-to-next-like-this :wk "MC Skip Next")
-    "p" '(mc/mark-previous-like-this-word :wk "MC Mark Previous")
-    "P" '(mc/skip-to-previous-like-this :wk "MC Skip Previous")
-    "m" '(:ignore: wk "multicursor")
-    "m j" '(mc/mark-next-like-this :wk "Mark Next line/region")
-    "m k" '(mc/mark-next-like-this :wk "Mark Previous line/region")
-    "m ^" '(mc/edit-beginnings-of-lines :wk "Mark line starts")
-    "m $" '(mc/edit-ends-of-lines :wk "Mark line ends")
-    "m s" '(mc/mark-all-in-region :wk "Mark all in region")
-    "m v" '(mc/vertical-align :wk "Vertical align")
-    "m f" '(mc/mark-all-like-this-in-defun :wk "All in function")
-    "m i" '(:ignore t :wk "Insert")
-    "m i a" '(mc/insert-letters :wk "Add incrementing letters")
-    "m i n" '(mc/insert-letters :wk "Add incrementing letters")
+    "m" '(:ignore wk "multicursor")
+    "m i" '(:ignore :wk "insert")
     )
 
   ;; Open line (Above or below)
   (start/leader-keys
-    "o" '(crux-smart-open-line :wk "Line below")
-    "O" '(crux-smart-open-line :wk "Line above")
+    "o" '(:ignore t :wk "Line below")
+    "O" '(:ignore t :wk "Line above")
     )
 
   ;; Language Specific Bindings
@@ -932,7 +950,7 @@ If the new path's directories does not exist, create them."
   ;; Toggle/Terminal
   (start/leader-keys
     "t" '(:ignore t :wk "terminal/toggle")
-    "t t" '(eat :wk "Terminal")
+    "t t" '(:ignore t :wk "Terminal")
     "t w" '(visual-line-mode :wk "Toggle line wrap")
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
     )
@@ -940,7 +958,7 @@ If the new path's directories does not exist, create them."
   ;; Utility functions (mostly crux)
   (start/leader-keys
     "u" '(:ignore t :wk "utils")
-    "u d" '(crux-duplicate-current-line-or-region  :wk "Duplicate line/region")
+    "u d" '(:ignore t  :wk "Duplicate line/region")
     "u j" '(join-line :wk "Join line")
     )
 
@@ -954,7 +972,7 @@ If the new path's directories does not exist, create them."
     "w q" '(delete-window :wk "Close Window")
     "w |" '(split-window-right :wk "Split Vertical")
     "w -" '(split-window-below :wk "Split Horizontal")
-    "w t" '(crux-transpose-windows :wk "Transpose windows")
+    "w t" '(:ignore t :wk "Transpose windows")
     )
 
   ;; Flycheck
@@ -967,6 +985,6 @@ If the new path's directories does not exist, create them."
 
   ;; Zen/Writing
   (start/leader-keys
-    "z" '(writeroom-mode :wk "Zen/Writing")
+    "z" '(:ignore t :wk "Zen/Writing")
     )
 )
