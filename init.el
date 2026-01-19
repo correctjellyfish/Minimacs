@@ -141,15 +141,15 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(almost-mono-themes beacon cape catppuccin-theme centaur-tabs
-			change-inner corfu-terminal crux dap-mode
-			dashboard eat embark-consult envrc ess esup
-			flycheck-pos-tip format-all general god-mode
-			json-mode kind-icon lsp-ui magit marginalia
-			move-text multiple-cursors orderless
-			paper-theme rust-mode smartparens
-			tempel-collection termint typst-ts-mode
-			vertico wgrep writeroom-mode yaml-mode))
+   '(almost-mono-themes beacon cape centaur-tabs change-inner
+			corfu-terminal crux dap-mode dashboard eat
+			embark-consult envrc ess esup flycheck-pos-tip
+			format-all general god-mode json-mode
+			kind-icon lsp-ui magit marginalia move-text
+			multiple-cursors orderless paper-theme
+			rust-mode smartparens tempel-collection
+			termint typst-ts-mode vertico wgrep
+			writeroom-mode yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -281,7 +281,7 @@ If the new path's directories does not exist, create them."
 (use-package multiple-cursors
   :ensure t
   :config
-    (define-key mc/keymap (kbd "<return>") nil)
+  (define-key mc/keymap (kbd "<return>") nil)
   :bind(
         ("C-c n" . mc/mark-next-like-this-word)
         ("C-c N" . mc/skip-to-next-like-this)
@@ -312,6 +312,12 @@ If the new path's directories does not exist, create them."
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
          ("M-s o" . consult-outline)
+         ;; Leader key functions
+         ("C-c f r" . consult-recent-file)
+         ("C-c f f" . consult-fd)
+         ("C-c f g" . consult-ripgrep)
+         ("C-c f l" . consult-line)
+         ("C-c f i" . consult-imenu)
          ;; Isearch integration
          :map isearch-mode-map
          ("M-e" . consult-isearch-history)   ; orig. isearch-edit-string
@@ -359,8 +365,8 @@ If the new path's directories does not exist, create them."
 (use-package expand-region
   :ensure t
   :bind (
-   ("C-=" . er/expand-region)
-   )
+	 ("C-=" . er/expand-region)
+	 )
   )
 
 ;; Change inside/outside current region
@@ -373,7 +379,22 @@ If the new path's directories does not exist, create them."
   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
   :config
   ;; load default config
-  (require 'smartparens-config))
+  (require 'smartparens-config)
+  :bind
+  ("C-c s s" . sp-forward-slurp-sexp)
+  ("C-c s S" . sp-backward-slurp-sexp)
+  ("C-c s b" . sp-forward-barf-sexp)
+  ("C-c s B" . sp-backward-barf-sexp)
+  ("C-c s n" . sp-next-sexp)
+  ("C-c s p" . sp-previous-sexp)
+  ("C-c s r" . sp-rewrap-sexp)
+  ("C-c s d" . sp-unwrap-sexp)
+  ("C-c s D" . sp-backward-unwrap-sexp)
+  ("C-c s c" . sp-change-enclosing)
+  ("C-c s (" . sp-wrap-round)
+  ("C-c s {" . sp-wrap-curly)
+  ("C-c s [" . sp-wrap-square)
+  )
 
 ;; Move lines or region
 (use-package move-text
@@ -389,11 +410,14 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind (
 	 ("C-k" . crux-smart-kill-line)
-   ("C-c C-o" . crux-smart-open-line)
-   ("C-c C-O" . crux-smart-open-line-above)
-   ("C-c u d" . crux-duplicate-current-line-or-region)
-   ("C-c w t" . crux-transpose-windows)
-  )
+	 ("C-c o" . crux-smart-open-line)
+	 ("C-c O" . crux-smart-open-line-above)
+	 ("C-c u d" . crux-duplicate-current-line-or-region)
+	 ("C-c w t" . crux-transpose-windows)
+	 ("C-c b R" . crux-rename-file-and-buffer)
+	 ("C-c b o" . crux-kill-other-buffers)
+	 ("C-c b b" . consult-buffer )
+	 )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -447,7 +471,9 @@ If the new path's directories does not exist, create them."
 
 ;; File tree
 (use-package treemacs
-  :ensure t)
+  :ensure t
+  :commands treemacs
+  :bind ("C-c f t" . treemacs))
 
 (use-package centaur-tabs
   :ensure t
@@ -478,7 +504,9 @@ If the new path's directories does not exist, create them."
   :ensure t)
 (load-theme 'almost-mono-white t) ;; Loaded so it will work with writeroom-mode
 
-(load-theme 'deeper-blue)
+(if (display-graphic-p)
+    (load-theme 'wombat)
+  (load-theme 'modus-vivendi-tinted))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -521,6 +549,7 @@ If the new path's directories does not exist, create them."
 (use-package flycheck
   :ensure t
   :init
+  (setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
   (global-flycheck-mode)
   (flycheck-pos-tip-mode)
   )
@@ -542,32 +571,55 @@ If the new path's directories does not exist, create them."
          ;; which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
+  :bind ("C-c l l" . lsp)
   )
 
 (use-package lsp-ui
-  :ensure t)
+  :ensure t
+  :after lsp-mode
+  :commands lsp
+  )
 
 ;; Integrate LSP with Treemacs
 (use-package lsp-treemacs
-  :ensure t)
-(lsp-treemacs-sync-mode 1)
+  :ensure t
+  :config (lsp-treemacs-sync-mode 1)
+  :commands lsp)
 
 ;;;;;;;;;;;;;;;;;;
 ;;;  Debugging  ;;
 ;;;;;;;;;;;;;;;;;;
 
 (use-package dap-mode
-  :ensure t)
+  :ensure t
+  :config (add-hook 'dap-stopped-hook
+		    (lambda (arg) (call-interactively #'dap-hydra)))
+  :bind (
+	 ("C-c d b" . dap-breakpoint-toggle)
+	 ("C-c d s" . dap-debug)
+	 ("C-c d o" . dap-go-to-output-buffer)
+	 ("C-c d c" . dap-continue)
+	 ("C-c d n" . dap-next)
+	 ("C-c d i" . dap-step-in)
+	 ("C-c d u" . dap-step-out)
+	 ("C-c d e" . dap-eval-thing-at-point)
+	 ("C-c d g" . dap-eval-region)
+	 ("C-c d r" . dap-restart-frame)
+         )
+  )
 
-(add-hook 'dap-stopped-hook
-          (lambda (arg) (call-interactively #'dap-hydra)))
+
 
 ;; Native Debugging
-(use-package dap-gdb)
+(use-package dap-gdb
+  :after dap-mode)
 
 ;; Python Debugging
-(setq dap-python-debugger 'debugpy)
-(use-package dap-python)
+(use-package dap-python
+  :after dap-mode
+  :config (setq dap-python-debugger 'debugpy)
+  :mode ("\\.py\\'" . python-ts-mode)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;   Formatting  ;;
@@ -579,10 +631,10 @@ If the new path's directories does not exist, create them."
   :hook (prog-mode . format-all-mode)
   :config
   (setq-default format-all-formatters
-    '(
-      ("Shell" (shfmt "-i" "4" "-ci"))
-      )
-    )
+		'(
+		  ("Shell" (shfmt "-i" "4" "-ci"))
+		  )
+		)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -600,25 +652,16 @@ If the new path's directories does not exist, create them."
   :ensure t)
 
 (use-package rust-mode
-  :ensure t)
-(add-hook 'rust-mode-hook #'lsp)
-;; Stop rust-mode clobbering my keymap
-(with-eval-after-load 'rust-mode
-  (define-key rust-mode-map (kbd "C-c C-c C-u") nil) ;; Default Compile
-  (define-key rust-mode-map (kbd "C-c C-c C-k") nil) ;; Default Check
-  (define-key rust-mode-map (kbd "C-c C-c C-t") nil) ;; Default test
-  (define-key rust-mode-map (kbd "C-c C-c C-r") nil) ;; Default run
-  (define-key rust-mode-map (kbd "C-c C-d") nil) ;; Default rust-dbg-wrap-or-unwrap
-  (define-key rust-mode-map (kbd "C-c p c") 'rust-compile) ;; New compile
-  (define-key rust-mode-map (kbd "C-c p k") 'rust-check) ;; New check
-  (define-key rust-mode-map (kbd "C-c p t") 'rust-test) ;; New test
-  (define-key rust-mode-map (kbd "C-c p r") 'rust-run) ;; New run
+  :ensure t
+  :hook (rust-mode . lsp)
   )
 
 ;; Typst
 (use-package typst-ts-mode
   :ensure t
-  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
+  :mode "\\.typ\\'"
+  )
 
 ;; R
 (defun my/insert-R-pipe ()
@@ -630,18 +673,6 @@ If the new path's directories does not exist, create them."
   "Insert '<-' at point, moving point forward."
   (interactive)
   (insert "<-"))
-(use-package ess
-  :ensure t
-  :bind (
-	 ("C-c >" . #'my/insert-R-pipe)
-	 ("C-c >" . #'my/insert-R-pipe)
-    )
-  )
-(load "ess-autoloads")
-
-
-(setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
-
 ;; use Air to format the content of the file
 (defun run-air-on-r-save ()
   "Run Air after saving .R files and refresh buffer."
@@ -652,10 +683,16 @@ If the new path's directories does not exist, create them."
       ;; Refresh buffer from disk
       (with-current-buffer current-buffer
         (revert-buffer nil t t)))))
+(use-package ess
+  :ensure t
+  :defer t
+  :hook (after-save . run-air-on-r-save)
+  :config
+  (keymap-global-set "C-c >" #'my/insert-R-pipe)
+  (keymap-global-set "C-c -" #'my/insert-R-assignment)
 
-(with-eval-after-load "ess-mode"
-  (add-hook 'after-save-hook 'run-air-on-r-save)
   )
+(load "ess-autoloads")
 ;;;;;;;;;;;;;;;;;;;
 ;;;  Templating  ;;
 ;;;;;;;;;;;;;;;;;;;
@@ -689,7 +726,7 @@ If the new path's directories does not exist, create them."
 (use-package tempel-collection
   :ensure t
   :after tempel
-)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  Version Control  ;;
@@ -698,6 +735,8 @@ If the new path's directories does not exist, create them."
 ;; Magit: best Git client to ever exist
 (use-package magit
   :ensure t
+  :commands magit-status
+  :bind ("C-c g s" . magit-status)
   )
 
 
@@ -743,7 +782,7 @@ If the new path's directories does not exist, create them."
   ;; C-c r F: `termint-ipython-source-defun'
   ;; C-c r h: `termint-ipython-hide-window'
   (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
-)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -830,24 +869,16 @@ If the new path's directories does not exist, create them."
     "=" '(er/expand-region :wk "Expand Region")
     "C-i" '(change-inner :wk "Change Inner")
     "C-o" '(change-outer :wk "Change Outer")
-    "C-b" '(consult-buffer :wk "Switch Buffer")
     )
-
-  ;; Region keymap
-  (start/leader-keys
-    "SPC" '(hydra-region :wk "Region select") )
 
   ;; Buffer keymaps
   (start/leader-keys
     "b" '(:ignore t :wk "buffer")
-    "b s" '(consult-buffer :wk "Switch buffer")
     "b k" '(kill-current-buffer :wk "Kill current buffer")
     "b i" '(ibuffer :wk "Ibuffer")
     "b n" '(next-buffer :wk "Next buffer")
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
-    "b R" '(crux-rename-file-and-buffer :wk "Rename")
-    "b o" '(crux-kill-other-buffers :wk "Kill other buffers")
     )
 
   ;; Comment keymaps
@@ -861,16 +892,6 @@ If the new path's directories does not exist, create them."
   ;; Debugging
   (start/leader-keys
     "d" '(:ignore t :wk "debug")
-    "d b" '(dap-breakpoint-toggle :wk "toggle breakpoint")
-    "d s" '(dap-debug :wk "start debug")
-    "d o" '(dap-go-to-output-buffer :wk "goto output buffer")
-    "d c" '(dap-continue :wk "continue")
-    "d n" '(dap-next :wk "next")
-    "d i" '(dap-step-in :wk "step in")
-    "d u" '(dap-step-out :wk "step out")
-    "d e" '(dap-eval-thing-at-point :wk "eval at point")
-    "d g" '(dap-eval-region :wk "eval region")
-    "d r" '(dap-restart-frame :wk "restart frame")
     )
 
   ;; File/Find Keymaps
@@ -881,19 +902,11 @@ If the new path's directories does not exist, create them."
     "f w" '(write-file :wk "Write File (with name)")
     "f s" '(save-buffer :wk "Save Buffer")
     "f S" '(save-some-buffer :wk "Save Some Buffer")
-    "f t" '(treemacs :wk "File Tree")
-    "f r" '(consult-recent-file :wk "Recent Files")
-    "f f" '(consult-fd :wk "Files with fd")
-    "f g" '(consult-ripgrep :wk "Grep")
-    "f l" '(consult-line :wk "Search line")
-    "f i" '(consult-imenu :wk "Search Imenu buffer locations")
     )
 
   ;; Git
   (start/leader-keys
     "g" '(:ignore t :wk "git")
-    "g g" '(magit :wk "Open Magit")
-    "g s" '(magit-status :wk "Magit Status")
     )
 
   ;; Jump
@@ -904,7 +917,6 @@ If the new path's directories does not exist, create them."
   ;; Language keymaps (lsp-mode, etc.)
   (start/leader-keys
     "l" '(:ignore t :wk "language")
-    "l l" '(lsp :wk "start lsp")
     )
 
   ;; Multicursor
@@ -919,11 +931,6 @@ If the new path's directories does not exist, create them."
     "O" '(:ignore t :wk "Line above")
     )
 
-  ;; Language Specific Bindings
-  (start/leader-keys
-    "p" '(:ignore t :wk "language specific")
-    )
-
   ;; REPL (Termint)
   (start/leader-keys
     "r" '(:ignore t :wk "REPL")
@@ -932,19 +939,6 @@ If the new path's directories does not exist, create them."
   ;; SEXP
   (start/leader-keys
     "s" '(:ignore t :wk "Sexp/Parens")
-    "s s" '(sp-forward-slurp-sexp :wk "slurp forward")
-    "s S" '(sp-backward-slurp-sexp :wk "slurp back")
-    "s b" '(sp-forward-barf-sexp :wk "barf forward")
-    "s B" '(sp-backward-barf-sexp :wk "barf back")
-    "s n" '(sp-next-sexp :wk "next")
-    "s p" '(sp-previous-sexp :wk "previous")
-    "s r" '(sp-rewrap-sexp :wk "replace")
-    "s d" '(sp-unwrap-sexp :wk "delete")
-    "s D" '(sp-backward-unwrap-sexp :wk "delete backwards")
-    "s c" '(sp-change-enclosing :wk "change inside")
-    "s (" '(sp-wrap-round :wk "wrap ()")
-    "s {" '(sp-wrap-curly :wk "wrap {}")
-    "s [" '(sp-wrap-square :wk "wrap []")
     )
 
   ;; Toggle/Terminal
@@ -981,10 +975,10 @@ If the new path's directories does not exist, create them."
     )
   (start/leader-keys
     "x" '(hydra-flycheck/body :wk "flycheck")
-  )
+    )
 
   ;; Zen/Writing
   (start/leader-keys
     "z" '(:ignore t :wk "Zen/Writing")
     )
-)
+  )
