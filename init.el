@@ -126,6 +126,12 @@ If the new path's directories does not exist, create them."
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
+
+;; Set font if not in terminal
+(defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
+(when (window-system)
+  (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100:size=14" nil t))
+	((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100:size=18" nil t))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Customization
@@ -137,18 +143,16 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(deeper-blue))
- '(custom-safe-themes
-   '("f9d423fcd4581f368b08c720f04d206ee80b37bfb314fa37e279f554b6f415e9"
-     default))
+ '(custom-enabled-themes '(modus-vivendi))
+ '(custom-safe-themes '(default))
  '(package-selected-packages
    '(beacon cape centaur-tabs change-inner corfu-terminal crux dap-mode
 	    dashboard eat embark-consult envrc ess esup
 	    flycheck-pos-tip format-all general json-mode kind-icon
 	    lsp-ui magit marginalia move-text multiple-cursors
 	    orderless rust-mode smartparens tempel-collection termint
-	    typst-ts-mode undo-fu vertico wgrep writeroom-mode
-	    yaml-mode))
+	    tuareg typst-ts-mode undo-fu vertico wgrep writeroom-mode
+	    ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -259,8 +263,10 @@ If the new path's directories does not exist, create them."
 ;;;   Editing Enhancements
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tweak the zap character
+(keymap-global-set "M-z" 'zap-up-to-char)
 
-;; Allows for jumping around visual field
+;; allows for jumping around visual field
 (use-package avy
   :ensure t
   :bind (
@@ -303,18 +309,18 @@ If the new path's directories does not exist, create them."
   :ensure t
   :config
   (global-unset-key (kbd "C-z"))
-  (global-set-key (kbd "C-z")   'undo-fu-only-undo)
-  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo)
-  :bind (
-         ("C-c u u" . undo-fu-only-undo)
-         ("C-c u r" . undo-fu-only-redo)
-         )
+  :bind
+  ("C-c u u" . undo-fu-only-undo)
+  ("C-c u r" . undo-fu-only-redo)
+  ("C-z" . undo-fu-only-undo)
+  ("C-S-z" . undo-fu-only-redo)
   )
 
 
 ;; Remove Whitespace
 (use-package ws-butler
   :ensure t
+  :defer t
   :hook (prog-mode . ws-butler-mode))
 
 ;; Consult: Misc. enhanced commands
@@ -348,7 +354,8 @@ If the new path's directories does not exist, create them."
   (setq consult-narrow-key "<"))
 
 (use-package embark-consult
-  :ensure t)
+  :ensure t
+  :after consult)
 
 ;; Embark: supercharged context-dependent menu; kinda like a
 ;; super-charged right-click.
@@ -384,12 +391,17 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind (
 	 ("C-=" . er/expand-region)
+	 ("C-c =" . er/expand-region)
 	 )
   )
 
 ;; Change inside/outside current region
 (use-package change-inner
-  :ensure t)
+  :ensure t
+  :bind
+  ("C-c C-i" . change-inner)
+  ("C-c C-o" . change-outer)
+  )
 
 ;; Smart Parens
 (use-package smartparens
@@ -655,13 +667,21 @@ If the new path's directories does not exist, create them."
 
 (use-package markdown-mode
   :ensure t
-  :hook ((markdown-mode . visual-line-mode)))
+  :hook ((markdown-mode . visual-line-mode))
+  :mode ("\\.md\\'")
+  )
 
 (use-package yaml-mode
-  :ensure t)
+  :ensure t
+  :mode ("\\.yaml\\'"
+	 "\\.yml\\'")
+  )
 
 (use-package json-mode
-  :ensure t)
+  :ensure t
+  :mode ("\\.json\\'"
+	 "\\.jsonc\\'")
+  )
 
 (use-package rust-mode
   :ensure t
@@ -705,6 +725,15 @@ If the new path's directories does not exist, create them."
 
   )
 (load "ess-autoloads")
+
+(use-package tuareg
+  :defer t
+  :ensure t
+  :mode ("\\.ml\\'"
+	 "\\.mli\\'"
+	 "\\.mlp\\'")
+  )
+
 ;;;;;;;;;;;;;;;;;;;
 ;;;  Templating  ;;
 ;;;;;;;;;;;;;;;;;;;
@@ -748,7 +777,7 @@ If the new path's directories does not exist, create them."
 (use-package magit
   :ensure t
   :commands magit-status
-  :bind ("C-c g s" . magit-status)
+  :bind ("C-c g" . magit-status)
   )
 
 
@@ -757,6 +786,8 @@ If the new path's directories does not exist, create them."
 ;;;   Terminal/REPL
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Set the default shell to Fish
+(setq shell-file-name "/usr/bin/fish")
 
 ;; Eat: Emulate A Terminal
 (use-package eat
@@ -874,12 +905,6 @@ If the new path's directories does not exist, create them."
     :keymaps 'override
     :prefix "C-c"
     :global-prefix "C-c")
-  ;; Directly accesible keys, all prefixed with CTRL
-  (start/leader-keys
-    "=" '(er/expand-region :wk "Expand Region")
-    "C-i" '(change-inner :wk "Change Inner")
-    "C-o" '(change-outer :wk "Change Outer")
-    )
 
   ;; Buffer keymaps
   (start/leader-keys
