@@ -42,9 +42,6 @@
 ;;;   Basic settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Change GC Threshold to improve loading times/For LSP
-
-
 ;; Package Initialization (including MELPA)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
@@ -140,7 +137,18 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
+ '(custom-enabled-themes '(deeper-blue))
+ '(custom-safe-themes
+   '("f9d423fcd4581f368b08c720f04d206ee80b37bfb314fa37e279f554b6f415e9"
+     default))
+ '(package-selected-packages
+   '(beacon cape centaur-tabs change-inner corfu-terminal crux dap-mode
+	    dashboard eat embark-consult envrc ess esup
+	    flycheck-pos-tip format-all general god-mode json-mode
+	    kind-icon lsp-ui magit marginalia move-text
+	    multiple-cursors orderless rust-mode smartparens
+	    tempel-collection termint typst-ts-mode undo-fu vertico
+	    wgrep writeroom-mode yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -302,6 +310,12 @@ If the new path's directories does not exist, create them."
          ("C-c u r" . undo-fu-only-redo)
          )
   )
+
+
+;; Remove Whitespace
+(use-package ws-butler
+  :ensure t
+  :hook (prog-mode . ws-butler-mode))
 
 ;; Consult: Misc. enhanced commands
 (use-package consult
@@ -504,13 +518,7 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package almost-mono-themes
-  :ensure t)
-(load-theme 'almost-mono-white t) ;; Loaded so it will work with writeroom-mode
-
-(if (display-graphic-p)
-    (load-theme 'wombat)
-  (load-theme 'modus-vivendi-tinted))
+(load-theme 'deeper-blue)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -805,14 +813,12 @@ If the new path's directories does not exist, create them."
   (cond
    ((= arg 1)
     (progn
-      (enable-theme 'almost-mono-white)
       (setq display-line-numbers nil)
       (visual-line-mode)
       )
     )
    ((= arg -1)
     (progn
-      (disable-theme 'almost-mono-white)
       (setq display-line-numbers t)
       (visual-line-mode)
       )
@@ -889,7 +895,7 @@ If the new path's directories does not exist, create them."
   (start/leader-keys
     "c" '(:ignore t :wk "comment")
     "c l" '(comment-line :wk "line")
-    "c r" '(comment-region :wk "region")
+    "c r" '(comment-or-uncomment-region :wk "region")
     "c d" '(comment-dwim :wk "dwim")
     )
 
