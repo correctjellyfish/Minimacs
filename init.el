@@ -144,11 +144,11 @@ If the new path's directories does not exist, create them."
  '(package-selected-packages
    '(beacon cape centaur-tabs change-inner corfu-terminal crux dap-mode
 	    dashboard eat embark-consult envrc ess esup
-	    flycheck-pos-tip format-all general god-mode json-mode
-	    kind-icon lsp-ui magit marginalia move-text
-	    multiple-cursors orderless rust-mode smartparens
-	    tempel-collection termint typst-ts-mode undo-fu vertico
-	    wgrep writeroom-mode yaml-mode))
+	    flycheck-pos-tip format-all general json-mode kind-icon
+	    lsp-ui magit marginalia move-text multiple-cursors
+	    orderless rust-mode smartparens tempel-collection termint
+	    typst-ts-mode undo-fu vertico wgrep writeroom-mode
+	    yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
