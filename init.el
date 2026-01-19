@@ -126,7 +126,7 @@ If the new path's directories does not exist, create them."
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
 
-;; Set font if not in terminal
+;; Set font if not in terminal (Useful to set nerd font)
 (defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
 (when (window-system)
   (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100:size=14" nil t))
