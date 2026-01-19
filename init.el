@@ -140,16 +140,7 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(almost-mono-themes beacon cape centaur-tabs change-inner
-			corfu-terminal crux dap-mode dashboard eat
-			embark-consult envrc ess esup flycheck-pos-tip
-			format-all general god-mode json-mode
-			kind-icon lsp-ui magit marginalia move-text
-			multiple-cursors orderless paper-theme
-			rust-mode smartparens tempel-collection
-			termint typst-ts-mode vertico wgrep
-			writeroom-mode yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -297,6 +288,19 @@ If the new path's directories does not exist, create them."
         ("C-c m i a" . mc/insert-letters )
         ("C-c m i n" . mc/insert-letters )
         )
+  )
+
+;; Better Undo
+(use-package undo-fu
+  :ensure t
+  :config
+  (global-unset-key (kbd "C-z"))
+  (global-set-key (kbd "C-z")   'undo-fu-only-undo)
+  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo)
+  :bind (
+         ("C-c u u" . undo-fu-only-undo)
+         ("C-c u r" . undo-fu-only-redo)
+         )
   )
 
 ;; Consult: Misc. enhanced commands
