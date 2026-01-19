@@ -63,7 +63,6 @@
 ;; Save history of minibuffer
 (savehist-mode)
 
-
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
 
@@ -146,13 +145,12 @@ If the new path's directories does not exist, create them."
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
  '(package-selected-packages
-   '(beacon cape centaur-tabs change-inner corfu-terminal crux dap-mode
-	    dashboard eat embark-consult envrc ess esup
-	    flycheck-pos-tip format-all general json-mode kind-icon
-	    lsp-ui magit marginalia move-text multiple-cursors
-	    orderless rust-mode smartparens tempel-collection termint
-	    tuareg typst-ts-mode undo-fu vertico wgrep writeroom-mode
-	    ws-butler yaml-mode))
+   '(beacon cape change-inner corfu-terminal crux dap-mode dashboard eat
+	    embark-consult envrc ess esup flycheck-pos-tip format-all
+	    general json-mode kind-icon lsp-ui magit marginalia
+	    move-text multiple-cursors orderless rust-mode smartparens
+	    tempel-collection termint tuareg typst-ts-mode undo-fu
+	    vertico wgrep writeroom-mode ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -443,6 +441,7 @@ If the new path's directories does not exist, create them."
 	 ("C-c o" . crux-smart-open-line)
 	 ("C-c O" . crux-smart-open-line-above)
 	 ("C-c u d" . crux-duplicate-current-line-or-region)
+	 ("C-c u j" . crux-join-top-line)
 	 ("C-c w t" . crux-transpose-windows)
 	 ("C-c b R" . crux-rename-file-and-buffer)
 	 ("C-c b o" . crux-kill-other-buffers)
@@ -505,24 +504,20 @@ If the new path's directories does not exist, create them."
   :commands treemacs
   :bind ("C-c f t" . treemacs))
 
-(use-package centaur-tabs
-  :ensure t
-  :config (centaur-tabs-mode t)
-  :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
-
+;; Welcome Screen
 (use-package dashboard
   :ensure t
-  :config(dashboard-setup-startup-hook)
+  :config
+  (setq dashboard-banner-logo-title "Welcome to Emacs!")
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content t)
+  (setq dashboard-items '((recents   . 5)
+                          (bookmarks . 5)
+                          (projects  . 5)
+                          (registers . 5)))
+  (dashboard-setup-startup-hook)
   )
-(setq dashboard-banner-logo-title "Welcome to Emacs!")
-(setq dashboard-startup-banner 'logo)
-(setq dashboard-center-content t)
-(setq dashboard-items '((recents   . 5)
-                        (bookmarks . 5)
-                        (projects  . 5)
-                        (registers . 5)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -987,8 +982,8 @@ If the new path's directories does not exist, create them."
   ;; Utility functions (mostly crux)
   (start/leader-keys
     "u" '(:ignore t :wk "utils")
-    "u d" '(:ignore t  :wk "Duplicate line/region")
-    "u j" '(join-line :wk "Join line")
+    "u d" '(:ignore t :wk "Duplicate line/region")
+    "u j" '(:ignore t :wk "Join line")
     )
 
   ;; Window keymaps
