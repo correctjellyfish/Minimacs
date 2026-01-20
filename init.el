@@ -829,10 +829,19 @@ If the new path's directories does not exist, create them."
 ;;;   Org-Mode
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package org
+  :mode ("\\.org\\'")
+  :config
+  (defun my/org-confirm-eval (lang body)
+    (not (member lang '("python"))))
+  (setq org-confirm-babel-evaluate 'my/org-confirm-eval)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)))
+  (org-mode)
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
