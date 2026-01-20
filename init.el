@@ -28,6 +28,7 @@
 ;;;    - Templating
 ;;;    - Version Control
 ;;;  - REPL/Terminal
+;;;  - Org Mode
 ;;;  - Writing
 ;;;  - Keymaps
 
@@ -144,7 +145,14 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(beacon cape catppuccin-theme centaur-tabs change-inner company
+	    corfu-terminal crux dap-mode dashboard eat eglot elsa
+	    embark-consult envrc ess flycheck-pos-tip format-all
+	    general json-mode kind-icon lsp-ui magit marginalia
+	    move-text multiple-cursors orderless rust-mode smartparens
+	    tempel-collection termint tuareg typst-ts-mode undo-fu
+	    vertico wgrep writeroom-mode ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -815,6 +823,16 @@ If the new path's directories does not exist, create them."
   ;; C-c r h: `termint-ipython-hide-window'
   (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Org-Mode
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
