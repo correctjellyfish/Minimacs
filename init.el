@@ -144,13 +144,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape change-inner corfu-terminal crux dap-mode dashboard eat
-	    embark-consult envrc ess flycheck-pos-tip format-all
-	    general json-mode kind-icon lsp-ui magit marginalia
-	    move-text multiple-cursors orderless rust-mode smartparens
-	    tempel-collection termint tuareg typst-ts-mode undo-fu
-	    vertico wgrep writeroom-mode ws-butler yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
