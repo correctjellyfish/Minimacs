@@ -1126,9 +1126,13 @@ If the new path's directories does not exist, create them."
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
      '("'" . repeat)
+     ;; Added keymaps
      '(":" . execute-extended-command)
      '("/" . isearch-forward)
+     '("C" . comment-or-uncomment-region)
      '("=" . er/expand-region)
+     '("<" . indent-rigidly-left)
+     '(">" . indent-rigidly-right)
      '("<escape>" . ignore)
      ))
   :config
