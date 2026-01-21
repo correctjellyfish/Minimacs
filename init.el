@@ -643,6 +643,10 @@ If the new path's directories does not exist, create them."
   :mode ("\\.py\\'" . python-ts-mode)
   )
 
+(use-package dap-dlv-go
+  :after dap-mode
+  )
+
 ;;;;;;;;;;;;;;;;;;;;
 ;;;   Formatting  ;;
 ;;;;;;;;;;;;;;;;;;;;
@@ -689,7 +693,8 @@ If the new path's directories does not exist, create them."
 ;; Go-ts-mode (built-in)
 (use-package go-ts-mode
   :ensure nil ;; builtin
-  :mode "\\.go\\'")
+  :mode "\\.go\\'"
+  :config (require 'dap-dlv-go))
 
 ;; Typst
 (use-package typst-ts-mode
