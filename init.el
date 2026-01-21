@@ -1122,7 +1122,7 @@ If the new path's directories does not exist, create them."
      '("'" . repeat)
      ;; Added keymaps
      '(":" . execute-extended-command)
-     '("/" . isearch-forward)
+     '("/" . consult-line)
      '("C" . comment-or-uncomment-region)
      '("=" . er/expand-region)
      '("<" . indent-rigidly-left)
