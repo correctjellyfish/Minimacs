@@ -149,8 +149,8 @@ If the new path's directories does not exist, create them."
  '(package-selected-packages
    '(beacon cape change-inner corfu-terminal crux dap-mode dashboard eat
 	    embark-consult envrc ess flycheck-pos-tip format-all
-	    general json-mode just-mode just-ts-mode kind-icon lsp-ui
-	    magit marginalia meow-tree-sitter meson-mode move-text
+	    general json-mode just-mode kind-icon lsp-ui magit
+	    marginalia meow-tree-sitter meson-mode move-text
 	    multiple-cursors orderless rust-mode smartparens
 	    tempel-collection termint tuareg typst-ts-mode undo-fu
 	    vertico wgrep writeroom-mode ws-butler yaml-mode))
@@ -932,6 +932,7 @@ If the new path's directories does not exist, create them."
 (avy-setup-default)
 
 (use-package general
+  :ensure t
   :config
   (general-create-definer start/leader-keys
     :keymaps 'override
