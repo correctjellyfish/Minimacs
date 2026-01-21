@@ -1049,7 +1049,7 @@ If the new path's directories does not exist, create them."
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore))
-    (meow-leader-define-key
+     (meow-leader-define-key
      ;; Use SPC (0-9) for digit arguments.
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
@@ -1062,7 +1062,9 @@ If the new path's directories does not exist, create them."
      '("9" . meow-digit-argument)
      '("0" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet))
+     '("?" . meow-cheatsheet)
+     '("SPC" . avy-goto-word-0)
+     )
     (meow-normal-define-key
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
@@ -1126,6 +1128,7 @@ If the new path's directories does not exist, create them."
      '("'" . repeat)
      '(":" . execute-extended-command)
      '("/" . isearch-forward)
+     '("=" . er/expand-region)
      '("<escape>" . ignore)
      ))
   :config
