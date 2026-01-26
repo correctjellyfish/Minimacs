@@ -283,28 +283,6 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind ("M-o" . ace-window))
 
-;; Multiple cursors
-(use-package multiple-cursors
-  :ensure t
-  :config
-  (define-key mc/keymap (kbd "<return>") nil)
-  :bind(
-        ("C-c n" . mc/mark-next-like-this-word)
-        ("C-c N" . mc/skip-to-next-like-this)
-        ("C-c p" . mc/mark-previous-like-this-word)
-        ("C-c P" . mc/skip-to-previous-like-this)
-        ("C-c m j" . mc/mark-next-like-this )
-        ("C-c m k" . mc/mark-next-like-this )
-        ("C-c m ^" . mc/edit-beginnings-of-lines )
-        ("C-c m $" . mc/edit-ends-of-lines )
-        ("C-c m s" . mc/mark-all-in-region )
-        ("C-c m v" . mc/vertical-align )
-        ("C-c m f" . mc/mark-all-like-this-in-defun )
-        ("C-c m i a" . mc/insert-letters )
-        ("C-c m i n" . mc/insert-letters )
-        )
-  )
-
 ;; Better Undo
 (use-package undo-fu
   :ensure t
@@ -990,12 +968,6 @@ If the new path's directories does not exist, create them."
   ;; Language keymaps (lsp-mode, etc.)
   (start/leader-keys
     "l" '(:ignore t :wk "language")
-    )
-
-  ;; Multicursor
-  (start/leader-keys
-    "m" '(:ignore wk "multicursor")
-    "m i" '(:ignore :wk "insert")
     )
 
   ;; Open line (Above or below)
