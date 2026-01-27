@@ -146,14 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape change-inner corfu-terminal crux dap-mode dashboard eat
-	    embark-consult envrc ess flycheck-pos-tip format-all
-	    general json-mode just-mode kind-icon lsp-ui magit
-	    marginalia meow-tree-sitter meson-mode move-text
-	    multiple-cursors orderless rust-mode smartparens
-	    tempel-collection termint tuareg typst-ts-mode undo-fu
-	    vertico wgrep writeroom-mode ws-butler yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -668,6 +661,20 @@ If the new path's directories does not exist, create them."
   :hook (rust-mode . lsp)
   )
 
+;; Clojure
+(use-package clojure-mode
+  :ensure t
+  :hook (clojure-mode . lsp)
+  :mode ("\\.clj\\'")
+  )
+
+;; CIDER (clojure REPL)
+(use-package cider
+  :ensure t
+  :commands (cider-jack-in)
+  :bind (
+	 ("C-c r c" . cider-jack-in)))
+
 ;; Go-ts-mode (built-in)
 (use-package go-ts-mode
   :ensure nil ;; builtin
@@ -908,9 +915,6 @@ If the new path's directories does not exist, create them."
 ;;;  General Keybinds   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Move through windows with Ctrl-<arrow keys>
-(windmove-default-keybindings 'control)
-
 ;; Avy default bindings
 (avy-setup-default)
 
@@ -1132,6 +1136,10 @@ If the new path's directories does not exist, create them."
      '("(" . meow-page-up)
      '(")" . meow-page-down)
      '("<escape>" . ignore)
+     '("C-<up>" . windmove-up)
+     '("C-<down>" . windmove-down)
+     '("C-<right>" . windmove-right)
+     '("C-<left>" . windmove-left)
      ))
   :config
   (meow-setup)
