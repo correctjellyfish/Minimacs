@@ -656,6 +656,14 @@ If the new path's directories does not exist, create them."
 	 "\\.jsonc\\'")
   )
 
+;; CSV
+(use-package csv-mode
+  :ensure t
+  :mode ("\\.csv\\'"
+	 "\\.tsv\\'")
+  )
+
+;; Rust
 (use-package rust-mode
   :ensure t
   :hook (rust-mode . lsp)
@@ -1048,9 +1056,9 @@ If the new path's directories does not exist, create them."
 (defun wq ()
   "Save buffers and quit"
   (interactive)
-  (save-buffer)
-  (meow-quit)
-)
+  (save-buffers-kill-emacs)
+  )
+
 (use-package meow
   :ensure t
   :init
@@ -1060,7 +1068,7 @@ If the new path's directories does not exist, create them."
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore))
-     (meow-leader-define-key
+    (meow-leader-define-key
      ;; Use SPC (0-9) for digit arguments.
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
@@ -1164,5 +1172,5 @@ If the new path's directories does not exist, create them."
   :config
   (meow-tree-sitter-register-defaults)
   (meow-normal-define-key
-  '("o" . meow-tree-sitter-node)))
+   '("o" . meow-tree-sitter-node)))
 ;; end init.el
