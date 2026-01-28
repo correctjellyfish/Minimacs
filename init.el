@@ -146,7 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages '(typst-ts-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -415,7 +415,7 @@ If the new path's directories does not exist, create them."
 	 ("C-c o" . crux-smart-open-line)
 	 ("C-c O" . crux-smart-open-line-above)
 	 ("C-c u d" . crux-duplicate-current-line-or-region)
-	 ("C-c u j" . crux-join-top-line)
+	 ("C-c u j" . crux-top-join-line)
 	 ("C-c w t" . crux-transpose-windows)
 	 ("C-c b R" . crux-rename-file-and-buffer)
 	 ("C-c b o" . crux-kill-other-buffers)
