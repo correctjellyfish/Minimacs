@@ -146,7 +146,15 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(beacon cape change-inner cider corfu-terminal crux csv-mode dap-mode
+	    dashboard eat embark-consult envrc ess flycheck-pos-tip
+	    format-all general json-mode just-mode kind-icon lsp-java
+	    lsp-ui magit marginalia meow-tree-sitter meson-mode
+	    move-text multiple-cursors orderless rust-mode smartparens
+	    tempel-collection termint tree-sitter-langs treesit-auto
+	    tuareg typst-ts-mode undo-fu vertico wgrep writeroom-mode
+	    ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -667,6 +675,13 @@ If the new path's directories does not exist, create them."
 (use-package rust-mode
   :ensure t
   :hook (rust-mode . lsp)
+  )
+
+;; Java
+(use-package lsp-java
+  :ensure t
+  :mode ("\\.java\\'")
+  :hook (java-mode . lsp)
   )
 
 ;; Clojure
