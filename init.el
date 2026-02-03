@@ -150,11 +150,11 @@ If the new path's directories does not exist, create them."
    '(beacon cape change-inner cider corfu-terminal crux csv-mode dap-mode
 	    dashboard eat embark-consult envrc ess flycheck-pos-tip
 	    format-all general json-mode just-mode kind-icon lsp-java
-	    lsp-ui magit marginalia meow-tree-sitter meson-mode
-	    move-text multiple-cursors orderless rust-mode smartparens
-	    tempel-collection termint tree-sitter-langs treesit-auto
-	    tuareg typst-ts-mode undo-fu vertico wgrep writeroom-mode
-	    ws-butler yaml-mode))
+	    lsp-javacomp lsp-ui magit marginalia meow-tree-sitter
+	    meson-mode move-text multiple-cursors orderless rust-mode
+	    smartparens tempel-collection termint tree-sitter-langs
+	    treesit-auto tuareg typst-ts-mode undo-fu vertico wgrep
+	    writeroom-mode ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -562,6 +562,27 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;
 ;;;  LSP   ;;
 ;;;;;;;;;;;;;
+;; Using eglot for some modes that lsp-mode doesn't work well for
+(use-package eglot
+  :hook (((java-mode java-ts-mode) . eglot-ensure))
+  :custom
+  (eglot-send-changes-idle-time 0.1)
+  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+
+  :config
+  (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+  ;; Sometimes you need to tell Eglot where to find the language server
+  ; (add-to-list 'eglot-server-programs
+					;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  :bind (
+	 ("C-c l r" . eglot-rename)
+	 ("C-c l a" . eglot-code-actions)
+       )
+  )
+
+
+;; Using LSP mode for integration with DAP-mode, and to enable
+;; multiple servers per buffer
 (use-package lsp-mode
   :ensure t
   :init (setq lsp-keymap-prefix "C-c l")
@@ -677,13 +698,6 @@ If the new path's directories does not exist, create them."
   :hook (rust-mode . lsp)
   )
 
-;; Java
-(use-package lsp-java
-  :ensure t
-  :mode ("\\.java\\'")
-  :hook (java-mode . lsp)
-  )
-
 ;; Clojure
 (use-package clojure-mode
   :ensure t
@@ -697,6 +711,12 @@ If the new path's directories does not exist, create them."
   :commands (cider-jack-in)
   :bind (
 	 ("C-c r c" . cider-jack-in)))
+
+;; Java Treesitter Mode
+(use-package java-ts-mode
+  :ensure nil
+  :mode "\\.java\\'"
+  )
 
 ;; Go-ts-mode (built-in)
 (use-package go-ts-mode
