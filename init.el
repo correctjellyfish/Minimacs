@@ -146,15 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape change-inner cider corfu-terminal crux csv-mode dap-mode
-	    dashboard eat embark-consult envrc ess flycheck-pos-tip
-	    format-all general json-mode just-mode kind-icon lsp-java
-	    lsp-javacomp lsp-ui magit marginalia meow-tree-sitter
-	    meson-mode move-text multiple-cursors orderless rust-mode
-	    smartparens tempel-collection termint tree-sitter-langs
-	    treesit-auto tuareg typst-ts-mode undo-fu vertico wgrep
-	    writeroom-mode ws-butler yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -383,27 +375,10 @@ If the new path's directories does not exist, create them."
   ("C-c C-o" . change-outer)
   )
 
-;; Smart Parens
-(use-package smartparens
-  :ensure smartparens  ;; install the package
-  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
-  :config
-  ;; load default config
-  (require 'smartparens-config)
-  :bind
-  ("C-c s s" . sp-forward-slurp-sexp)
-  ("C-c s S" . sp-backward-slurp-sexp)
-  ("C-c s b" . sp-forward-barf-sexp)
-  ("C-c s B" . sp-backward-barf-sexp)
-  ("C-c s n" . sp-next-sexp)
-  ("C-c s p" . sp-previous-sexp)
-  ("C-c s r" . sp-rewrap-sexp)
-  ("C-c s d" . sp-unwrap-sexp)
-  ("C-c s D" . sp-backward-unwrap-sexp)
-  ("C-c s c" . sp-change-enclosing)
-  ("C-c s (" . sp-wrap-round)
-  ("C-c s {" . sp-wrap-curly)
-  ("C-c s [" . sp-wrap-square)
+;; Surround ()
+(use-package surround
+  :ensure t
+  :bind ("M-'" . surround-keymap)
   )
 
 ;; Move lines or region
@@ -572,12 +547,12 @@ If the new path's directories does not exist, create them."
   :config
   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
   ;; Sometimes you need to tell Eglot where to find the language server
-  ; (add-to-list 'eglot-server-programs
+					; (add-to-list 'eglot-server-programs
 					;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   :bind (
 	 ("C-c l r" . eglot-rename)
 	 ("C-c l a" . eglot-code-actions)
-       )
+	 )
   )
 
 
