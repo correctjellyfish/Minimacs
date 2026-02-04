@@ -17,3 +17,4 @@ tramp
 xkcd/
 eclipse.jdt.ls/
 workspace/
+flycheck_init.el

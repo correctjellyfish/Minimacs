@@ -375,11 +375,10 @@ If the new path's directories does not exist, create them."
   ("C-c C-o" . change-outer)
   )
 
-;; Surround ()
+;; Surround
 (use-package surround
   :ensure t
-  :bind ("M-'" . surround-keymap)
-  )
+  :bind-keymap ("M-'" . surround-keymap))
 
 ;; Move lines or region
 (use-package move-text
