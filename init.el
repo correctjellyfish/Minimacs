@@ -527,6 +527,7 @@ If the new path's directories does not exist, create them."
   :ensure t
   :init
   (setq-default flycheck-disabled-checkers '(r-lintr)) ;; lintr is VERY slow
+  :config
   (global-flycheck-mode)
   (flycheck-pos-tip-mode)
   )
