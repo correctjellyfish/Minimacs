@@ -501,7 +501,9 @@ If the new path's directories does not exist, create them."
           (typescript-mode . typescript-ts-mode)
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
-          (python-mode . python-ts-mode)))
+          (python-mode . python-ts-mode)
+	  (java-mode . java-ts-mode)
+	  ))
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
@@ -671,6 +673,11 @@ If the new path's directories does not exist, create them."
   :ensure t
   :hook (rust-mode . lsp)
   )
+
+;; Java
+(use-package java-ts-mode
+             :ensure nil
+             :mode "\\.java\\'")
 
 ;; Clojure
 (use-package clojure-mode
