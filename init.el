@@ -754,12 +754,8 @@ If the new path's directories does not exist, create them."
 (load "ess-autoloads")
 
 (use-package tuareg
-  :defer t
-  :ensure t
-  :mode ("\\.ml\\'"
-	 "\\.mli\\'"
-	 "\\.mlp\\'")
-  )
+  :ensure t)
+
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;  Templating  ;;
