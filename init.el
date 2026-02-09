@@ -483,6 +483,11 @@ If the new path's directories does not exist, create them."
 
 (load-theme 'modus-vivendi)
 
+(use-package catppuccin-theme
+  :ensure t
+  :init (setq catppuccin-flavor 'mocha)
+  :config (load-theme 'catppuccin t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Developement
