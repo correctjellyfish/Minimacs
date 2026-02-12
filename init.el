@@ -276,6 +276,15 @@ If the new path's directories does not exist, create them."
   :ensure t
   :bind ("M-o" . ace-window))
 
+;; Multiple Cursors (easier than beacon)
+(use-package multiple-cursors
+  :ensure t
+  :config (define-key mc/keymap (kbd "<return>") nil)
+  :commands (mc/mark-next-like-this
+	     mc/mark-previous-like-this
+	     mc/edit-lines)
+  )
+
 ;; Better Undo
 (use-package undo-fu
   :ensure t
@@ -1198,10 +1207,16 @@ If the new path's directories does not exist, create them."
      '("(" . meow-page-up)
      '(")" . meow-page-down)
      '("<escape>" . ignore)
+     ;; Move between windows
      '("C-<up>" . windmove-up)
      '("C-<down>" . windmove-down)
      '("C-<right>" . windmove-right)
      '("C-<left>" . windmove-left)
+     ;; Multiple-Cursors
+     '("C-c n" .  mc/mark-next-like-this)
+     '("C-c p" . mc/mark-previous-like-this)
+     '("C-c ^" . mc/edit-lines)
+     '("S" . mc/mark-all-in-region-regexp)
      ))
   :config
   (meow-setup)
