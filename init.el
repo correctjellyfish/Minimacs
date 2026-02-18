@@ -286,17 +286,9 @@ If the new path's directories does not exist, create them."
   )
 
 ;; Better Undo
-(use-package undo-fu
-  :ensure t
-  :config
-  (global-unset-key (kbd "C-z"))
-  :bind
-  ("C-c u u" . undo-fu-only-undo)
-  ("C-c u r" . undo-fu-only-redo)
-  ("C-z" . undo-fu-only-undo)
-  ("C-S-z" . undo-fu-only-redo)
-  )
-
+(use-package undo-tree
+             :ensure t
+             :config (global-undo-tree-mode))
 
 ;; Remove Whitespace
 (use-package ws-butler
