@@ -146,7 +146,16 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(beacon cape catppuccin-theme change-inner cider corfu-terminal crux
+	    csv-mode dashboard dune eat eglot embark-consult envrc ess
+	    flycheck-ocaml flycheck-pos-tip format-all general
+	    json-mode just-mode kind-icon lsp-java lsp-javacomp lsp-ui
+	    magit marginalia meow-tree-sitter merlin-eldoc meson-mode
+	    move-text multiple-cursors orderless rust-mode smartparens
+	    surround tempel-collection termint tuareg typst-ts-mode
+	    undo-fu undo-tree vertico wgrep writeroom-mode ws-butler
+	    yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -473,6 +482,19 @@ If the new path's directories does not exist, create them."
                           (projects  . 5)
                           (registers . 5)))
   (dashboard-setup-startup-hook)
+  )
+
+;; Folding with Tree-sitter
+(use-package treesit-fold
+  :ensure t
+  :config (global-treesit-fold-indicators-mode)
+  :bind (
+	 ("C-c v c" . treesit-fold-close)
+	 ("C-c v o" . treesit-fold-open)
+	 ("C-c v O" . treesit-fold-open-recursively)
+	 ("C-c v C" . treesit-fold-close-all)
+	 ("C-c v t" . treesit-fold-toggle)
+	 )
   )
 
 
