@@ -9,8 +9,6 @@
 ;;       _\/\\\_____________\/\\\_\/\\\_\/\\\___\/\\\_\/\\\_\/\\\__\/\\\__\/\\\_\//\\\\\\\\/\\__\///\\\\\\\\__/\\\\\\\\\\_
 ;;        _\///______________\///__\///__\///____\///__\///__\///___\///___\///___\////////\//_____\////////__\//////////__
 
-;;; Minimal init.el
-
 ;;; Contents:
 ;;;
 ;;;  - Basic Setup
@@ -299,8 +297,10 @@ If the new path's directories does not exist, create them."
 ;; Better Undo
 (use-package undo-tree
   :ensure t
-  :preface (setq undo-tree-suto-save-history nil)
-  :config (global-undo-tree-mode))
+  :init (setq undo-tree-auto-save-history nil)
+  :config (global-undo-tree-mode)
+
+  )
 
 ;; Remove Whitespace
 (use-package ws-butler
