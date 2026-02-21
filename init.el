@@ -296,8 +296,9 @@ If the new path's directories does not exist, create them."
 
 ;; Better Undo
 (use-package undo-tree
-             :ensure t
-             :config (global-undo-tree-mode))
+  :ensure t
+  :preface (setq undo-tree-suto-save-history nil)
+  :config (global-undo-tree-mode))
 
 ;; Remove Whitespace
 (use-package ws-butler
@@ -704,8 +705,8 @@ If the new path's directories does not exist, create them."
 
 ;; Java
 (use-package java-ts-mode
-             :ensure nil
-             :mode "\\.java\\'")
+  :ensure nil
+  :mode "\\.java\\'")
 
 ;; Clojure
 (use-package clojure-mode
