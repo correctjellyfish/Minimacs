@@ -576,16 +576,14 @@ If the new path's directories does not exist, create them."
   ;; Sometimes you need to tell Eglot where to find the language server
 					; (add-to-list 'eglot-server-programs
 					;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
-  :bind (
-	 ("C-c l r" . eglot-rename)
-	 ("C-c l a" . eglot-code-actions)
-	 )
+  :bind
+  ("C-c l r" . eglot-rename)
+  ("C-c l a" . eglot-code-actions)
   )
 
 
 ;; Using LSP mode for integration with DAP-mode, and to enable
 ;; multiple servers per buffer
-
 (use-package lsp-mode
   :ensure t
   :preface
@@ -629,7 +627,8 @@ If the new path's directories does not exist, create them."
 
 ;; Childframe for signature
 (use-package posframe
-  :ensure t)
+  :ensure t
+  :commands lsp-signature-posframe)
 
 ;; Integrate LSP with Treemacs
 (use-package lsp-treemacs
