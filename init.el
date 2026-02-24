@@ -481,18 +481,9 @@ If the new path's directories does not exist, create them."
   (dashboard-setup-startup-hook)
   )
 
-;; Folding with Tree-sitter
-(use-package treesit-fold
-  :ensure t
-  :config (global-treesit-fold-indicators-mode)
-  :bind (
-	 ("C-c v c" . treesit-fold-close)
-	 ("C-c v o" . treesit-fold-open)
-	 ("C-c v O" . treesit-fold-open-recursively)
-	 ("C-c v C" . treesit-fold-close-all)
-	 ("C-c v t" . treesit-fold-toggle)
-	 )
-  )
+;; Turn on hideshow mode
+;; (add-hook 'prog-mode-hook 'hideshow-minor-mode)
+(add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -566,19 +557,27 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;
 ;; Using eglot for some modes that lsp-mode doesn't work well for
 (use-package eglot
-  :hook (((java-mode java-ts-mode) . eglot-ensure))
+  :hook (
+	 ((java-mode java-ts-mode) . eglot-ensure)
+	 )
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
 
   :config
   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+  (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t) ;; Add eldoc-box
   ;; Sometimes you need to tell Eglot where to find the language server
 					; (add-to-list 'eglot-server-programs
 					;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   :bind
   ("C-c l r" . eglot-rename)
   ("C-c l a" . eglot-code-actions)
+  )
+
+(use-package eldoc-box
+  :ensure t
+  :config (eldoc-box-hover-at-point-mode)
   )
 
 
@@ -1267,6 +1266,12 @@ If the new path's directories does not exist, create them."
      '("C-c p" . mc/mark-previous-like-this)
      '("C-c ^" . mc/edit-lines)
      '("S" . mc/mark-all-in-region-regexp)
+     ;; Hideshow
+     '("F b" . hs-hide-block)
+     '("F B" . hs-show-block)
+     '("F a" . hs-hide-all)
+     '("F A" . hs-show-all)
+     '("F l" . hs-hide-level)
      ))
   :config
   (meow-setup)
