@@ -146,16 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape catppuccin-theme change-inner cider corfu-terminal crux
-	    csv-mode dashboard dune eat eglot embark-consult envrc ess
-	    flycheck-ocaml flycheck-pos-tip format-all general
-	    json-mode just-mode kind-icon lsp-java lsp-javacomp lsp-ui
-	    magit marginalia meow-tree-sitter merlin-eldoc meson-mode
-	    move-text multiple-cursors orderless rust-mode smartparens
-	    surround tempel-collection termint tuareg typst-ts-mode
-	    undo-fu undo-tree vertico wgrep writeroom-mode ws-butler
-	    yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -594,8 +585,16 @@ If the new path's directories does not exist, create them."
 
 ;; Using LSP mode for integration with DAP-mode, and to enable
 ;; multiple servers per buffer
+
 (use-package lsp-mode
   :ensure t
+  :preface
+  (setq
+   lsp-eldoc-enable-hover nil
+   lsp-eldoc-render-all nil
+   lsp-signature-render-documentation nil
+   lsp-signature-function 'lsp-signature-posframe
+   )
   :init (setq lsp-keymap-prefix "C-c l")
   :hook (
          (python-ts-mode . lsp)
@@ -603,20 +602,50 @@ If the new path's directories does not exist, create them."
          ;; which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
-  :bind ("C-c l l" . lsp)
+  :bind
+  ("C-c l l" . lsp)
+  ("C-c l R" . lsp-rename)
   )
 
 (use-package lsp-ui
   :ensure t
+  :preface
+  (setq
+   ;; Sideline
+   lsp-ui-sideline-show-diagnostics t
+   lsp-ui-show-hover t
+   lsp-ui-side-show-code-actions nil
+   lsp-ui-sideline-update-mode 'point
+   lsp-ui-side-delay 1
+   ;; Doc
+   lsp-ui-doc-enable t
+   lsp-ui-doc-dealy 1
+   lsp-ui-doc-positon 'at-point
+   lsp-ui-doc-show-with-cursor t
+   )
   :after lsp-mode
   :commands lsp
   )
+
+;; Childframe for signature
+(use-package posframe
+  :ensure t)
 
 ;; Integrate LSP with Treemacs
 (use-package lsp-treemacs
   :ensure t
   :config (lsp-treemacs-sync-mode 1)
   :commands lsp)
+
+;; Integrate LSP with consult
+(use-package consult-lsp
+  :ensure t
+  :bind
+  ("C-c l d" . consult-lsp-file-diagnostics)
+  ("C-c l D" . consult-lsp-diagnostics)
+  ("C-c l s" . consult-lsp-file-symbols)
+  ("C-c l S" . consult-lsp-symbols)
+  )
 
 ;;;;;;;;;;;;;;;;;;
 ;;;  Debugging  ;;
