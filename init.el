@@ -437,6 +437,9 @@ If the new path's directories does not exist, create them."
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 
+;; Tab-line to show buffers as tabs
+(global-tab-line-mode)
+
 ;; For terminal users, make the mouse more useful
 (xterm-mouse-mode 1)
 
@@ -1224,6 +1227,8 @@ If the new path's directories does not exist, create them."
      '("(" . meow-page-up)
      '(")" . meow-page-down)
      '("<escape>" . ignore)
+     '("N" . tab-line-switch-to-prev-tab)
+     '("M" . tab-line-switch-to-next-tab)
      ;; Move between windows
      '("C-<up>" . windmove-up)
      '("C-<down>" . windmove-down)
