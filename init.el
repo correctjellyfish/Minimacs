@@ -129,8 +129,8 @@ If the new path's directories does not exist, create them."
 ;; Set font if not in terminal (Useful to set nerd font)
 (defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
 (when (window-system)
-  (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100:size=14" nil t))
-	((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100:size=18" nil t))))
+  (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100" nil t))
+	((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100" nil t))))
 
 (setq kill-buffer-delete-auto-save-files t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
