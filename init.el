@@ -146,7 +146,16 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(beacon cape casual catppuccin-theme change-inner cider consult-lsp
+	    corfu-terminal crux csv-mode dap-mode dashboard dune eat
+	    eldoc-box embark-consult envrc ess flycheck-ocaml
+	    flycheck-pos-tip format-all general json-mode just-mode
+	    kind-icon lsp-ui magit marginalia meow-tree-sitter
+	    merlin-eldoc meson-mode move-text multiple-cursors
+	    orderless rust-mode surround tempel-collection termint
+	    treesit-fold tuareg typst-ts-mode undo-fu undo-tree
+	    vertico wgrep writeroom-mode ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -486,9 +495,39 @@ If the new path's directories does not exist, create them."
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
 
 
+;; Consule (for dired transient mode)
+(use-package casual
+  :ensure t
+  :after dired
+  :bind (
+	 :map dired-mode-map
+	 ("C-o" . #'casual-dired-tmenu)
+	 ("s" . #'casual-dired-sort-by-tmenu)
+	 ("/" . #'casual-dired-search-replace-tmenu)
+	 ( "M-o" . #'dired-omit-mode)
+	 ( "E" . #'wdired-change-to-wdired-mode)
+	 ( "M-n" . #'dired-next-dirline)
+	 ("M-p" . #'dired-prev-dirline)
+	 ("]" . #'dired-next-subdir)
+	 ("[" . #'dired-prev-subdir)
+	 ("A-M-<mouse-1>" . #'browse-url-of-dired-file)
+	 ("<backtab>" . #'dired-prev-subdir)
+	 ("TAB" . #'dired-next-subdir)
+	 ("M-j" . #'dired-goto-subdir)
+	 (";" . #'image-dired-dired-toggle-marked-thumbs)
+	 :map image-dired-thumbnail-mode-map
+	 ("n" . #'image-dired-display-next)
+	 ("p" . #'image-dired-display-previous)
+	 )
+  :hook (
+	 (dired-mode . hl-line-mode)
+	 )
+  )
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Theme
+;;;   theme
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1222,8 +1261,8 @@ If the new path's directories does not exist, create them."
      '("L" . meow-right-expand)
      '("m" . meow-join)
      '("n" . meow-search)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
+     '("o" . er/expand-region)
+     '("O" . er/contract-region)
      '("p" . meow-yank)
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
@@ -1246,7 +1285,6 @@ If the new path's directories does not exist, create them."
      '(":" . execute-extended-command)
      '("/" . consult-line)
      '("C" . comment-or-uncomment-region)
-     '("=" . er/expand-region)
      '("<" . indent-rigidly-left)
      '(">" . indent-rigidly-right)
      '("}" . forward-paragraph)
@@ -1277,11 +1315,5 @@ If the new path's directories does not exist, create them."
   (meow-setup)
   (meow-global-mode 1)
   )
-(use-package meow-tree-sitter
-  :ensure t
-  :after meow
-  :config
-  (meow-tree-sitter-register-defaults)
-  (meow-normal-define-key
-   '("o" . meow-tree-sitter-node)))
-;; end init.el
+(provide 'init)
+;;; init.el ends here
