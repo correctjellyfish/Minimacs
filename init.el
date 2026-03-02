@@ -768,13 +768,6 @@ If the new path's directories does not exist, create them."
 	 "\\.tsv\\'")
   )
 
-;; Python (Docstring fixing)
-(defun my-python-noindent-docstring (&optional _previous)
-  (if (eq (car (python-indent-context)) :inside-docstring)
-      'noindent))
-
-(advice-add 'python-indent-line :before-until #'my-python-noindent-docstring)
-
 ;; Rust
 (use-package rust-mode
   :ensure t
