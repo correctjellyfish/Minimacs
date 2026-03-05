@@ -146,7 +146,16 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages '(typst-ts-mode))
+ '(package-selected-packages
+   '(beacon cape casual catppuccin-theme change-inner cider consult-lsp
+	    corfu-terminal crux dap-mode dashboard dune eat eldoc-box
+	    embark-consult envrc ess flycheck-ocaml flycheck-pos-tip
+	    format-all general indent-bars json-mode just-mode
+	    kind-icon lsp-ui magit marginalia meow-tree-sitter
+	    merlin-eldoc meson-mode move-text multiple-cursors
+	    orderless rust-mode smartparens surround tempel-collection
+	    termint treesit-auto tuareg typst-ts-mode undo-fu
+	    undo-tree vertico wgrep writeroom-mode ws-butler yaml-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -557,6 +566,15 @@ If the new path's directories does not exist, create them."
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
+
+;; Treesit automatic grammar installation
+(use-package treesit-auto
+  :ensure t
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 
 (use-package project
