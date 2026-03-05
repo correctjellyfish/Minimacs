@@ -818,20 +818,6 @@ If the new path's directories does not exist, create them."
   :mode "\\.go\\'"
   :config (require 'dap-dlv-go))
 
-;; Python (indent help)
-(defun python-fake-indent-context (orig-fun &rest args)
-  (let ((res (apply orig-fun args)))  ; Get the original result
-    (pcase res
-      (`(:inside-string . ,start)  ; When inside a string
-       `(:inside-string . ,(save-excursion  ; Find a point in previous non-empty line
-                             (beginning-of-line)
-                             (backward-sexp)
-                             (point))))
-      (_ res))))  ; Otherwise, return the result as is
-
-;; Add the advice
-(advice-add 'python-indent-context :around #'python-fake-indent-context)
-
 
 ;; Typst
 (use-package typst-ts-mode
