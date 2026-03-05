@@ -146,16 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape casual catppuccin-theme change-inner cider consult-lsp
-	    corfu-terminal crux csv-mode dap-mode dashboard dune eat
-	    eldoc-box embark-consult envrc ess flycheck-ocaml
-	    flycheck-pos-tip format-all general json-mode just-mode
-	    kind-icon lsp-ui magit marginalia meow-tree-sitter
-	    merlin-eldoc meson-mode move-text multiple-cursors
-	    orderless rust-mode surround tempel-collection termint
-	    treesit-fold tuareg typst-ts-mode undo-fu undo-tree
-	    vertico wgrep writeroom-mode ws-butler yaml-mode))
+ '(package-selected-packages '(typst-ts-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -494,8 +485,12 @@ If the new path's directories does not exist, create them."
 ;; (add-hook 'prog-mode-hook 'hideshow-minor-mode)
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
 
+;; Indent guides
+(use-package indent-bars
+  :ensure t
+  :hook ((python-ts-mode python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
 
-;; Consule (for dired transient mode)
+;; Casual (for dired transient mode)
 (use-package casual
   :ensure t
   :after dired
@@ -804,6 +799,21 @@ If the new path's directories does not exist, create them."
   :ensure nil ;; builtin
   :mode "\\.go\\'"
   :config (require 'dap-dlv-go))
+
+;; Python (indent help)
+(defun python-fake-indent-context (orig-fun &rest args)
+  (let ((res (apply orig-fun args)))  ; Get the original result
+    (pcase res
+      (`(:inside-string . ,start)  ; When inside a string
+       `(:inside-string . ,(save-excursion  ; Find a point in previous non-empty line
+                             (beginning-of-line)
+                             (backward-sexp)
+                             (point))))
+      (_ res))))  ; Otherwise, return the result as is
+
+;; Add the advice
+(advice-add 'python-indent-context :around #'python-fake-indent-context)
+
 
 ;; Typst
 (use-package typst-ts-mode
