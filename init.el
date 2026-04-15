@@ -146,16 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages
-   '(beacon cape casual catppuccin-theme change-inner cider consult-lsp
-	    corfu-terminal crux dap-mode dashboard dune eat eldoc-box
-	    embark-consult envrc ess flycheck-ocaml flycheck-pos-tip
-	    format-all general indent-bars json-mode just-mode
-	    kind-icon lsp-ui magit marginalia meow-tree-sitter
-	    merlin-eldoc meson-mode move-text multiple-cursors
-	    orderless rust-mode smartparens surround tempel-collection
-	    termint treesit-auto tuareg typst-ts-mode undo-fu
-	    undo-tree vertico wgrep writeroom-mode ws-butler yaml-mode))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -1208,6 +1199,11 @@ If the new path's directories does not exist, create them."
   (interactive)
   (save-buffers-kill-emacs)
   )
+
+(defun q ()
+  "Quit without saving"
+  (interactive)
+  (kill-emacs))
 
 (use-package meow
   :ensure t
