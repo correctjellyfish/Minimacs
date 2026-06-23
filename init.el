@@ -32,7 +32,7 @@
 ;;;  - Meow
 
 ;;; Guardrail
-
+;;; Code:
 (when (< emacs-major-version 29)
   ("Config only works with Emacs 29 and newer; you have version %s" emacs-major-version))
 
@@ -146,7 +146,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages nil)
+ '(package-selected-packages '(typst-ts-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -264,10 +264,13 @@ If the new path's directories does not exist, create them."
 (use-package avy
   :ensure t
   :bind (
-         ("C-c j j" . avy-goto-word-0)
-         ("C-c j l" . avy-goto-line)
-         ("C-c j c" . avy-goto-char-timer)
-         ("C-c j w" . avy-goto-word-1)
+	 :prefix-map avy-prefix
+	 :prefix "C-c j"
+	 :prefix-docstring "Avy Bindings"
+         ("j" . avy-goto-word-0)
+         ("l" . avy-goto-line)
+         ("c" . avy-goto-char-timer)
+         ("w" . avy-goto-word-1)
          )
   )
 
@@ -312,18 +315,21 @@ If the new path's directories does not exist, create them."
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
          ("M-s o" . consult-outline)
-         ;; Leader key functions
-         ("C-c f r" . consult-recent-file)
-         ("C-c f f" . consult-fd)
-         ("C-c f g" . consult-ripgrep)
-         ("C-c f l" . consult-line)
-         ("C-c f i" . consult-imenu)
+         ("M-s i" . consult-imenu)
          ;; Isearch integration
          :map isearch-mode-map
          ("M-e" . consult-isearch-history)   ; orig. isearch-edit-string
          ("M-s e" . consult-isearch-history) ; orig. isearch-edit-string
          ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
          ("M-s L" . consult-line-multi)      ; needed by consult-line to detect isearch
+	 ;; Leader key functions
+	 :prefix-map files-prefix
+	 :prefix "C-c f"
+	 :prefix-docstring "Prefix for File related functions"
+         ("r" . consult-recent-file)
+         ("f" . consult-fd)
+         ("g" . consult-ripgrep)
+         ("l" . consult-line)
          )
   :config
   ;; Narrowing lets you restrict results to certain groups of candidates
@@ -1190,18 +1196,18 @@ If the new path's directories does not exist, create them."
 ;; Define some functions that I always
 ;; accidentally call because vim
 (defun w ()
-  "Save a buffer"
+  "Save a buffer."
   (interactive)
   (save-buffer))
 
 (defun wq ()
-  "Save buffers and quit"
+  "Save buffers and quit."
   (interactive)
   (save-buffers-kill-emacs)
   )
 
 (defun q ()
-  "Quit without saving"
+  "Quit without saving."
   (interactive)
   (kill-emacs))
 
@@ -1310,7 +1316,7 @@ If the new path's directories does not exist, create them."
      '("C-<right>" . windmove-right)
      '("C-<left>" . windmove-left)
      ;; Multiple-Cursors
-     '("C-c n" .  mc/mark-next-like-this)
+     '("C-c n" . mc/mark-next-like-this)
      '("C-c p" . mc/mark-previous-like-this)
      '("C-c ^" . mc/edit-lines)
      '("S" . mc/mark-all-in-region-regexp)
