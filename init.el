@@ -264,9 +264,9 @@ If the new path's directories does not exist, create them."
 (use-package avy
   :ensure t
   :bind (
-	 :prefix-map avy-prefix
+	 :prefix-map jump-prefix
 	 :prefix "C-c j"
-	 :prefix-docstring "Avy Bindings"
+	 :prefix-docstring "Jump Bindings"
          ("j" . avy-goto-word-0)
          ("l" . avy-goto-line)
          ("c" . avy-goto-char-timer)
