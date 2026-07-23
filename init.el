@@ -726,7 +726,6 @@ If the new path's directories does not exist, create them."
 (use-package dap-python
   :after dap-mode
   :config (setq dap-python-debugger 'debugpy)
-  :mode ("\\.py\\'" . python-ts-mode)
   )
 
 (use-package dap-dlv-go
