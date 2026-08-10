@@ -1202,6 +1202,7 @@ If the new path's directories does not exist, create them."
 (defun wq ()
   "Save buffers and quit."
   (interactive)
+  (save-buffer)
   (save-buffers-kill-emacs)
   )
 
