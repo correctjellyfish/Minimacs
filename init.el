@@ -956,7 +956,7 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set the default shell to Fish
-(setq shell-file-name "/usr/bin/fish")
+(setq shell-file-name (executable-find "fish"))
 
 ;; Eat: Emulate A Terminal
 (use-package eat
@@ -965,7 +965,7 @@ If the new path's directories does not exist, create them."
   (eat-term-name "xterm")
   :config
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode)     ; commands like less will be handled by Eat
+  (eat-eshell-visual-command-mode)      ; commands like less will be handled by Eat
   :bind (
          ("C-c t t" . eat)
          )
