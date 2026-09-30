@@ -19,3 +19,5 @@ eclipse.jdt.ls/
 workspace/
 flycheck_init.el
 image-dired/
+projects.eld
+recentf.eld

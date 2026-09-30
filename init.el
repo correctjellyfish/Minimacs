@@ -146,7 +146,13 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes '(default))
- '(package-selected-packages '(typst-ts-mode))
+ '(package-selected-packages
+   '(cider clojure-mode consult-lsp dap-mode dune eat eldoc-box envrc ess
+	   flycheck flycheck-ocaml flycheck-pos-tip format-all general
+	   json-mode just-mode lsp-mode lsp-treemacs lsp-ui magit meow
+	   merlin merlin-eldoc meson-mode rust-mode tempel
+	   tempel-collection termint treesit-auto tuareg typst-ts-mode
+	   visual-fill-column writeroom-mode yaml-mode zig-mode))
  '(package-vc-selected-packages
    '((typst-ts-mode :url
 		    "https://codeberg.org/meow_king/typst-ts-mode.git")))
@@ -890,6 +896,12 @@ If the new path's directories does not exist, create them."
   :ensure t
   :config
   (flycheck-ocaml-setup))
+
+;; Zig programming language
+(use-package zig-mode
+  :ensure t
+  :hook (zig-mode . lsp)
+  :mode ("\\.zig\\'" "\\.zon\\'"))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;  Templating  ;;
