@@ -16,7 +16,7 @@
     ;; Load breakpoints on startup
     (after-init . dape-breakpoint-load)
 
-    :custom
+    ; :custom
     ;; Turn on global bindings for setting breakpoints with mouse
     ;; (dape-breakpoint-global-mode +1)
 
