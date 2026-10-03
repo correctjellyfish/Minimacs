@@ -318,6 +318,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("c4df9006b9eb32599d758800a32f3487c2cdf13826084511783b47d419024af2"
+     default))
  '(package-selected-packages '(citar-typst which-key))
  '(writeroom-global-effects
    '(writeroom-set-fullscreen writeroom-set-alpha

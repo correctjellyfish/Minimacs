@@ -15,20 +15,20 @@
              :ensure t)
 
 (defun my/writeroom (arg)
-  "Hook used for writeroom-mode"
+  "Hook used for writeroom-mode."
   (cond
    ((= arg 1)
     (progn
       (setq display-line-numbers nil)
       (visual-line-mode)
-      (enable-theme 'almost-mono-white)
+      (load-theme 'almost-mono-white t)
       )
     )
    ((= arg -1)
     (progn
       (setq display-line-numbers t)
       (visual-line-mode)
-      (disable-theme 'almost-mono-white)
+      (load-theme 'catppuccin t)
       )
     )
    )
