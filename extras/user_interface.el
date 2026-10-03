@@ -1,10 +1,9 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   User Interface enhancements/defaults
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 ;; Mode line information
 (setopt line-number-mode t)                        ; Show current line in modeline
 (setopt column-number-mode t)                      ; Show column as well
@@ -19,6 +18,10 @@
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
+
+;; Set scroll margin
+(setq scroll-margin 2)
+(setq scroll-conservatively 101)
 
 ;; Update the cursor shape inside a terminal; e.g. when in insert mode
 ;; when using Evil (Vim emulation) change the cursor to a bar.
@@ -48,9 +51,14 @@
 (setopt global-hl-line-sticky-flag 'window) ; Every window gets own hl-line instance
 (global-hl-line-mode)
 
-;; Use this to enable the line highlight in only certain modes:
-;(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
-;  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+;; Help tracking cursor
+(use-package beacon
+  :ensure t
+  :init (beacon-mode 1))
+
+;; Set modes to highlight current line in
+(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
+  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 
 ;; Show matching delimiters
 (setopt show-paren-delay 0)
@@ -59,6 +67,39 @@
 (setopt show-paren-context-when-offscreen 'overlay)
 
 ;; Theme
-(use-package emacs
+(use-package catppuccin-theme
+  :ensure t
+  :init (setq catppuccin-flavor 'mocha)
+  :config (load-theme 'catppuccin t))
+
+
+;; Set font if not in terminal (Useful to set nerd font)
+(defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
+(when (window-system)
+  (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100" nil t))
+	((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100" nil t))))
+
+;; File tree
+(use-package treemacs
+  :ensure t
+  :commands treemacs
+  :bind ("C-c f t" . treemacs))
+
+;; Welcome Screen
+(use-package dashboard
+  :ensure t
   :config
-  (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+  (setq dashboard-banner-logo-title "Welcome to Emacs!")
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content t)
+  (setq dashboard-items '((recents   . 5)
+                          (bookmarks . 5)
+                          (projects  . 5)
+                          (registers . 5)))
+  (dashboard-setup-startup-hook)
+  )
+
+;; Indent guides
+(use-package indent-bars
+  :ensure t
+  :hook ((python-ts-mode python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer

@@ -9,6 +9,8 @@
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
+;; Stop the splash Screen
+(setopt inhibit-splash-screen t)
 
 (setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
@@ -68,7 +70,7 @@
 
 ;; Don't litter file system with *~ backup files; put them all inside
 ;; ~/.emacs.d/backup or wherever
-(defun bedrock--backup-file-name (fpath)
+(defun minimacs--backup-file-name (fpath)
   "Return a new file path of a given file path.
 If the new path's directories does not exist, create them."
   (let* ((backupRootDir (concat user-emacs-directory "emacs-backup/"))
@@ -76,44 +78,16 @@ If the new path's directories does not exist, create them."
          (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath))
-(setopt make-backup-file-name-function 'bedrock--backup-file-name)
+(setopt make-backup-file-name-function 'minimacs--backup-file-name)
 
+;; Remove autosave buffers when killing buffer
+(setq kill-buffer-delete-auto-save-files t)
 
 ;; Basic speedups
-;;
-;; Emacs works really hard to be incredibly compatible out-of-the-box
-;; with a wide variety of languages. That comes at the cost of a
-;; little performance. These tell Emacs to assume left-to-right text
-;; in all buffers.
-;; Remove/comment if you read right-to-left languages (Arabic, Hebrew, etc.)
+;; assume left-to-right text in all buffers.
 (setq-default bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t)
 
-;; Various built in settings
-(use-package emacs
-  :config
-  ;; Code folding config
-  (setopt hs-show-indicators t)         ; Show collapse indicators in margin
-  (setopt hs-display-lines-hidden t)    ; Show number of collapsed lines
+;; Replace selection when typing (or pasting)
+(delete-selection-mode 1)
 
-
-  ;; Treesitter config
-
-  ;; Enable tree-sitter in all available modes
-  (setopt treesit-enabled-modes t)
-
-  ;; Amount to highlight: integer between 1-4; 4 is max highlighting
-  (setopt treesit-font-lock-level 3)
-
-  ;; What to do if language grammar not installed: default is `ask';
-  ;; other options are `always', and `ask-dir'.
-  (setopt treesit-auto-install-grammar 'ask)
-
-  :hook
-  ;; Auto parenthesis matching
-  ((prog-mode . electric-pair-mode)))
-
-(use-package project
-  :custom
-  (when (>= emacs-major-version 30)
-    (project-mode-line t)))         ; show project name in modeline

@@ -1,4 +1,9 @@
-
+;;; -*- lexical-binding: t -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Terminal
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package eshell
   :init
   (defun bedrock/setup-eshell ()
@@ -13,4 +18,52 @@
   (eat-term-name "xterm")
   :config
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
+  (eat-eshell-visual-command-mode)      ; commands like less will be handled by Eat
+  :bind (
+         :map minimacs-term-keymap
+         ("t" . eat)
+         )
+  )     
+
+;; Termint
+(use-package termint
+  :ensure t
+  :after python
+  :config
+  (termint-define "ipython" "ipython" :bracketed-paste-p t
+                  :source-syntax termint-ipython-source-syntax-template)
+  (setq termint-backend 'eat)
+
+  ;; C-c r s: `termint-ipython-start'
+  ;; C-c r e: `termint-ipython-send-string'
+  ;; C-c r r: `termint-ipython-send-region' (or `termint-ipython-send-region-operator' if evil is installed.)
+  ;; C-c r p: `termint-ipython-send-paragraph'
+  ;; C-c r b: `termint-ipython-send-buffer'
+  ;; C-c r f: `termint-ipython-send-defun'
+  ;; C-c r R: `termint-ipython-source-region' (or `termint-ipython-source-region-operator' if evil is installed.)
+  ;; C-c r P: `termint-ipython-source-paragraph'
+  ;; C-c r B: `termint-ipython-source-buffer'
+  ;; C-c r F: `termint-ipython-source-defun'
+  ;; C-c r h: `termint-ipython-hide-window'
+  (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
+  :commands (
+             termint-ipython-start
+             )
+  )
+
+(defun minimacs-python-ts-mode-setup ()
+  "Configure python-ts-mode"
+  (keymap-set minimacs-repl-keymap "s" #'termint-ipython-start)
+  (keymap-set minimacs-repl-keymap "e" #'termint-ipython-send-string)
+  (keymap-set minimacs-repl-keymap "r" #'termint-ipython-send-region) 
+  (keymap-set minimacs-repl-keymap "p" #'termint-ipython-send-paragraph)
+  (keymap-set minimacs-repl-keymap "b" #'termint-ipython-send-buffer)
+  (keymap-set minimacs-repl-keymap "f" #'termint-ipython-send-defun)
+  (keymap-set minimacs-repl-keymap "R" #'termint-ipython-source-region)
+  (keymap-set minimacs-repl-keymap "P" #'termint-ipython-source-paragraph)
+  (keymap-set minimacs-repl-keymap "B" #'termint-ipython-source-buffer)
+  (keymap-set minimacs-repl-keymap "F" #'termint-ipython-source-defun)
+  (keymap-set minimacs-repl-keymap "h" #'termint-ipython-hide-window)
+  )
+(add-hook 'python-ts-mode-hook 'minimacs-python-ts-mode-setup)
+

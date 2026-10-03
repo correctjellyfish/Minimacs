@@ -30,4 +30,16 @@
   ; (setopt eglot-workspace-configuration
   ;  '((haskell (maxCompletions . 100))
   ;    (elixir  (maxCompletions . 100))))
+  :bind (
+        :map minimacs-language-keymap
+        ("r" . eglot-rename)
+        ("a" . eglot-code-actions)
+         )
   )
+
+(use-package eldoc-box
+  :ensure t
+  :config (eldoc-box-hover-at-point-mode)
+  )
+
+(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)

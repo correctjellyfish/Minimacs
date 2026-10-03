@@ -47,6 +47,8 @@
      '("0" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet))
+     ;; Avy jump
+     '("SPC" . avy-goto-word-0)
     (meow-normal-define-key
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
@@ -88,8 +90,6 @@
      '("L" . meow-right-expand)
      '("m" . meow-join)
      '("n" . meow-search)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
      '("p" . meow-yank)
      '("q" . meow-quit)
      '("Q" . meow-goto-line)
@@ -121,11 +121,13 @@
      '(")" . meow-page-down)
      '("N" . tab-line-switch-to-prev-tab)
      '("M" . tab-line-switch-to-next-tab)
+     '("o" . er/expand-region)
+     '("O" . er/contract-region)
      ;; Move between windows
-     '("C-k" . windmove-up)
-     '("C-j" . windmove-down)
-     '("C-l" . windmove-right)
-     '("C-h" . windmove-left)
+     '("C-<up>" . windmove-up)
+     '("C-<down>" . windmove-down)
+     '("C-<left>" . windmove-right)
+     '("C-<right>" . windmove-left)
      ;; Multiple-Cursors
      '("C-c n" . mc/mark-next-like-this)
      '("C-c p" . mc/mark-previous-like-this)

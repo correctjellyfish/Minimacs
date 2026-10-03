@@ -12,7 +12,12 @@
   (:map corfu-map
         ("SPC" . corfu-insert-separator)
         ("C-n" . corfu-next)
-        ("C-p" . corfu-previous)))
+        ("C-p" . corfu-previous)
+        )
+  :custom 
+  (corfu-auto t)
+  (corfu-cycle t)
+  )
 
 ;; Part of corfu
 (use-package corfu-popupinfo

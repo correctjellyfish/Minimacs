@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Tab-bar configuration
@@ -14,8 +15,6 @@
 (display-time-mode)
 
 ;; A transient menu to make working with the tab-bar easier
-;; The `transient' library is built-in and makes defining little menus
-;; easy to work with. Activate this menu with `C-c C-t'.
 (use-package transient
   :ensure nil                           ; built-in
   :config
@@ -33,5 +32,5 @@
       ("r" "rename tab" tab-rename)]]
     [[""
       ("RET" "Done" transient-quit-one)]])
-  :bind (:map global-map
-              ("C-c C-t" . tab-bar-transient)))
+  :bind (:map minimacs-tab-keymap
+              ("t" . tab-bar-transient)))

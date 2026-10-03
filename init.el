@@ -1,4 +1,15 @@
 ;;; -*- lexical-binding: t -*-
+;;__/\\\\____________/\\\\_________________________________________________________________________________________
+;; _\/\\\\\\________/\\\\\\_________________________________________________________________________________________
+;;  _\/\\\//\\\____/\\\//\\\__/\\\________________/\\\_______________________________________________________________
+;;   _\/\\\\///\\\/\\\/_\/\\\_\///___/\\/\\\\\\___\///_____/\\\\\__/\\\\\____/\\\\\\\\\________/\\\\\\\\__/\\\\\\\\\\_
+;;    _\/\\\__\///\\\/___\/\\\__/\\\_\/\\\////\\\___/\\\__/\\\///\\\\\///\\\_\////////\\\_____/\\\//////__\/\\\//////__
+;;     _\/\\\____\///_____\/\\\_\/\\\_\/\\\__\//\\\_\/\\\_\/\\\_\//\\\__\/\\\___/\\\\\\\\\\___/\\\_________\/\\\\\\\\\\_
+;;      _\/\\\_____________\/\\\_\/\\\_\/\\\___\/\\\_\/\\\_\/\\\__\/\\\__\/\\\__/\\\/////\\\__\//\\\________\////////\\\_
+;;       _\/\\\_____________\/\\\_\/\\\_\/\\\___\/\\\_\/\\\_\/\\\__\/\\\__\/\\\_\//\\\\\\\\/\\__\///\\\\\\\\__/\\\\\\\\\\_
+;;        _\///______________\///__\///__\///____\///__\///__\///___\///___\///___\////////\//_____\////////__\//////////__
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Basic settings
@@ -11,33 +22,166 @@
 ;;;   Setup Keymaps
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar-keymap minimacs-file-keymap
-               :doc "File related keys")
-(defvar-keymap minimacs-find-keymap
-               :doc "Find/Search related keys")
-(defvar-keymap minimacs-language-keymap
-               :doc "Language/LSP related keys")
+
+;;;;;;;;;;;;;;
+;;; Buffer ;;;
+;;;;;;;;;;;;;;
 (defvar-keymap minimacs-buffer-keymap
-               :doc "Language/LSP related keys")
+               :doc "Buffer related keys"
+               :prefix t
+               "k" #'kill-current-buffer
+               "i" #'ibuffer
+               "n" #'next-buffer
+               "p" #'previous-buffer
+               "r" #'revert-buffer
+               )
+(global-set-key (kbd "C-c b") 'minimacs-buffer-keymap)
 
-(global-set-key (kbd "C-c f") minimacs-file-keymap)
-(global-set-key (kbd "C-c s") minimacs-find-keymap)
-(global-set-key (kbd "C-c b") minimacs-buffer-keymap)
-(global-set-key (kbd "C-c l") minimacs-language-keymap)
+;;;;;;;;;;;;;;;
+;;; Comment ;;;
+;;;;;;;;;;;;;;;
+(defvar-keymap minimacs-comment-keymap
+               :doc "Comment related keys"
+               :prefix t
+               "l" #'comment-line
+               "r" #'comment-or-uncomment-region
+               "d" #'comment-dwim
+               )
+(global-set-key (kbd "C-c c") 'minimacs-comment-keymap)
 
-;; which-key: shows a popup of available keybindings when typing a long key
-;; sequence (e.g. C-x ...)
+;;;;;;;;;;;;;;
+;;; Errors ;;;
+;;;;;;;;;;;;;;
+(defvar-keymap minimacs-errors-keymap
+               :doc "Errors/Flycheck keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c e") 'minimacs-errors-keymap)
+
+;;;;;;;;;;;;;
+;;; Files ;;;
+;;;;;;;;;;;;;
+(defvar-keymap minimacs-file-keymap
+               :doc "File related keys"
+               :prefix t
+               "d" #'dired
+               "w" #'write-file
+               "s" #'save-buffer
+               "S" #'save-some-buffer
+               )
+(global-set-key (kbd "C-c f") 'minimacs-file-keymap)
+
+;;;;;;;;;;;
+;;; Git ;;;
+;;;;;;;;;;;
+(defvar-keymap minimacs-git-keymap
+               :doc "Git related keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c g") 'minimacs-git-keymap)
+
+;;;;;;;;;;;;
+;;; Jump ;;;
+;;;;;;;;;;;;
+(defvar-keymap minimacs-jump-keymap
+               :doc "Movement related keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c j") 'minimacs-jump-keymap)
+
+;;;;;;;;;;;;;;;;
+;;; Language ;;;
+;;;;;;;;;;;;;;;;
+(defvar-keymap minimacs-language-keymap
+               :doc "Language/LSP related keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c l") 'minimacs-language-keymap)
+
+;;;;;;;;;;;;;;
+;;; Search ;;;
+;;;;;;;;;;;;;;
+(defvar-keymap minimacs-search-keymap
+               :doc "Search related keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c s") 'minimacs-search-keymap)
+
+;;;;;;;;;;;
+;;; Tab ;;;
+;;;;;;;;;;;
+(defvar-keymap minimacs-tab-keymap
+               :doc "Tab keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c T") 'minimacs-tab-keymap)
+
+;;;;;;;;;;;;;;;;
+;;; Terminal ;;;
+;;;;;;;;;;;;;;;;
+(defvar-keymap minimacs-term-keymap
+               :doc "Terminal keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c t") 'minimacs-term-keymap)
+
+;;;;;;;;;;;;;
+;;; Utils ;;;
+;;;;;;;;;;;;;
+(defvar-keymap minimacs-utils-keymap
+               :doc "Misc. Utility keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c u") 'minimacs-utils-keymap)
+
+;;;;;;;;;;;;;;
+;;; Window ;;;
+;;;;;;;;;;;;;;
+(defvar-keymap minimacs-windows-keymap
+               :doc "Window related keys"
+               :prefix t
+               "h" #'windmove-left
+               "j" #'windmove-down
+               "k" #'windmove-up
+               "l" #'windmove-right
+               "q" #'delete-window
+               "v" #'split-window-right
+               "s" #'split-window-right
+               )
+(global-set-key (kbd "C-c w") 'minimacs-windows-keymap)
+
+;;;;;;;;;;;;
+;;; REPL ;;;
+;;;;;;;;;;;;
+(defvar-keymap minimacs-repl-keymap
+               :doc "REPL keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c r") 'minimacs-repl-keymap)
+
+;;;;;;;;;;;;;;;
+;;; Writing ;;;
+;;;;;;;;;;;;;;;
+(defvar-keymap minimacs-writing-keymap
+               :doc "Writing keys"
+               :prefix t
+               )
+(global-set-key (kbd "C-c z") 'minimacs-writing-keymap)
+
+
+
+;; which-key setup
 (use-package which-key
   :config
   (which-key-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Minibuffer/completion/searching settings
+;;;   Minibuffer settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-file (expand-file-name "extras/minibuffer.el" user-emacs-directory))
 
+(load-file (expand-file-name "extras/minibuffer.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -46,37 +190,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-file (expand-file-name "extras/user_interface.el" user-emacs-directory))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Tab-bar configuration
+;;;   Casual
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-file (expand-file-name "extras/tab_bar.el" user-emacs-directory))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Motion aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package avy
-  :demand t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Search 
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-file (expand-file-name "extras/consult.el" user-emacs-directory))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Context Menu 
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load-file (expand-file-name "extras/context_menu.el" user-emacs-directory))
-
+(load-file (expand-file-name "extras/casual.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -88,11 +207,56 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;;   Tab-bar configuration
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file (expand-file-name "extras/tab_bar.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Templates
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file (expand-file-name "extras/templates.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Motion aids
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file (expand-file-name "extras/movement.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Search 
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file (expand-file-name "extras/search.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Context Menu 
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file (expand-file-name "extras/context_menu.el" user-emacs-directory))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;;   Terminal/Eshell 
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (load-file (expand-file-name "extras/terminal.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Writing
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(load-file (expand-file-name "extras/writing.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -117,6 +281,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (load-file (expand-file-name "extras/lsp.el" user-emacs-directory))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Editing Enhancements
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(load-file (expand-file-name "extras/editing.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -146,7 +318,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(citar-typst which-key)))
+ '(package-selected-packages '(citar-typst which-key))
+ '(writeroom-global-effects
+   '(writeroom-set-fullscreen writeroom-set-alpha
+                              writeroom-set-menu-bar-lines
+                              writeroom-set-tool-bar-lines
+                              writeroom-set-vertical-scroll-bars
+                              writeroom-set-bottom-divider-width
+                              my/writeroom)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
