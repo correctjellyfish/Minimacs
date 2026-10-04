@@ -8,7 +8,7 @@
 (use-package eglot
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
-  (((python-mode markdown-mode typst-ts-mode) . eglot-ensure))
+  (((python-mode markdown-mode typst-ts-mode zig-mode) . eglot-ensure))
 
   :custom
   (eglot-send-changes-idle-time 0.1)

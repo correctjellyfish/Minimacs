@@ -12,6 +12,16 @@
     (keymap-set eshell-mode-map "C-r" 'consult-history))
   :hook ((eshell-mode . bedrock/setup-eshell)))
 
+;; Set default shell to fish if available
+(let ((fish-path (executable-find "fish")))
+  (setq shell-file-name
+        (if fish-path fish-path
+          (if (executable-find "zsh") (executable-find "zsh")
+            (if (executable-find "bash") (executable-find "bash")
+              (if (executable-find "bash") (executable-find "bash")
+                (if (executable-find "pwsh") (executable-find "pwsh")
+                  (executable-find "cmd"))))))))
+
 ;; Eat: Emulate A Terminal
 (use-package eat
   :custom
@@ -43,7 +53,7 @@
   "Configure python-ts-mode"
   (keymap-set minimacs-repl-keymap "s" #'termint-ipython-start)
   (keymap-set minimacs-repl-keymap "e" #'termint-ipython-send-string)
-  (keymap-set minimacs-repl-keymap "r" #'termint-ipython-send-region) 
+  (keymap-set minimacs-repl-keymap "r" #'termint-ipython-send-region)
   (keymap-set minimacs-repl-keymap "p" #'termint-ipython-send-paragraph)
   (keymap-set minimacs-repl-keymap "b" #'termint-ipython-send-buffer)
   (keymap-set minimacs-repl-keymap "f" #'termint-ipython-send-defun)

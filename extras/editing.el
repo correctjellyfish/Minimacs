@@ -150,8 +150,9 @@
 ;;;;;;;;;;;;;;;;;;;;
 (use-package format-all
   :ensure t
-  :commands format-all-mode
+  :commands (format-all-mode format-all-buffer)
   :hook (prog-mode . format-all-mode)
+  :bind (:map minimacs-buffer-keymap ("f" . format-all-buffer))
   :config
   (setq-default format-all-formatters
 		        '(
