@@ -24,13 +24,17 @@
       (setq display-line-numbers nil)
       (visual-line-mode)
       (enable-theme 'almost-mono-white)
+      (eldoc-box-hover-mode -1)
+      (eldoc-box-hover-at-point-mode -1)
       )
     )
    ((= arg -1)
     (progn
-      (setq display-line-numbers t)
+      (setq display-line-numbers 'relative)
       (visual-line-mode)
       (disable-theme 'almost-mono-white)
+      (eldoc-box-hover-mode 1)
+      (eldoc-box-hover-at-point-mode 1)
       )
     )
    )
@@ -43,6 +47,5 @@
 (use-package writeroom-mode
   :ensure t
   :bind (:map minimacs-writing-keymap
-              ("s" . writeroom-mode)
-              )
+              ("z" . writeroom-mode))
   )
