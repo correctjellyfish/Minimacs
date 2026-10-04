@@ -71,13 +71,13 @@
 (global-set-key (kbd "C-c f") 'minimacs-file-keymap)
 
 ;;;;;;;;;;;
-;;; Git ;;;
+;;; VCS ;;;
 ;;;;;;;;;;;
-(defvar-keymap minimacs-git-keymap
-  :doc "Git related keys"
+(defvar-keymap minimacs-vcs-keymap
+  :doc "VCS related keys"
   :prefix t
   )
-(global-set-key (kbd "C-c g") 'minimacs-git-keymap)
+(global-set-key (kbd "C-c v") 'minimacs-vcs-keymap)
 
 ;;;;;;;;;;;;
 ;;; Jump ;;;
