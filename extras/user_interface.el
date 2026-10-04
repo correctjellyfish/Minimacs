@@ -27,6 +27,9 @@
 ;; when using Evil (Vim emulation) change the cursor to a bar.
 (setopt xterm-update-cursor t)
 
+;; Tab-line to show buffers as tabs
+(global-tab-line-mode)
+
 ;; These are too personal to prescribe a default; uncomment and
 ;; configure according to your tastes
 (setopt indent-tabs-mode nil) ; Only use spaces to perform indentation
@@ -40,10 +43,10 @@
 ;; See https://karthinks.com/software/it-bears-repeating/
 (repeat-mode)
 
-;; Display line numbers in programming mode
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+;; Display line numbers
 (setopt display-line-numbers-width 3)           ; Set a minimum width
-(setq display-line-numbers 'relative) ; Use relative numbers
+(setq display-line-numbers-type 'relative) ; Use relative numbers
+(global-display-line-numbers-mode)
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -83,7 +86,9 @@
 (use-package treemacs
   :ensure t
   :commands treemacs
-  :bind ("C-c f t" . treemacs))
+  :bind (
+         :map minimacs-file-keymap ("t" . treemacs))
+  )
 
 ;; Welcome Screen
 (use-package dashboard
@@ -96,8 +101,7 @@
                           (bookmarks . 5)
                           (projects  . 5)
                           (registers . 5)))
-  (dashboard-setup-startup-hook)
-  )
+  (dashboard-setup-startup-hook))
 
 ;; Indent guides
 (use-package indent-bars

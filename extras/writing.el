@@ -12,23 +12,25 @@
 
 ;; Light theme for writing
 (use-package almost-mono-themes
-             :ensure t)
+  :ensure t
+  :config
+  (load-theme 'almost-mono-white t t))
 
 (defun my/writeroom (arg)
-  "Hook used for writeroom-mode."
+  "Hook used for writeroom-mode, ARG indicates if entering or leaving."
   (cond
    ((= arg 1)
     (progn
       (setq display-line-numbers nil)
       (visual-line-mode)
-      (load-theme 'almost-mono-white t)
+      (enable-theme 'almost-mono-white)
       )
     )
    ((= arg -1)
     (progn
       (setq display-line-numbers t)
       (visual-line-mode)
-      (load-theme 'catppuccin t)
+      (disable-theme 'almost-mono-white)
       )
     )
    )
@@ -41,6 +43,6 @@
 (use-package writeroom-mode
   :ensure t
   :bind (:map minimacs-writing-keymap
-         ("s" . writeroom-mode)
-         )
+              ("s" . writeroom-mode)
+              )
   )

@@ -8,7 +8,7 @@
 (use-package eglot
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
-  (((python-mode ruby-mode elixir-mode) . eglot-ensure))
+  (((python-mode markdown-mode typst-ts-mode) . eglot-ensure))
 
   :custom
   (eglot-send-changes-idle-time 0.1)
@@ -21,8 +21,10 @@
 
   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
   ;; Sometimes you need to tell Eglot where to find the language server
-  ; (add-to-list 'eglot-server-programs
-  ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  (add-to-list 'eglot-server-programs
+               '(markdown-mode . ("rass" "--" "marksman" "server" "--" "harper-ls" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(typst-ts-mode . ("rass" "--" "tinymist" "--" "harper-ls" "--stdio")))
 
   ;; You can set various options for each language server. For
   ;; example, you can raise the number of completions surfaced by a
@@ -32,8 +34,14 @@
   ;    (elixir  (maxCompletions . 100))))
   :bind (
         :map minimacs-language-keymap
+        ("s" . eglot)
         ("r" . eglot-rename)
         ("a" . eglot-code-actions)
+        ("f" . eglot-format-buffer)
+        ("h" . eglot-inlay-hints-mode)
+        ("d" . xref-find-definitions)
+        ("R" . xref-find-references)
+        ("i" . imenu)
          )
   )
 

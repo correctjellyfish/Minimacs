@@ -18,4 +18,4 @@
 ;; Easy jumping between windows
 (use-package ace-window
   :ensure t
-  :bind ("M-o" . ace-window))
+  :bind ("M-j" . ace-window))

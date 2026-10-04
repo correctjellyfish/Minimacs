@@ -18,10 +18,10 @@
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
 
 ;; Better Undo
-(use-package undo-tree
+(use-package vundo
   :ensure t
-  :init (setq undo-tree-auto-save-history nil)
-  :config (global-undo-tree-mode)
+  :bind (:map minimacs-utils-keymap
+         ("u" . vundo))
   )
 
 ;; Remove Whitespace
@@ -33,19 +33,15 @@
 ;; Expand selected region
 (use-package expand-region
   :ensure t
-  :bind (
-	 ("C-=" . er/expand-region)
-	 ("C-c =" . er/expand-region)
-	 )
+  :commands (er/expand-region
+             er/contract-region)
   )
 
 ;; Change inside/outside current region
 (use-package change-inner
   :ensure t
-  :bind
-  ("M-i" . change-inner)
-  ("M-o" . change-outer)
-  )
+  :bind ("M-i" . change-inner)
+        ("M-o" . change-outer))
 
 ;; Surround
 (use-package surround
@@ -66,11 +62,9 @@
   :ensure t
   :bind (
 	 ("C-k" . crux-smart-kill-line)
-	 ("C-c o" . crux-smart-open-line)
-	 ("C-c O" . crux-smart-open-line-above)
    :map minimacs-utils-keymap
-	 ("C-c u d" . crux-duplicate-current-line-or-region)
-	 ("C-c u j" . crux-top-join-line)
+	 ("d" . crux-duplicate-current-line-or-region)
+	 ("j" . crux-top-join-line)
    :map minimacs-windows-keymap
 	 ("t" . crux-transpose-windows)
    :map minimacs-buffer-keymap
@@ -134,6 +128,7 @@
   :config
   (global-flycheck-mode)
   (flycheck-pos-tip-mode)
+  (global-flycheck-eglot-mode 1)
   :bind (
          :map minimacs-errors-keymap
           ("n" . flycheck-next-error )
@@ -161,6 +156,7 @@
   (setq-default format-all-formatters
 		'(
 		  ("Shell" (shfmt "-i" "4" "-ci"))
+		  ("Markdown" (mdformat))
 		  )
 )
   )

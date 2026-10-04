@@ -126,8 +126,8 @@
      ;; Move between windows
      '("C-<up>" . windmove-up)
      '("C-<down>" . windmove-down)
-     '("C-<left>" . windmove-right)
-     '("C-<right>" . windmove-left)
+     '("C-<right>" . windmove-right)
+     '("C-<left>" . windmove-left)
      ;; Multiple-Cursors
      '("C-c n" . mc/mark-next-like-this)
      '("C-c p" . mc/mark-previous-like-this)

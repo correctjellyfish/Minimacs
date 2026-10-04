@@ -34,18 +34,6 @@
                   :source-syntax termint-ipython-source-syntax-template)
   (setq termint-backend 'eat)
 
-  ;; C-c r s: `termint-ipython-start'
-  ;; C-c r e: `termint-ipython-send-string'
-  ;; C-c r r: `termint-ipython-send-region' (or `termint-ipython-send-region-operator' if evil is installed.)
-  ;; C-c r p: `termint-ipython-send-paragraph'
-  ;; C-c r b: `termint-ipython-send-buffer'
-  ;; C-c r f: `termint-ipython-send-defun'
-  ;; C-c r R: `termint-ipython-source-region' (or `termint-ipython-source-region-operator' if evil is installed.)
-  ;; C-c r P: `termint-ipython-source-paragraph'
-  ;; C-c r B: `termint-ipython-source-buffer'
-  ;; C-c r F: `termint-ipython-source-defun'
-  ;; C-c r h: `termint-ipython-hide-window'
-  (define-key python-ts-mode-map (kbd "C-c r") termint-ipython-map)
   :commands (
              termint-ipython-start
              )
