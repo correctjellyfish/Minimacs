@@ -54,13 +54,6 @@
   :mode ("\\.clj\\'")
   )
 
-;; CIDER (clojure REPL)
-(use-package cider
-  :ensure t
-  :commands (cider-jack-in)
-  :bind (
-	 ("C-c r c" . cider-jack-in)))
-
 ;; Java Treesitter Mode
 (use-package java-ts-mode
   :ensure nil

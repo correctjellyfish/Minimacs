@@ -23,7 +23,7 @@
          :map minimacs-term-keymap
          ("t" . eat)
          )
-  )     
+  )
 
 ;; Termint
 (use-package termint
@@ -55,3 +55,11 @@
   )
 (add-hook 'python-ts-mode-hook 'minimacs-python-ts-mode-setup)
 
+;; CIDER (clojure REPL)
+(use-package cider
+  :ensure t
+  :commands (cider-jack-in))
+
+(defun minimacs-clojure-mode-setup ()
+  "Configure Clojure mode"
+  (keymap-set minimacs-repl-keymap "s" #'cider-jack-in))

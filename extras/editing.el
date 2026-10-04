@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Editing 
+;;;   Editing
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multiple Cursors (easier than Meow's beacon)
@@ -9,9 +9,9 @@
   :ensure t
   :config (define-key mc/keymap (kbd "<return>") nil)
   :commands (
-       mc/mark-next-like-this
-	     mc/mark-previous-like-this
-	     mc/edit-lines)
+             mc/mark-next-like-this
+	         mc/mark-previous-like-this
+	         mc/edit-lines)
   )
 
 ;; Turn on hideshow in prog-mode
@@ -21,7 +21,7 @@
 (use-package vundo
   :ensure t
   :bind (:map minimacs-utils-keymap
-         ("u" . vundo))
+              ("u" . vundo))
   )
 
 ;; Remove Whitespace
@@ -41,7 +41,7 @@
 (use-package change-inner
   :ensure t
   :bind ("M-i" . change-inner)
-        ("M-o" . change-outer))
+  ("M-o" . change-outer))
 
 ;; Surround
 (use-package surround
@@ -52,25 +52,25 @@
 (use-package move-text
   :ensure t
   :bind (
-	 ("M-<down>" . move-text-down)
-	 ("M-<up>" .  move-text-up)
-	 )
+	     ("M-<down>" . move-text-down)
+	     ("M-<up>" .  move-text-up)
+	     )
   )
 
 ;; Various useful functions
 (use-package crux
   :ensure t
   :bind (
-	 ("C-k" . crux-smart-kill-line)
-   :map minimacs-utils-keymap
-	 ("d" . crux-duplicate-current-line-or-region)
-	 ("j" . crux-top-join-line)
-   :map minimacs-windows-keymap
-	 ("t" . crux-transpose-windows)
-   :map minimacs-buffer-keymap
-	 ("R" . crux-rename-file-and-buffer)
-	 ("o" . crux-kill-other-buffers)
-	 )
+	     ("C-k" . crux-smart-kill-line)
+         :map minimacs-utils-keymap
+	     ("d" . crux-duplicate-current-line-or-region)
+	     ("j" . crux-top-join-line)
+         :map minimacs-windows-keymap
+	     ("t" . crux-transpose-windows)
+         :map minimacs-buffer-keymap
+	     ("R" . crux-rename-file-and-buffer)
+	     ("o" . crux-kill-other-buffers)
+	     )
   )
 
 ;; Various built in settings
@@ -80,15 +80,15 @@
   (setopt hs-show-indicators t)         ; Show collapse indicators in margin
   (setopt hs-display-lines-hidden t)    ; Show number of collapsed lines
   (setq major-mode-remap-alist
-          '((yaml-mode . yaml-ts-mode)
-            (bash-mode . bash-ts-mode)
-            (js2-mode . js-ts-mode)
-            (typescript-mode . typescript-ts-mode)
-            (json-mode . json-ts-mode)
-            (css-mode . css-ts-mode)
-            (python-mode . python-ts-mode)
-            (java-mode . java-ts-mode))
-          )
+        '((yaml-mode . yaml-ts-mode)
+          (bash-mode . bash-ts-mode)
+          (js2-mode . js-ts-mode)
+          (typescript-mode . typescript-ts-mode)
+          (json-mode . json-ts-mode)
+          (css-mode . css-ts-mode)
+          (python-mode . python-ts-mode)
+          (java-mode . java-ts-mode))
+        )
 
 
   ;; Treesitter config
@@ -131,13 +131,13 @@
   (global-flycheck-eglot-mode 1)
   :bind (
          :map minimacs-errors-keymap
-          ("n" . flycheck-next-error )
-          ("p" . flycheck-previous-error )
-          ("e" . flycheck-explain-error-at-point )
-          ("l" . flycheck-list-errors )
-          ("s" . flycheck-select-checker )
-          ("x" . flycheck-buffer )
-          ("v" . flycheck-verify-setup )
+         ("n" . flycheck-next-error )
+         ("p" . flycheck-previous-error )
+         ("e" . flycheck-explain-error-at-point )
+         ("l" . flycheck-list-errors )
+         ("s" . flycheck-select-checker )
+         ("x" . flycheck-buffer )
+         ("v" . flycheck-verify-setup )
          )
   )
 
@@ -154,10 +154,9 @@
   :hook (prog-mode . format-all-mode)
   :config
   (setq-default format-all-formatters
-		'(
-		  ("Shell" (shfmt "-i" "4" "-ci"))
-		  ("Markdown" (mdformat))
-		  )
-)
+		        '(
+		          ("Shell" (shfmt "-i" "4" "-ci"))
+		          ("Markdown" (mdformat))
+		          )
+                )
   )
-
