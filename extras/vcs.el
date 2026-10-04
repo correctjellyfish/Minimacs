@@ -6,5 +6,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit: best Git client to ever exist
 (use-package magit
-  :bind (:map minimacs-git-keymap
+  :bind (:map minimacs-vcs-keymap
          ("g" . magit-status)))
