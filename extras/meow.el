@@ -26,6 +26,9 @@
 
 (use-package meow
   :ensure t
+  :config
+  (meow-setup)
+  (meow-global-mode 1)
   :init
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -141,8 +144,3 @@
      '("F l" . hs-hide-level)
      ))
   )
-
-
-(require 'meow)
-  (meow-setup)
-  (meow-global-mode 1)
