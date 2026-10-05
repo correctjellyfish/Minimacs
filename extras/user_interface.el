@@ -95,7 +95,7 @@
          (index (random size)))
     (nth index items)))
 
-(defvar banner-to-use (random-element-of-list (directory-files (expand-file-name "images/" user-emacs-directory) t)))
+(defvar banner-to-use (random-element-of-list (directory-files (expand-file-name "images/" user-emacs-directory) t "\\.txt")))
 ;; Welcome Screen
 (use-package dashboard
   :ensure t
