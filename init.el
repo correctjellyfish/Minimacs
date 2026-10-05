@@ -299,6 +299,12 @@
    '("c4df9006b9eb32599d758800a32f3487c2cdf13826084511783b47d419024af2"
      default))
  '(package-selected-packages '(citar-typst which-key))
+ '(warning-suppress-log-types
+   '((files missing-lexbind-cookie
+            "/usr/share/emacs/site-lisp/suse-start-po-mode.el")
+     (files missing-lexbind-cookie
+            "/usr/share/emacs/site-lisp/site-start.d/vterm-init.el")
+     (comp) (bytecomp)))
  '(writeroom-global-effects
    '(writeroom-set-fullscreen writeroom-set-alpha
                               writeroom-set-menu-bar-lines
