@@ -95,7 +95,7 @@
   :ensure t
   :config
   (setq dashboard-banner-logo-title "Mea Navis Aëricumbens Anguillis Abundat")
-  (setq dashboard-footer-messages (list (shell-command-to-string "fortune -s")))
+  (setq dashboard-footer-messages (list (shell-command-to-string "fortune")))
   (setq dashboard-startup-banner (expand-file-name "images/logo.txt" user-emacs-directory))
   (setq dashboard-center-content t)
   (setq dashboard-items '((recents   . 5)
