@@ -94,15 +94,19 @@
   (let* ((size (length items))
          (index (random size)))
     (nth index items)))
+(defvar logo-titles (list 
+                      "Mea Navis Aëricumbens Anguillis Abundat" 
+                      "Nolite te Bastardes Carborundorum"
+                          )
+  )
 
-(defvar banner-to-use (random-element-of-list (directory-files (expand-file-name "images/" user-emacs-directory) t "\\.txt")))
 ;; Welcome Screen
 (use-package dashboard
   :ensure t
   :config
-  (setq dashboard-banner-logo-title "Mea Navis Aëricumbens Anguillis Abundat")
+  (setq dashboard-banner-logo-title (random-element-of-list logo-titles))
   (setq dashboard-footer-messages (list (shell-command-to-string "fortune")))
-  (setq dashboard-startup-banner banner-to-use)
+  (setq dashboard-startup-banner (random-element-of-list (directory-files (expand-file-name "images/" user-emacs-directory) t "\\.txt")))
   (setq dashboard-center-content t)
   (setq dashboard-items '((recents   . 5)
                           (bookmarks . 5)
