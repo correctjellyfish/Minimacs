@@ -89,6 +89,12 @@
   :bind (
          :map minimacs-file-keymap ("t" . treemacs))
   )
+;; Get a random element of a list
+(defun random-element-of-list (items)
+  (let* ((size (length items))
+         (index (random size)))
+    (nth index items)))
+
 
 ;; Welcome Screen
 (use-package dashboard
@@ -96,7 +102,8 @@
   :config
   (setq dashboard-banner-logo-title "Mea Navis Aëricumbens Anguillis Abundat")
   (setq dashboard-footer-messages (list (shell-command-to-string "fortune")))
-  (setq dashboard-startup-banner (expand-file-name "images/logo.txt" user-emacs-directory))
+  (setq dashboard-startup-banner (random-element-of-list (directory-files (expand-file-name "images" user-emacs-directory) t))
+        )
   (setq dashboard-center-content t)
   (setq dashboard-items '((recents   . 5)
                           (bookmarks . 5)
