@@ -95,15 +95,14 @@
          (index (random size)))
     (nth index items)))
 
-
+(defvar banner-to-use (random-element-of-list (directory-files (expand-file-name "images/" user-emacs-directory) t)))
 ;; Welcome Screen
 (use-package dashboard
   :ensure t
   :config
   (setq dashboard-banner-logo-title "Mea Navis Aëricumbens Anguillis Abundat")
   (setq dashboard-footer-messages (list (shell-command-to-string "fortune")))
-  (setq dashboard-startup-banner (random-element-of-list (directory-files (expand-file-name "images" user-emacs-directory) t))
-        )
+  (setq dashboard-startup-banner banner-to-use)
   (setq dashboard-center-content t)
   (setq dashboard-items '((recents   . 5)
                           (bookmarks . 5)
