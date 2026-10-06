@@ -97,6 +97,14 @@
 (defvar logo-titles (list 
                       "Mea Navis Aëricumbens Anguillis Abundat" 
                       "Nolite te Bastardes Carborundorum"
+                      "Aut iveniam viam aut faciam"
+                      "Carpe diem cras"
+                      "Noli Timere Messorem"
+                      "Ook"
+                      "Memento Mori"
+                      "Memento Vivere"
+                      "Nunc Id Vides, Nunc Ne Vides"
+                      "'Hope' is the thing with feathers"
                           )
   )
 
