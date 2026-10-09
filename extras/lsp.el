@@ -8,7 +8,7 @@
 (use-package eglot
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
-  (((python-mode markdown-mode typst-ts-mode zig-mode) . eglot-ensure))
+  (((python-ts-mode markdown-mode typst-ts-mode zig-mode) . eglot-ensure))
 
   :custom
   (eglot-send-changes-idle-time 0.1)
@@ -29,19 +29,19 @@
   ;; You can set various options for each language server. For
   ;; example, you can raise the number of completions surfaced by a
   ;; given langauge server to Emacs:
-  ; (setopt eglot-workspace-configuration
-  ;  '((haskell (maxCompletions . 100))
-  ;    (elixir  (maxCompletions . 100))))
+                                        ; (setopt eglot-workspace-configuration
+                                        ;  '((haskell (maxCompletions . 100))
+                                        ;    (elixir  (maxCompletions . 100))))
   :bind (
-        :map minimacs-language-keymap
-        ("s" . eglot)
-        ("r" . eglot-rename)
-        ("a" . eglot-code-actions)
-        ("f" . eglot-format-buffer)
-        ("h" . eglot-inlay-hints-mode)
-        ("d" . xref-find-definitions)
-        ("R" . xref-find-references)
-        ("i" . imenu)
+         :map minimacs-language-keymap
+         ("e" . eglot)
+         ("r" . eglot-rename)
+         ("a" . eglot-code-actions)
+         ("f" . eglot-format-buffer)
+         ("h" . eglot-inlay-hints-mode)
+         ("d" . xref-find-definitions)
+         ("R" . xref-find-references)
+         ("i" . imenu)
          )
   )
 
@@ -49,5 +49,12 @@
   :ensure t
   :config (eldoc-box-hover-at-point-mode)
   )
+
+(use-package consult-eglot
+  :ensure t
+  :after (eglot consult)
+  :bind (:map minimacs-language-keymap
+         ("s" . consult-eglot-symbols)
+         ))
 
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
