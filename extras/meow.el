@@ -51,7 +51,7 @@
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet)
      ;; Avy jump
-     '("SPC" . avy-goto-char-2))
+     '("SPC" . avy-goto-word-0))
     (meow-normal-define-key
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
