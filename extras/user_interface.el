@@ -131,3 +131,15 @@
 (use-package rainbow-delimiters
              :ensure t
              :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+;; Floating/Popup terminal 
+(use-package popterm
+  :bind (("C-`"   . popterm-toggle)
+         ("C-~"   . popterm-toggle-cd)
+         ([f9]    . popterm-window-toggle))
+  :config
+  (setq popterm-backend        'eat     ; or 'ghostel, 'eat, 'shell, 'eshell
+        popterm-display-method 'posframe  ; or 'window, 'fullscreen
+        popterm-scope          'project   ; or 'frame, 'dedicated, nil
+        popterm-auto-cd        t)
+  (popterm-global-mode 1))
