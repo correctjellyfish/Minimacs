@@ -66,7 +66,7 @@
 ;; Show matching delimiters
 (setopt show-paren-delay 0)
 (setopt show-paren-mode t)
-(setopt show-paren-style 'expression)   ; default is 'parenthesis and just does delimiters
+(setopt show-paren-style 'parenthesis)   ; default is 'parenthesis and just does delimiters
 (setopt show-paren-context-when-offscreen 'overlay)
 
 ;; Theme
@@ -126,3 +126,8 @@
 (use-package indent-bars
   :ensure t
   :hook ((python-ts-mode python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
+
+;; Mark matching parens by color
+(use-package rainbow-delimiters
+             :ensure t
+             :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
