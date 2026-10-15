@@ -4,16 +4,6 @@
 ;;;   Editing
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Multiple Cursors (easier than Meow's beacon)
-(use-package multiple-cursors
-  :ensure t
-  :config (define-key mc/keymap (kbd "<return>") nil)
-  :commands (
-             mc/mark-next-like-this
-	         mc/mark-previous-like-this
-	         mc/edit-lines)
-  )
-
 ;; Turn on hideshow in prog-mode
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
 

@@ -131,11 +131,6 @@
      '("C-<down>" . windmove-down)
      '("C-<right>" . windmove-right)
      '("C-<left>" . windmove-left)
-     ;; Multiple-Cursors
-     '("C-c n" . mc/mark-next-like-this)
-     '("C-c p" . mc/mark-previous-like-this)
-     '("C-c ^" . mc/edit-lines)
-     '("S" . mc/mark-all-in-region-regexp)
      ;; Hideshow
      '("F b" . hs-hide-block)
      '("F B" . hs-show-block)
