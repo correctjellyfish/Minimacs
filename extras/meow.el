@@ -124,8 +124,8 @@
      '(")" . meow-page-down)
      '("N" . tab-line-switch-to-prev-tab)
      '("M" . tab-line-switch-to-next-tab)
-     '("o" . er/expand-region)
-     '("O" . er/contract-region)
+     '("o" . expreg-expand)
+     '("O" . expreg-contract)
      ;; Move between windows
      '("C-<up>" . windmove-up)
      '("C-<down>" . windmove-down)
@@ -142,5 +142,8 @@
      '("F a" . hs-hide-all)
      '("F A" . hs-show-all)
      '("F l" . hs-hide-level)
+     ;; Case
+     '("~" . upcase-dwim)
+     '("`" . downcase-dwim)
      ))
   )

@@ -30,12 +30,11 @@
   :defer t
   :hook (prog-mode . ws-butler-mode))
 
-;; Expand selected region
-(use-package expand-region
+;; Expand region
+(use-package expreg
+  :config (setq expreg-restore-point-on-quit t)
   :ensure t
-  :commands (er/expand-region
-             er/contract-region)
-  )
+  :commands (expreg-expand expreg-contract))
 
 ;; Change inside/outside current region
 (use-package change-inner

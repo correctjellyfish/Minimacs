@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Search 
+;;;   Search
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Consult: Misc. enhanced commands
@@ -18,7 +18,7 @@
          ("L" . consult-line-multi) ; isearch to M-s s
          ("o" . consult-outline)
          ("e" . consult-compile-error)
-         ;; Buffer 
+         ;; Buffer
          :map minimacs-buffer-keymap
          ("s" . consult-buffer)
          ;; Files
@@ -38,8 +38,25 @@
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
-;; Modify search results en masse
+;; Modify search results en mass
 (use-package wgrep
   :ensure t
   :config
   (setq wgrep-auto-save-buffer t))
+
+;; Search region on Wikipedia
+(defun search-region-wikipedia ()
+  "Search the current region on Wikipedia."
+  (interactive)
+  (let (
+        (search-url "https://en.wikipedia.org/wiki/Special:Search?search=")
+        (region (buffer-substring (mark) (point)))
+        )
+    (browse-url (concat search-url region))
+    )
+  )
+
+(keymap-set minimacs-search-keymap "w" 'search-region-wikipedia)
+
+(provide 'search)
+;;; search.el ends here
