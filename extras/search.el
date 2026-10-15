@@ -20,7 +20,7 @@
          ("e" . consult-compile-error)
          ;; Buffer
          :map minimacs-buffer-keymap
-         ("s" . consult-buffer)
+         ("b" . consult-buffer)
          ;; Files
          :map minimacs-file-keymap
          ("h" . consult-recent-file)
