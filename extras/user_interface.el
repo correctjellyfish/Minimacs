@@ -132,6 +132,11 @@
              :ensure t
              :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
+;; Mark colors in buffers 
+(use-package rainbow-mode
+             :commands (rainbow-mode)
+             :config (rainbow-mode))
+
 ;; Floating/Popup terminal 
 (use-package popterm
   :bind (("C-`"   . popterm-toggle)
