@@ -137,16 +137,21 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;;;  Formatting   ;;
 ;;;;;;;;;;;;;;;;;;;;
+(with-eval-after-load 'language-id
+  (add-to-list 'language-id--definitions
+               '( "Typst" typst-mode typst-ts-mode)))
+
 (use-package format-all
   :ensure t
   :commands (format-all-mode format-all-buffer)
-  :hook (prog-mode . format-all-mode)
+  :hook ((prog-mode typst-ts-mode) . format-all-mode)
   :bind (:map minimacs-buffer-keymap ("f" . format-all-buffer))
   :config
   (setq-default format-all-formatters
 		        '(
 		          ("Shell" (shfmt "-i" "4" "-ci"))
 		          ("Markdown" (mdformat))
+                          ("Typst" (typstyle "--wrap-text=fill"))
 		          )
                 )
   )
