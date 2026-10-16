@@ -80,7 +80,7 @@
 (defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
 (when (window-system)
   (cond ((font-exists-p "Fira Code Nerd Font Mono") (set-frame-font "Fira Code Nerd Font Mono:spacing=100" nil t))
-	((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100" nil t))))
+	    ((font-exists-p "Courier New") (set-frame-font "Courier New:spacing=100" nil t))))
 
 ;; File tree
 (use-package treemacs
@@ -94,18 +94,18 @@
   (let* ((size (length items))
          (index (random size)))
     (nth index items)))
-(defvar logo-titles (list 
-                      "Mea Navis Aëricumbens Anguillis Abundat" 
-                      "Nolite te Bastardes Carborundorum"
-                      "Aut iveniam viam aut faciam"
-                      "Carpe diem cras"
-                      "Noli Timere Messorem"
-                      "Ook"
-                      "Memento Mori"
-                      "Memento Vivere"
-                      "Nunc Id Vides, Nunc Ne Vides"
-                      "'Hope' is the thing with feathers"
-                          )
+(defvar logo-titles (list
+                     "Mea Navis Aëricumbens Anguillis Abundat"
+                     "Nolite te Bastardes Carborundorum"
+                     "Aut iveniam viam aut faciam"
+                     "Carpe diem cras"
+                     "Noli Timere Messorem"
+                     "Ook"
+                     "Memento Mori"
+                     "Memento Vivere"
+                     "Nunc Id Vides, Nunc Ne Vides"
+                     "'Hope' is the thing with feathers"
+                     )
   )
 
 ;; Welcome Screen
@@ -125,19 +125,19 @@
 ;; Indent guides
 (use-package indent-bars
   :ensure t
-  :hook ((python-ts-mode python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
+  :hook ((python-ts-mode yaml-mode) . indent-bars-mode))
 
 ;; Mark matching parens by color
 (use-package rainbow-delimiters
-             :ensure t
-             :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
-;; Mark colors in buffers 
+;; Mark colors in buffers
 (use-package rainbow-mode
-             :commands (rainbow-mode)
-             :config (rainbow-mode))
+  :ensure t
+  :hook (prog-mode . rainbow-mode))
 
-;; Floating/Popup terminal 
+;; Floating/Popup terminal
 (use-package popterm
   :bind (("C-`"   . popterm-toggle)
          ("C-~"   . popterm-toggle-cd)
