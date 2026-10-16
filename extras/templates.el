@@ -5,11 +5,6 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package tempel
-  ;; By default, tempel looks at the file "templates" in
-  ;; user-emacs-directory, but you can customize that with the
-  ;; tempel-path variable:
-  ;; :custom
-  ;; (tempel-path (concat user-emacs-directory "custom_template_file"))
   :bind (("M-*" . tempel-insert)
          ("M-+" . tempel-complete)
          :map tempel-map
@@ -19,11 +14,18 @@
          ("M-<down>" . tempel-next)
          ("M-<up>" . tempel-previous))
   :init
-  ;; Make a function that adds the tempel expansion function to the
-  ;; list of completion-at-point-functions (capf).
-  (defun tempel-setup-capf ()
-    (add-hook 'completion-at-point-functions #'tempel-expand -1 'local))
-  ;; Put tempel-expand on the list whenever you start programming or
-  ;; writing prose.
+   (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.  `tempel-expand'
+    ;; only triggers on exact matches. We add `tempel-expand' *before* the main
+    ;; programming mode Capf, such that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand completion-at-point-functions))
+  )
+
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf))
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+  (add-hook 'typst-ts-mode-hook 'tempel-setup-capf)
+  )
+
+(use-package tempel-collection)
