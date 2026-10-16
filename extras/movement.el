@@ -5,6 +5,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package avy
+  :demand t
   :ensure t
   :bind (
          :map minimacs-jump-keymap
