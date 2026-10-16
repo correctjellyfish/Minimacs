@@ -9,7 +9,8 @@
   :bind (
          ;; Drop-in replacements
          ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
-         ("M-y"   . consult-yank-pop)   ; orig. yank-pop
+         ("C-y" . consult-yank-from-killring) ; orig. yank
+         ("M-y" . consult-yank-pop)   ; orig. yank-pop
          ;; Searching
          :map minimacs-search-keymap
          ("g" . consult-ripgrep)
