@@ -54,7 +54,20 @@
   :ensure t
   :after (eglot consult)
   :bind (:map minimacs-language-keymap
-         ("s" . consult-eglot-symbols)
-         ))
+              ("s" . consult-eglot-symbols)
+              ))
 
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+
+
+;; Function to pin main file for tinymist in Typst projects
+(defun tinymist-pin-main ()
+  "Pin the current buffer as the main file for tinymist"
+  (interactive)
+  (require 'jsonrpc)
+  (jsonrpc-request
+   (eglot-current-server)
+   :workspace/executeCommand `(:command "tinymist.pinMain" :arguments [,(buffer-file-name)]))
+  )
+
+(keymap-set minimacs-language-keymap "p" 'tinymist-pin-main)
