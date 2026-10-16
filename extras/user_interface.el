@@ -54,10 +54,24 @@
 (setopt global-hl-line-sticky-flag 'window) ; Every window gets own hl-line instance
 (global-hl-line-mode)
 
-;; Help tracking cursor
-(use-package beacon
+;; Theme setup
+(use-package batppuccin
   :ensure t
-  :init (beacon-mode 1))
+  :config
+  (load-theme 'batppuccin-mocha t t))
+;; Light theme for writing
+(use-package almost-mono-themes
+  :ensure t
+  :config
+  (load-theme 'almost-mono-white t t))
+(use-package emacs
+  :config
+  (load-theme minimacs-theme t))
+
+;; Help tracking cursor
+(use-package beacon 
+  :config 
+  (beacon-mode 1))
 
 ;; Set modes to highlight current line in
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
@@ -68,18 +82,6 @@
 (setopt show-paren-mode t)
 (setopt show-paren-style 'parenthesis)   ; default is 'parenthesis and just does delimiters
 (setopt show-paren-context-when-offscreen 'overlay)
-
-;; Theme
-(use-package catppuccin-theme
-  :ensure t
-  :init (setq catppuccin-flavor 'mocha)
-  :config (load-theme 'catppuccin t))
-;; Light theme for writing
-(use-package almost-mono-themes
-  :ensure t
-  :config
-  (load-theme 'almost-mono-white t t))
-
 
 ;; Set font if not in terminal (Useful to set nerd font)
 (defun font-exists-p (font) (if (null (x-list-fonts font)) nil t))
@@ -142,14 +144,3 @@
   :ensure t
   :hook (prog-mode . rainbow-mode))
 
-;; Floating/Popup terminal
-(use-package popterm
-  :bind (("C-`"   . popterm-toggle)
-         ("C-~"   . popterm-toggle-cd)
-         ([f9]    . popterm-window-toggle))
-  :config
-  (setq popterm-backend        'eat     ; or 'ghostel, 'eat, 'shell, 'eshell
-        popterm-display-method 'posframe  ; or 'window, 'fullscreen
-        popterm-scope          'project   ; or 'frame, 'dedicated, nil
-        popterm-auto-cd        t)
-  (popterm-global-mode 1))

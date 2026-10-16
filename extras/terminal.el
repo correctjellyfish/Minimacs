@@ -22,18 +22,36 @@
                 (if (executable-find "pwsh") (executable-find "pwsh")
                   (executable-find "cmd"))))))))
 
-;; Eat: Emulate A Terminal
-(use-package eat
-  :custom
-  (eat-term-name "xterm")
+; ;; Eat: Emulate A Terminal
+; (use-package eat
+;   :custom
+;   (eat-term-name "xterm")
+;   :config
+;   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
+;   (eat-eshell-visual-command-mode)      ; commands like less will be handled by Eat
+;   :bind (
+;          :map minimacs-term-keymap
+;          ("t" . eat)
+;          )
+;   )
+(use-package vterm
+    :ensure t
+    :bind (:map minimacs-term-keymap
+          ("t" . vterm))
+    )
+(defvar term-backend 'vterm)
+
+;; Floating/Popup terminal
+(use-package popterm
+  :bind (("C-`"   . popterm-toggle)
+         ("C-~"   . popterm-toggle-cd)
+         ([f9]    . popterm-window-toggle))
   :config
-  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode)      ; commands like less will be handled by Eat
-  :bind (
-         :map minimacs-term-keymap
-         ("t" . eat)
-         )
-  )
+  (setq popterm-backend        term-backend     ; or 'ghostel, 'eat, 'shell, 'eshell
+        popterm-display-method 'posframe  ; or 'window, 'fullscreen
+        popterm-scope          'project   ; or 'frame, 'dedicated, nil
+        popterm-auto-cd        t)
+  (popterm-global-mode 1))
 
 ;; Termint
 (use-package termint
@@ -42,7 +60,7 @@
   :config
   (termint-define "ipython" "ipython" :bracketed-paste-p t
                   :source-syntax termint-ipython-source-syntax-template)
-  (setq termint-backend 'eat)
+  (setq termint-backend term-backend)
 
   :commands (
              termint-ipython-start
