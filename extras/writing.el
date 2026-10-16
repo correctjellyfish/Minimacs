@@ -10,6 +10,19 @@
 ;; Enable flyspell mode for text mode
 (add-hook 'text-mode-hook #'flyspell-mode)
 
+;; Citation help
+(use-package citar
+             :ensure t
+             :hook (typst-ts-mode . citar-capf-setup)
+             :bind (:map minimacs-writing-keymap
+                    ("c" . citar-insert-citation))
+             )
+(use-package citar-typst
+             :ensure t
+             :commands (citar-typst-mode)
+             :hook (typst-ts-mode . citar-typst-mode)
+             )
+
 ;; Light theme for writing
 (use-package almost-mono-themes
   :ensure t
