@@ -278,7 +278,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-file (expand-file-name "extras/meow.el" user-emacs-directory))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework
@@ -292,8 +291,27 @@
  '(custom-safe-themes
    '("c4df9006b9eb32599d758800a32f3487c2cdf13826084511783b47d419024af2"
      default))
- '(package-selected-packages '(citar-typst eglot which-key))
- '(safe-local-variable-values '((citar-bibliography . "./dissertation.bib")))
+ '(package-selected-packages '(citar-typst compile-angel eglot which-key))
+ '(safe-local-variable-values
+   '((eval setq-local citar-bibliography
+           (list
+            (expand-file-name "dissertation.bib"
+                              (locate-dominating-file
+                               default-directory ".dir-locals.el"))))
+     (eval setq-local citar-bibliography
+           (list
+            (expand-file-name "citations.bib"
+                              (locate-dominating-file
+                               default-directory ".dir-locals.el"))))
+     (citar-bibliography concat
+                         (locate-dominating-file default-directory
+                                                 ".dir-locals.el")
+                         "dissertation.bib")
+     (citar-bibliography expand-file-name "dissertation.bib"
+                         (project-root (project-current)))
+     (citar-bibliography concat (project-root (project-current))
+                         "./dissertation.bib")
+     (citar-bibliography . "./dissertation.bib")))
  '(warning-suppress-log-types
    '((files missing-lexbind-cookie
             "/usr/share/emacs/site-lisp/suse-start-po-mode.el")
