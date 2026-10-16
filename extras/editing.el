@@ -40,17 +40,14 @@
 ;; Move lines or region
 (use-package move-text
   :ensure t
-  :bind (
-	     ("M-<down>" . move-text-down)
-	     ("M-<up>" .  move-text-up)
-	     )
-  )
+  :bind (("M-<down>" . move-text-down)
+	 ("M-<up>" .  move-text-up)))
 
 ;; Various useful functions
 (use-package crux
   :ensure t
   :bind (
-	     ("C-k" . crux-smart-kill-line)
+	 ("C-k" . crux-smart-kill-line)
          :map minimacs-utils-keymap
 	     ("d" . crux-duplicate-current-line-or-region)
 	     ("j" . crux-top-join-line)
@@ -58,8 +55,17 @@
 	     ("t" . crux-transpose-windows)
          :map minimacs-buffer-keymap
 	     ("R" . crux-rename-file-and-buffer)
-	     ("o" . crux-kill-other-buffers)
-	     )
+	     ("o" . crux-kill-other-buffers))
+  :config 
+  (defun indent-region-advice (&rest ignored)
+    (let ((deactivate deactivate-mark))
+      (if (region-active-p)
+          (indent-region (region-beginning) (region-end))
+        (indent-region (line-beginning-position) (line-end-position)))
+      (setq deactivate-mark deactivate)))
+  
+  (advice-add 'move-text-up :after 'indent-region-advice)
+  (advice-add 'move-text-down :after 'indent-region-advice)
   )
 
 ;; Various built in settings
