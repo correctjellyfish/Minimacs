@@ -23,6 +23,15 @@
              :hook (typst-ts-mode . citar-typst-mode)
              )
 
+;; Focus by dimming text outside of region
+(use-package focus 
+             :commands (focus-mode)
+             :config 
+             (add-to-list 'focus-mode-to-thing '(typst-ts-mode . paragraph))
+             (add-to-list 'focus-mode-to-thing '(markdown-mode . paragraph))
+             (add-to-list 'focus-mode-to-thing '(text-mode . paragraph))
+             )
+
 ;; Light theme for writing
 (use-package almost-mono-themes
   :ensure t
@@ -35,19 +44,21 @@
    ((= arg 1)
     (progn
       (setq display-line-numbers nil)
-      (visual-line-mode)
+      (visual-line-mode 1)
       (enable-theme 'almost-mono-white)
       (eldoc-box-hover-mode -1)
       (eldoc-box-hover-at-point-mode -1)
+      (focus-mode 1)
       )
     )
    ((= arg -1)
     (progn
       (setq display-line-numbers 'relative)
-      (visual-line-mode)
+      (visual-line-mode -1)
       (disable-theme 'almost-mono-white)
       (eldoc-box-hover-mode 1)
       (eldoc-box-hover-at-point-mode 1)
+      (focus-mode -1)
       )
     )
    )
