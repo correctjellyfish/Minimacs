@@ -22,3 +22,5 @@ image-dired/
 projects.eld
 recentf.eld
 dape-breakpoints
+*.elc
+*.eld
