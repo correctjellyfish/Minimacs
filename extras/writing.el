@@ -32,12 +32,6 @@
              (add-to-list 'focus-mode-to-thing '(text-mode . paragraph))
              )
 
-;; Light theme for writing
-(use-package almost-mono-themes
-  :ensure t
-  :config
-  (load-theme 'almost-mono-white t t))
-
 (defun my/writeroom (arg)
   "Hook used for writeroom-mode, ARG indicates if entering or leaving."
   (cond
@@ -45,7 +39,7 @@
     (progn
       (setq display-line-numbers nil)
       (visual-line-mode 1)
-      (enable-theme 'almost-mono-white)
+      (enable-theme minimacs-writing-theme)
       (eldoc-box-hover-mode -1)
       (eldoc-box-hover-at-point-mode -1)
       (focus-mode 1)
@@ -55,7 +49,7 @@
     (progn
       (setq display-line-numbers 'relative)
       (visual-line-mode -1)
-      (disable-theme 'almost-mono-white)
+      (disable-theme minimacs-writing-theme)
       (eldoc-box-hover-mode 1)
       (eldoc-box-hover-at-point-mode 1)
       (focus-mode -1)

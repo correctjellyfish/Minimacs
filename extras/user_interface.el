@@ -74,6 +74,11 @@
   :ensure t
   :init (setq catppuccin-flavor 'mocha)
   :config (load-theme 'catppuccin t))
+;; Light theme for writing
+(use-package almost-mono-themes
+  :ensure t
+  :config
+  (load-theme 'almost-mono-white t t))
 
 
 ;; Set font if not in terminal (Useful to set nerd font)
