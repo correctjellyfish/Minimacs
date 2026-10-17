@@ -129,7 +129,6 @@
   :ensure t
   :config
   (add-hook 'tuareg-mode-hook #'merlin-mode)
-  (add-hook 'merlin-mode-hook #'company-mode)
   ;; we're using flycheck instead
   (setq merlin-error-after-save nil))
 
