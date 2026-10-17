@@ -15,7 +15,7 @@
 ;;   Basic settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar minimacs-theme 'batppuccin-mocha)
+(defvar minimacs-theme 'tokyo-night)
 (defvar minimacs-writing-theme 'almost-mono-white)
 (load-file (expand-file-name "extras/basic.el" user-emacs-directory))
 

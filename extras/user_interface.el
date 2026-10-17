@@ -55,10 +55,9 @@
 (global-hl-line-mode)
 
 ;; Theme setup
-(use-package batppuccin
+(use-package tokyo-night
   :ensure t
-  :config
-  (load-theme 'batppuccin-mocha t t))
+  :config (load-theme 'tokyo-night t t))
 ;; Light theme for writing
 (use-package almost-mono-themes
   :ensure t
@@ -69,8 +68,8 @@
   (load-theme minimacs-theme t))
 
 ;; Help tracking cursor
-(use-package beacon 
-  :config 
+(use-package beacon
+  :config
   (beacon-mode 1))
 
 ;; Set modes to highlight current line in
@@ -143,4 +142,3 @@
 (use-package rainbow-mode
   :ensure t
   :hook (prog-mode . rainbow-mode))
-
