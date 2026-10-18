@@ -336,6 +336,14 @@
      (citar-bibliography . "./dissertation.bib")))
  '(warning-suppress-log-types
    '((files missing-lexbind-cookie
+            "~/.emacs.d/elpa/almost-mono-themes-20250722.1957/almost-mono-white-theme.el")
+     (files missing-lexbind-cookie
+            "~/.emacs.d/elpa/tempel-collection-20260901.750/tempel-collection.el")
+     (files missing-lexbind-cookie
+            "~/.emacs.d/elpa/dune-20260803.1048/dune.el")
+     (files missing-lexbind-cookie
+            "~/.emacs.d/elpa/pos-tip-20240209.837/pos-tip.el")
+     (files missing-lexbind-cookie
             "/usr/share/emacs/site-lisp/suse-start-po-mode.el")
      (files missing-lexbind-cookie
             "/usr/share/emacs/site-lisp/site-start.d/vterm-init.el")
