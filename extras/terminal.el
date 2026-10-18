@@ -48,7 +48,7 @@
          ([f9]    . popterm-window-toggle))
   :config
   (setq popterm-backend        term-backend     ; or 'ghostel, 'eat, 'shell, 'eshell
-        popterm-display-method 'posframe  ; or 'window, 'fullscreen
+        popterm-display-method 'window  ; or 'window, 'fullscreen
         popterm-scope          'project   ; or 'frame, 'dedicated, nil
         popterm-auto-cd        t)
   (popterm-global-mode 1))
