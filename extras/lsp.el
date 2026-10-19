@@ -47,7 +47,10 @@
 
 (use-package eldoc-box
   :ensure t
-  :config (eldoc-box-hover-at-point-mode)
+  :hook (prog-mode . eldoc-box-hover-mode)
+  :config
+  (setq eldoc-box-max-pixel-height (* (line-pixel-height) 20))
+  (setq eldoc-box-max-pixel-width (* (window-font-height) 30))
   )
 
 (use-package consult-eglot
