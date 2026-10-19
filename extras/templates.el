@@ -10,9 +10,7 @@
          :map tempel-map
          ("C-c RET" . tempel-done)
          ("C-<down>" . tempel-next)
-         ("C-<up>" . tempel-previous)
-         ("M-<down>" . tempel-next)
-         ("M-<up>" . tempel-previous))
+         ("C-<up>" . tempel-previous))
   :init
    (defun tempel-setup-capf ()
     ;; Add the Tempel Capf to `completion-at-point-functions'.  `tempel-expand'
