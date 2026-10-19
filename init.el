@@ -139,7 +139,7 @@
   "l" #'windmove-right
   "q" #'delete-window
   "v" #'split-window-right
-  "s" #'split-window-right
+  "s" #'split-window-down
   )
 (global-set-key (kbd "C-c w") 'minimacs-windows-keymap)
 
