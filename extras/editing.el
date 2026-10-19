@@ -57,8 +57,8 @@
 ;; Move lines or region
 (use-package move-text
   :ensure t
-  :bind (("M-<down>" . move-text-down)
-	 ("M-<up>" .  move-text-up)))
+  :commands (move-text-up move-text-down)
+	)
 
 ;; Various useful functions
 (use-package crux

@@ -131,6 +131,9 @@
      '("C-<down>" . windmove-down)
      '("C-<right>" . windmove-right)
      '("C-<left>" . windmove-left)
+     ;; Move Text 
+     '("C-k" . move-text-up)
+     '("C-j" . move-text-down)
      ;; Hideshow
      '("F b" . hs-hide-block)
      '("F B" . hs-show-block)
