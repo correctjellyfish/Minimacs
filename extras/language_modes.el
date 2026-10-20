@@ -106,14 +106,12 @@
         (revert-buffer nil t t)))))
 (use-package ess
   :ensure t
-  :defer t
+  :mode ("\\.[rR]\\'" . ess-r-mode)
   :hook (after-save . run-air-on-r-save)
   :config
   (keymap-global-set "C-c >" #'my/insert-R-pipe)
   (keymap-global-set "C-c -" #'my/insert-R-assignment)
-
   )
-(load "ess-autoloads")
 
 ;; Major mode for OCaml programming
 (use-package tuareg
