@@ -13,14 +13,17 @@
          ;; Searching
          :map minimacs-search-keymap
          ("g" . consult-ripgrep)
-         ("l" . consult-line)       ; Alternative: rebind C-s to use
-         ("s" . consult-line)       ; consult-line instead of isearch, bind
-         ("L" . consult-line-multi) ; isearch to M-s s
+         ("l" . consult-line)
+         ("L" . consult-line-multi)
          ("o" . consult-outline)
          ("e" . consult-compile-error)
+         ("k" . consult-kmacro)
+         ("i" . consult-imenu)
+         ("b" . consult-bookmark)
          ;; Buffer
          :map minimacs-buffer-keymap
          ("b" . consult-buffer)
+         ("B" . consult-buffer-other-window)
          ;; Files
          :map minimacs-file-keymap
          ("h" . consult-recent-file)
