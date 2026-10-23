@@ -55,10 +55,11 @@
   :bind-keymap ("M-'" . surround-keymap))
 
 ;; Move lines or region
-(use-package move-text
-  :ensure t
-  :commands (move-text-up move-text-down)
-	)
+(use-package drag-stuff
+             :ensure t 
+             :config 
+             (drag-stuff-define-keys)
+             (drag-stuff-global-mode 1))
 
 ;; Various useful functions
 (use-package crux
@@ -73,16 +74,6 @@
          :map minimacs-buffer-keymap
 	     ("R" . crux-rename-file-and-buffer)
 	     ("o" . crux-kill-other-buffers))
-  :config 
-  (defun indent-region-advice (&rest ignored)
-    (let ((deactivate deactivate-mark))
-      (if (region-active-p)
-          (indent-region (region-beginning) (region-end))
-        (indent-region (line-beginning-position) (line-end-position)))
-      (setq deactivate-mark deactivate)))
-  
-  (advice-add 'move-text-up :after 'indent-region-advice)
-  (advice-add 'move-text-down :after 'indent-region-advice)
   )
 
 ;; Various built in settings
