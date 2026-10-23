@@ -139,7 +139,7 @@
   "l" #'windmove-right
   "q" #'delete-window
   "v" #'split-window-right
-  "s" #'split-window-down
+  "s" #'split-window-below
   )
 (global-set-key (kbd "C-c w") 'minimacs-windows-keymap)
 
@@ -313,7 +313,8 @@
  '(custom-safe-themes
    '("c4df9006b9eb32599d758800a32f3487c2cdf13826084511783b47d419024af2"
      default))
- '(package-selected-packages '(citar-typst compile-angel eglot macrostep which-key))
+ '(package-selected-packages
+   '(citar-typst compile-angel drag-stuff eglot macrostep which-key))
  '(safe-local-variable-values
    '((eval setq-local citar-bibliography
            (list
