@@ -14,7 +14,9 @@
 (use-package markdown-mode
   :ensure t
   :hook ((markdown-mode . visual-line-mode))
-  :mode ("\\.md\\'")
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
+  :config (setq markdown-command "marked")
   )
 
 (use-package yaml-mode
