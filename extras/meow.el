@@ -122,8 +122,8 @@
      '("{" . backward-paragraph)
      '("(" . meow-page-up)
      '(")" . meow-page-down)
-     '("N" . tab-line-switch-to-prev-tab)
-     '("M" . tab-line-switch-to-next-tab)
+     '("P" . tab-line-switch-to-prev-tab)
+     '("N" . tab-line-switch-to-next-tab)
      '("o" . expreg-expand)
      '("O" . expreg-contract)
      ;; Move between windows
