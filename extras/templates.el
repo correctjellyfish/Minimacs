@@ -27,3 +27,9 @@
   )
 
 (use-package tempel-collection)
+
+;; Integrate with Eglot
+(use-package eglot-tempel
+  :preface (eglot-tempel-mode)
+  :init
+  (eglot-tempel-mode t))
